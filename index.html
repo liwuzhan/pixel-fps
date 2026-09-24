@@ -4,21 +4,24 @@
 
 /* The laboratory is an operational panel; world rendering stays unchanged. */
 #lab-badge{position:absolute;top:75px;left:22px;background:#203e4dec;border:1px solid #9fb5c4;padding:6px 10px;max-width:85%;font-size:11px;color:#dbeff5}.lab-dialog{width:min(96vw,1180px);max-height:95vh;padding:22px}.lab-dialog .eyebrow{margin:0 0 6px}.lab-dialog h3{margin:12px 0}.lab-dialog input:not([type=checkbox]),.lab-dialog select{min-width:0;max-width:100%;background:#0b1923;color:#e8f1f4;border:1px solid #506879;border-radius:4px;padding:7px;font:inherit}.lab-actions{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:9px 0}.lab-actions>label{display:flex;align-items:center;gap:7px;font-size:12px}.lab-actions input[type=checkbox],.lab-checks input[type=checkbox]{width:16px;height:16px;accent-color:#b7ed91}.lab-quick{padding:10px 0;border-top:1px solid #405666;border-bottom:1px solid #405666}.lab-quick button,.lab-section button{font-size:12px;padding:7px 9px}.lab-cheats{gap:16px}.lab-columns{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);gap:22px}.lab-section{min-width:0}.lab-section+.lab-section{border-left:1px solid #405666;padding-left:22px}.lab-label{display:grid;gap:6px;font-size:12px;margin:12px 0}.lab-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}.lab-fields.positions{grid-template-columns:repeat(3,minmax(0,1fr))}.lab-fields label{display:grid;gap:5px;font-size:11px;color:#b7c9d1}.lab-fields input{width:100%}.lab-checks{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.lab-checks label{display:flex;align-items:center;gap:7px;font-size:12px}.lab-checks input[type=number]{width:70px}.console-output{height:235px;overflow:auto;background:#07131c;border:1px solid #405666;border-radius:5px;padding:10px;font:12px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.console-output>div+div{margin-top:6px}.console-error{color:#ffa68c}.console-result{color:#bedacb}.console-form{display:flex;align-items:center;gap:8px;margin-top:8px}.console-form input{flex:1;width:0}.console-form span{color:#b7ed91}.lab-log-title{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:22px 0 8px}.lab-log-title h3{margin-right:auto}.lab-log{max-height:360px;overflow:auto;background:#0d1c26;border:1px solid #405666;border-radius:4px;font-size:11px;line-height:1.6;padding:6px}.lab-log table{width:100%;border-collapse:collapse;table-layout:fixed}.lab-log th,.lab-log td{padding:7px 5px;text-align:left;vertical-align:top;white-space:pre-wrap;overflow-wrap:anywhere;border-bottom:1px solid #354a59}.lab-log th:first-child{width:16%}.lab-log th:nth-child(2){width:32%}.lab-log th{position:sticky;top:-6px;background:#203441;color:#cde0e9}.lab-log td:nth-child(3){font-variant-numeric:tabular-nums}.lab-section form:has(select:disabled){opacity:.6}@media(max-width:850px){.lab-dialog{padding:15px}.lab-columns{grid-template-columns:1fr}.lab-section+.lab-section{padding:14px 0 0;border-left:0;border-top:1px solid #405666}.lab-dialog .dialog-title{align-items:flex-start}.lab-dialog .dialog-title .lab-actions{margin:0}.console-output{height:180px}header .header-actions{flex-wrap:wrap;justify-content:flex-end}.header-actions button{white-space:nowrap}#lab-badge{top:85px;left:10px}.lab-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:420px){header{align-items:flex-start}header strong{display:block;white-space:nowrap;margin-top:9px}.header-actions{max-width:260px}.lab-dialog{width:98vw;padding:12px}.lab-dialog .dialog-title h2{font-size:21px}.lab-dialog .dialog-title .eyebrow{font-size:9px;letter-spacing:0}.lab-dialog .dialog-title button{font-size:12px;padding:7px}.lab-fields.positions{gap:5px}.lab-quick{gap:5px}.lab-log{padding:3px}.lab-log td,.lab-log th{padding:5px 3px}}
+
+/* Item identification belongs to the view; icons never encode inventory state. */
+.item-icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:46px;height:40px;color:#d5ecdf}.item-icon svg{display:block;width:100%;height:100%}.inventory-item{display:flex;align-items:center;gap:12px;min-width:0;flex:1}.item-copy{min-width:0}.inventory-row.selected{background:#28443966;border-radius:5px}.inventory-row{padding-left:6px;padding-right:6px}.inventory-row .actions{align-items:center;flex-wrap:wrap;justify-content:flex-end;max-width:52%}.inventory-row strong{font-size:13px}.inventory-row button{font-size:12px;padding:7px 9px}.inventory-skill{border:1px solid #405563;border-radius:7px;margin:10px 0;padding:4px 9px 10px}.inventory-skill>.inventory-row{border:0}.inventory-tier{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0;padding:7px 10px;background:#0f1d26;border-radius:4px;font-size:12px}.drop-amount{display:flex;align-items:center;gap:5px}.drop-amount input{width:60px;min-width:0}.drop-amount button{font-size:11px;padding:7px}.inventory-skill .skill-description{font-size:11px;color:#afc0ca;margin:0 7px 8px}.binding-label{display:flex;align-items:center;gap:5px;color:#b8cbd5;font-size:11px;white-space:nowrap}#inventory-dialog input,#inventory-dialog select{font:inherit;color:#e5f2eb;background:#0e1c25;border:1px solid #4d6574;border-radius:4px;padding:6px}#inventory-dialog{width:min(94vw,870px)}#inventory-dialog .inventory-resources{font-size:13px}#weapon-icon{align-self:center;width:70px;height:33px}.skill-card .item-icon{float:right;width:27px;height:25px;margin-top:-2px}.skill-card .name{clear:both}.skill-hud{max-width:56%;overflow-x:auto;padding-bottom:3px}.skill-card{flex-shrink:0}#pickup-prompt{display:flex;align-items:center;gap:9px;max-width:90vw;white-space:normal}#pickup-prompt .item-icon{width:35px;height:30px}#pickup-prompt span:last-child{text-align:left}#pickup-prompt small{display:block;font-size:10px;color:#adbfca;margin-top:3px}#status-hud{position:absolute;left:22px;bottom:163px;display:flex;gap:6px;flex-wrap:wrap;max-width:60%;font-size:11px}#status-hud span{background:#322b42ed;border:1px solid #947fa7;border-radius:4px;padding:5px 8px}.weapon-hud{min-width:170px}@media(max-width:850px){.inventory-row .actions{flex-direction:row;max-width:50%}.inventory-item{gap:7px}.item-icon{width:34px}.skill-hud{max-width:100%}#status-hud{left:10px;bottom:235px;max-width:85%}.weapon-hud{min-width:0}#weapon-icon{height:24px}.inventory-row .actions button{padding:6px;font-size:11px}}@media(max-width:560px){#inventory-dialog{padding:15px;width:96vw}.inventory-row{flex-wrap:wrap;gap:9px}.inventory-item{flex-basis:100%}.inventory-row .actions{max-width:100%;width:100%;justify-content:flex-end}.inventory-skill{padding:3px 5px 8px}.inventory-tier{padding:7px 5px}.drop-amount input{width:54px}.skill-hud{justify-content:flex-start}.skill-card{min-width:94px}#status-hud{bottom:250px}.inventory-row small{font-size:11px}}
 </style></head>
 <body>
 <canvas id="arena" aria-label="第一人称方块人训练场"></canvas>
 <div id="hud">
-  <header><div><strong>PIXEL FPS</strong><span class="muted">实验训练场 · 02</span></div><div class="header-actions"><button id="edit-character">捏人 / 画脸</button><button id="open-inventory">背包 <kbd>Tab</kbd></button><button id="open-settings">训练设置</button><button id="open-lab">实验台 <kbd>F2</kbd></button></div></header>
+  <header><div><strong>PIXEL FPS</strong><span class="muted">物资与战斗 · 03</span></div><div class="header-actions"><button id="edit-character">捏人 / 画脸</button><button id="open-inventory">背包 <kbd>Tab</kbd></button><button id="open-settings">训练设置</button><button id="open-lab">实验台 <kbd>F2</kbd></button></div></header>
   <div id="lab-badge" hidden></div><div id="target-label"></div><div id="crosshair"><i></i><b></b></div><div id="hit-marker" aria-hidden="true">×</div>
   <div id="pickup-prompt" class="prompt" hidden></div><div id="toast" role="status" aria-live="polite"></div>
-  <section class="bottom-hud"><div class="resources"><div><span>生命</span><strong id="health">100 / 100</strong><progress id="health-bar" max="100" value="100"></progress></div><div><span>蓝量</span><strong id="mana">100 / 100</strong><progress id="mana-bar" max="100" value="100"></progress></div></div><div class="weapon-hud"><span id="weapon-label">未持有武器</span><strong id="ammo">弹药 0</strong><small id="weapon-hint">靠近物资按 E 拾取</small></div><div id="skill-hud" class="skill-hud"></div></section>
-  <div id="control-hint">WASD 移动 · 鼠标瞄准 / 左键攻击 · 空格跳跃 · E 拾取 · 1–4 切枪 · Q / F / G 技能 · V 蓝瓶 · Tab 背包 · F2 实验台 · Esc 暂停</div>
+  <section class="bottom-hud"><div class="resources"><div><span>生命</span><strong id="health">100 / 100</strong><progress id="health-bar" max="100" value="100"></progress></div><div><span>蓝量</span><strong id="mana">100 / 100</strong><progress id="mana-bar" max="100" value="100"></progress></div></div><div class="weapon-hud"><span id="weapon-icon" class="item-icon" aria-hidden="true"></span><span id="weapon-label">未持有武器</span><strong id="ammo">弹药 0</strong><small id="weapon-hint">靠近物资按 E 拾取</small></div><div id="skill-hud" class="skill-hud"></div></section>
+  <div id="status-hud" aria-label="当前角色状态"></div><div id="control-hint">WASD 移动 · 鼠标瞄准 / 左键攻击 · 空格跳跃 · E 拾取 · 滚轮 / 1–9 切枪 · Q / F / G 技能（可改绑）· B 丢枪 · V 蓝瓶 · Tab 背包 · F2 实验台 · Esc 暂停</div>
 </div>
 <section id="start-screen" class="overlay">
- <div class="panel start-panel"><p class="eyebrow">可玩的规则，简单的方块</p><h1>Pixel FPS<br><span>玩法训练场</span></h1><p>先拾取脚边的武器和弹药，再向前方的六方块训练靶开火。枪弹实际飞行，墙壁会阻挡命中。</p><div class="instruction-grid"><div><kbd>E</kbd><b>拾取物资</b><small>枪械、通用弹药、技能、蓝瓶</small></div><div><kbd>Q F G</kbd><b>三个技能脚本</b><small>弹射背包、自瞄、虚弱榴弹</small></div><div><kbd>Tab</kbd><b>背包与合成</b><small>同名同级技能三合一</small></div></div><p id="character-summary" class="muted"></p><button id="start-game" class="primary">进入训练场</button><button id="start-edit">调整体型 / 画脸</button><button id="start-lab">打开实验台</button><p class="fine">单机玩法验证。参数为测试值；点击进入后鼠标控制视角，Esc 释放鼠标。</p><p id="boot-error" role="alert" hidden></p></div>
+ <div class="panel start-panel"><p class="eyebrow">可玩的规则，简单的方块</p><h1>Pixel FPS<br><span>玩法训练场</span></h1><p>拾取武器、弹药与技能，打开背包查看、合成或改绑快捷键。也可以把物资丢回地上；火箭筒会发射真实飞行的爆炸弹丸。</p><div class="instruction-grid"><div><kbd>E</kbd><b>拾取物资</b><small>枪械、通用弹药、技能、蓝瓶</small></div><div><kbd>Q F G</kbd><b>三个技能脚本</b><small>弹射背包、自瞄、虚弱榴弹</small></div><div><kbd>Tab</kbd><b>背包与合成</b><small>三合一、快捷绑定、按数量丢弃</small></div></div><p id="character-summary" class="muted"></p><button id="start-game" class="primary">进入训练场</button><button id="start-edit">调整体型 / 画脸</button><button id="start-lab">打开实验台</button><p class="fine">单机玩法验证。参数为测试值；点击进入后鼠标控制视角，Esc 释放鼠标。</p><p id="boot-error" role="alert" hidden></p></div>
 </section>
 <section id="pause-screen" class="overlay" hidden><div class="panel"><p class="eyebrow">训练已暂停</p><h2 id="pause-title">继续你的实验</h2><p id="pause-copy">鼠标已释放。点击继续回到第一人称。</p><button id="resume-game" class="primary">继续训练</button><button id="pause-inventory">背包与合成</button><button id="pause-character">调整体型 / 画脸</button><button id="pause-settings">训练设置</button><button id="pause-lab">实验台 / 控制台</button><button id="reset-game">重新开始训练</button></div></section>
-<dialog id="inventory-dialog"><div class="dialog-title"><h2>背包与合成</h2><button id="close-inventory" aria-label="关闭背包">关闭</button></div><p class="muted">快捷键只是使用入口。这里显示实际持有的武器、资源和技能。</p><div id="inventory-resources" class="inventory-resources"></div><h3>武器</h3><div id="inventory-weapons"></div><h3>技能</h3><div id="inventory-skills"></div><p class="fine">同名同级的三份普通技能合成一份高一级技能。自瞄是消耗型终极，每次使用消耗一份。</p></dialog>
+<dialog id="inventory-dialog"><div class="dialog-title"><h2>背包与合成</h2><button id="close-inventory" aria-label="关闭背包">关闭</button></div><p class="muted">查看、使用或丢弃随身物资。武器用数字键或滚轮切换；按 B 丢出当前手持武器。</p><div id="inventory-resources" class="inventory-resources"></div><h3>补给 · 枪械共享通用弹药</h3><div id="inventory-supplies"></div><h3>武器 · 每件独立携带</h3><div id="inventory-weapons"></div><h3>技能 · 快捷键可自由绑定</h3><div id="inventory-skills"></div><p class="fine">三份同名同级普通技能可合成高一级。快捷键只是使用入口；未绑定的技能仍可在背包中使用。丢弃技能不会清除已有冷却或已发动的效果。</p><button id="reset-bindings">恢复默认技能键位</button></dialog>
 <dialog id="settings-dialog"><div class="dialog-title"><h2>训练设置</h2><button id="close-settings">关闭</button></div><label class="check-row"><input id="moving-targets" type="checkbox" checked>训练靶横向移动</label><label class="check-row"><input id="enemy-fire" type="checkbox">靶机回击（可验证虚弱与受伤）</label><label class="range-row">鼠标灵敏度 <input id="sensitivity" type="range" min="0.0005" max="0.005" step="0.0001" value="0.002"><output id="sensitivity-value">1.0×</output></label><button id="reset-targets">恢复训练靶</button><button id="reset-all">重置场地与物资</button><h3>角色</h3><p id="settings-character" class="muted"></p><button id="import-character">导入角色 JSON</button><button id="default-character">使用默认角色</button><input id="character-file" type="file" accept=".json,application/json" hidden><p class="fine">可导入捏人模块导出的角色。应用体型会重新开始训练。</p></dialog>
 <dialog id="character-dialog" class="character-dialog"><div class="dialog-title"><h2>角色制作</h2><div><button id="cancel-character">取消</button><button id="apply-character" class="primary">应用角色并重新训练</button></div></div><iframe id="character-frame" title="方块人体型与画脸编辑器"></iframe></dialog>
 <dialog id="lab-dialog" class="lab-dialog">
@@ -28,11 +31,11 @@
   <div class="lab-actions lab-cheats"><label><input id="cheat-mana" type="checkbox"> 无限蓝量</label><label><input id="cheat-ammo" type="checkbox"> 无限弹药</label><label><input id="cheat-cooldown" type="checkbox"> 无技能冷却</label><span id="lab-clock" class="muted"></span></div>
   <div class="lab-columns">
     <section class="lab-section"><h3>实验场景</h3><div class="lab-actions"><select id="lab-scenario-select" aria-label="实验场景"></select><button id="lab-scenario-load">载入</button><button id="lab-scenario-delete">删除自存场景</button></div><div class="lab-actions"><input id="lab-scenario-name" aria-label="保存场景名称" placeholder="给当前实验起个名字" maxlength="40"><button id="lab-scenario-save">保存配置</button></div><div class="lab-actions"><button id="lab-scenario-export">导出配置 JSON</button><button id="lab-scenario-import">导入配置 JSON</button><input id="lab-scenario-file" type="file" accept=".json,application/json" hidden></div><p class="fine">保存体型、木桩、物资及实验开关。载入会恢复满血满蓝、清空弹丸和临时状态，重新开始同一组条件。</p>
-      <h3>物资</h3><div class="lab-actions"><button data-command="give weapon pistol">发放手枪</button><button data-command="give weapon rifle">发放步枪</button><button data-command="give weapon knife">发放小刀</button><button data-command="give mana 5">蓝瓶 +5</button><button data-command="give skill jetpack 9 1">弹射背包 ×9</button><button data-command="give skill weaken 9 1">虚弱榴弹 ×9</button><button data-command="give skill autoaim 3 1">自瞄 ×3</button></div>
+      <h3>物资</h3><div class="lab-actions"><button data-command="give weapon pistol">发放手枪</button><button data-command="give weapon rifle">发放步枪</button><button data-command="give weapon knife">发放小刀</button><button data-command="give weapon rocket">发放火箭筒</button><button data-command="give mana 5">蓝瓶 +5</button><button data-command="give skill jetpack 9 1">弹射背包 ×9</button><button data-command="give skill weaken 9 1">虚弱榴弹 ×9</button><button data-command="give skill autoaim 3 1">自瞄 ×3</button></div>
       <h3>木桩</h3><div class="lab-actions"><select id="lab-dummy-preset" aria-label="新木桩体型"><option value="standard">标准体型</option><option value="bighead">大头</option><option value="tiny">小体型</option><option value="longarm">长臂</option></select><button id="lab-dummy-spawn">新增木桩</button><button data-command="dummy clear">清空木桩</button></div>
       <form id="lab-dummy-form"><label class="lab-label">编辑对象 <select id="lab-dummy-select"></select></label><div class="lab-fields"><label>头部大小<input id="dummy-head" type="number" min="0.15" max="5" step="0.05" required></label><label>躯干大小<input id="dummy-torso" type="number" min="0.15" max="5" step="0.05" required></label><label>臂长 / m<input id="dummy-arms" type="number" min="0.04" max="4" step="0.01" required></label><label>腿长 / m<input id="dummy-legs" type="number" min="0.04" max="4" step="0.01" required></label></div><div class="lab-fields positions"><label>X<input id="dummy-x" type="number" step="0.1" required></label><label>Y<input id="dummy-y" type="number" min="0" step="0.1" required></label><label>Z<input id="dummy-z" type="number" step="0.1" required></label></div><div class="lab-actions"><label>移动 <select id="dummy-move"><option value="inherit">跟随训练设置</option><option value="stationary">静止</option><option value="strafe">左右移动</option></select></label><label>攻击 <select id="dummy-fire"><option value="inherit">跟随训练设置</option><option value="off">不还击</option><option value="on">向玩家还击</option></select></label></div><div class="lab-checks"><label><input id="dummy-recover" type="checkbox"> 非致命受伤后补满生命</label><label><input id="dummy-respawn" type="checkbox"> 死亡后自动复活</label><label>复活等待 / s <input id="dummy-delay" type="number" min="0" max="60" step="0.1" value="1" required></label></div><p id="lab-dummy-info" class="fine"></p><div class="lab-actions"><button class="primary" type="submit">应用木桩配置</button><button id="lab-dummy-remove" type="button">移除此木桩</button></div></form>
     </section>
-    <section class="lab-section"><h3>控制台</h3><div id="console-output" class="console-output" role="log" aria-label="指令执行结果"></div><form id="console-form" class="console-form"><span aria-hidden="true">&gt;</span><input id="console-input" aria-label="控制台指令" placeholder="help 查看指令，↑↓ 找回历史" autocomplete="off" spellcheck="false" list="console-suggestions"><button type="submit">执行</button></form><datalist id="console-suggestions"><option value="help"><option value="list"><option value="give skill weaken 9 1"><option value="dummy spawn bighead 0 0 -6"><option value="status add player invulnerable 10"><option value="status clear player"><option value="time pause"><option value="step 60"><option value="scenario load shooting"><option value="scenario load merge"><option value="scenario load weakness"></datalist><p class="fine">例如 give skill weaken 9 1：发放九份一级虚弱榴弹。技能仍通过正常发动入口施放，终极仍按份消耗。</p>
+    <section class="lab-section"><h3>控制台</h3><div id="console-output" class="console-output" role="log" aria-label="指令执行结果"></div><form id="console-form" class="console-form"><span aria-hidden="true">&gt;</span><input id="console-input" aria-label="控制台指令" placeholder="help 查看指令，↑↓ 找回历史" autocomplete="off" spellcheck="false" list="console-suggestions"><button type="submit">执行</button></form><datalist id="console-suggestions"><option value="help"><option value="list"><option value="give skill weaken 9 1"><option value="dummy spawn bighead 0 0 -6"><option value="status add player invulnerable 10"><option value="status clear player"><option value="time pause"><option value="step 60"><option value="scenario load shooting"><option value="scenario load merge"><option value="scenario load weakness"><option value="scenario load rocket"></datalist><p class="fine">例如 give skill weaken 9 1：发放九份一级虚弱榴弹。技能仍通过正常发动入口施放，终极仍按份消耗。</p>
       <div class="lab-log-title"><h3>战斗记录</h3><select id="lab-log-filter" aria-label="日志类型"><option value="all">全部事件</option><option value="damage">伤害结算</option><option value="status">状态变化</option></select><button id="lab-log-export">导出</button><button data-command="clear log">清空</button></div><div id="lab-log" class="lab-log" aria-live="off"></div><p class="fine">保留最近 500 条，面板显示其中最新 80 条。时间为游戏内秒数，暂停与慢放同时作用于弹丸、状态、冷却和复活。</p>
     </section>
   </div>
@@ -290,19 +293,198 @@
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(globalThis);
 </script>
+<script>(function attachPixelFPSContent(root) {
+  "use strict";
+
+  // Shared gameplay definitions. Presentation resolves visualKey to its own icons and meshes.
+  // Values expose behavior in the prototype; they are not balance decisions.
+  const WEAPONS = Object.freeze({
+    pistol: Object.freeze({ label: "手枪", description: "单发通用弹药武器。", visualKey: "pistol",
+      damage: 26, speed: 95, interval: 0.28, ammoCost: 1, color: Object.freeze([1, 0.83, 0.3]) }),
+    rifle: Object.freeze({ label: "步枪", description: "连续发射通用弹药。", visualKey: "rifle",
+      damage: 16, speed: 140, interval: 0.11, ammoCost: 1, color: Object.freeze([0.4, 0.95, 1]) }),
+    knife: Object.freeze({ label: "小刀", description: "近战距离随手臂长度变化。", visualKey: "knife",
+      damage: 42, interval: 0.45, ammoCost: 0, melee: true, color: Object.freeze([0.95, 0.95, 1]) }),
+    rocket: Object.freeze({ label: "火箭筒", description: "发射可见火箭，碰撞后造成范围伤害；使用通用弹药。", visualKey: "rocket",
+      damage: 80, speed: 22, interval: 0.9, ammoCost: 6, blastRadius: 3.5, projectileRadius: 0.12,
+      explosive: true, color: Object.freeze([1, 0.47, 0.16]) }),
+  });
+  const RESOURCES = Object.freeze({
+    ammo: Object.freeze({ label: "通用弹药", description: "所有枪械共享的弹药储备。", inventoryKey: "ammo", visualKey: "ammo" }),
+    mana: Object.freeze({ label: "蓝瓶", description: "使用后恢复蓝量。", inventoryKey: "manaPotions", visualKey: "mana", restore: 60 }),
+  });
+
+  // Skill behavior and costs belong to the loaded PixelFPSSkills scripts, not this catalog.
+  const api = Object.freeze({ WEAPONS, RESOURCES });
+  root.PixelFPSContent = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(typeof globalThis !== "undefined" ? globalThis : this);
+</script>
+<script>(function attachPixelFPSInventory(root) {
+  "use strict";
+  const Content = root.PixelFPSContent || (typeof require === "function" ? require("./content.js") : null);
+  if (!Content) throw new Error("PixelFPSInventory needs PixelFPSContent.");
+  const own = (object, key) => Object.hasOwn(object, key);
+  const reserved = new Set(["__proto__", "prototype", "constructor"]);
+
+  function identifier(value, label) {
+    if (typeof value !== "string" || !value.trim() || reserved.has(value)) throw new TypeError(`${label}无效。`);
+    return value;
+  }
+  function integer(value, label, min = 1) {
+    if (!Number.isSafeInteger(value) || value < min) throw new RangeError(`${label}必须是${min ? "正" : "非负"}安全整数。`);
+    return value;
+  }
+  function record(value, label) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw new TypeError(`${label}必须是对象。`);
+    return value;
+  }
+  function skillMap(inv) { return record(record(inv, "背包").skills, "技能集合"); }
+  function weapons(inv) {
+    if (!Array.isArray(record(inv, "背包").weapons)) throw new TypeError("武器集合必须是数组。");
+    return inv.weapons;
+  }
+  function resourceKey(key) {
+    if (key === "manaPotions") return key;
+    if (!own(Content.RESOURCES, key)) throw new TypeError("未知物资类型。");
+    return Content.RESOURCES[key].inventoryKey;
+  }
+  function skillState(inv, id, optional = false) {
+    identifier(id, "技能编号");
+    const map = skillMap(inv);
+    if (!own(map, id)) {
+      if (optional) return { level: 1, count: 0, levels: {} };
+      throw new Error("未持有这个技能。");
+    }
+    const entry = record(map[id], "技能"), levels = record(entry.levels, "技能等级");
+    let total = 0, highest = 1;
+    const tiers = {};
+    for (const [key, amount] of Object.entries(levels)) {
+      if (!/^[1-9]\d*$/.test(key)) throw new TypeError("技能等级无效。");
+      const level = integer(Number(key), "技能等级");
+      integer(amount, "技能份数");
+      total = integer(total + amount, "技能总份数");
+      highest = Math.max(highest, level);
+      tiers[level] = amount;
+    }
+    if (entry.count !== total || entry.level !== highest) throw new Error("技能份数或等级与各级存量不一致。");
+    return { level: highest, count: total, levels: tiers };
+  }
+  function commitSkill(inv, id, levels) {
+    const entries = Object.entries(levels).filter(([, count]) => count > 0);
+    const next = { level: Math.max(1, ...entries.map(([tier]) => Number(tier))),
+      count: entries.reduce((sum, [, count]) => sum + count, 0), levels: Object.fromEntries(entries) };
+    if (own(inv.skills, id)) Object.assign(inv.skills[id], next);
+    else inv.skills[id] = next;
+    return inv.skills[id];
+  }
+
+  function create(skillIds = []) {
+    if (!Array.isArray(skillIds)) throw new TypeError("技能编号需要数组。");
+    for (const id of skillIds) identifier(id, "技能编号");
+    return { weapons: [], selected: 0, ammo: 0, manaPotions: 0,
+      skills: Object.fromEntries(skillIds.map((id) => [id, { level: 1, count: 0, levels: {} }])) };
+  }
+  function grantWeapon(inv, instance) {
+    const list = weapons(inv);
+    record(instance, "武器实例"); identifier(instance.id, "武器实例编号");
+    identifier(instance.type, "武器类型");
+    if (!own(Content.WEAPONS, instance.type)) throw new TypeError("未知武器类型。");
+    if (list.some((item) => item.id === instance.id)) throw new Error("已持有这个武器实例。");
+    list.push(instance);
+    return instance;
+  }
+  function takeWeapon(inv, id) {
+    identifier(id, "武器实例编号");
+    const list = weapons(inv), index = list.findIndex((item) => item.id === id);
+    if (index < 0) throw new Error("未持有这个武器实例。");
+    const selected = list[inv.selected];
+    const [instance] = list.splice(index, 1);
+    // Removing another item cannot silently switch the held weapon.
+    inv.selected = selected && selected !== instance ? list.indexOf(selected) : Math.min(index, Math.max(0, list.length - 1));
+    return instance;
+  }
+  function selectWeapon(inv, index) {
+    const list = weapons(inv);
+    integer(index, "武器序号", 0);
+    if (index >= list.length) throw new RangeError("武器序号超出背包范围。");
+    inv.selected = index;
+    return true;
+  }
+  function grantResource(inv, key, amount) {
+    record(inv, "背包"); integer(amount, "物资数量");
+    const field = resourceKey(key), total = integer(integer(inv[field], "物资存量", 0) + amount, "物资总量");
+    inv[field] = total;
+    return total;
+  }
+  function takeResource(inv, key, amount) {
+    record(inv, "背包"); integer(amount, "物资数量");
+    const field = resourceKey(key), balance = integer(inv[field], "物资存量", 0);
+    if (balance < amount) throw new Error("物资数量不足。");
+    inv[field] -= amount;
+    return amount;
+  }
+  function grantSkill(inv, id, count = 1, level = 1) {
+    integer(count, "技能份数"); integer(level, "技能等级");
+    const state = skillState(inv, id, true);
+    integer(state.count + count, "技能总份数");
+    state.levels[level] = (state.levels[level] || 0) + count;
+    return commitSkill(inv, id, state.levels);
+  }
+  function takeSkill(inv, id, count = 1, level) {
+    integer(count, "技能份数");
+    if (level !== undefined) integer(level, "技能等级");
+    const state = skillState(inv, id), tier = level ?? state.level;
+    if ((state.levels[tier] || 0) < count) throw new Error("这个等级的技能份数不足。");
+    state.levels[tier] -= count;
+    commitSkill(inv, id, state.levels);
+    return { skillId: id, amount: count, level: tier };
+  }
+  function mergeSkill(inv, id) {
+    const state = skillState(inv, id);
+    const tier = Object.keys(state.levels).map(Number).sort((a, b) => a - b).find((level) => state.levels[level] >= 3);
+    if (tier === undefined) throw new Error("合成需要三份同名、同级技能。");
+    integer(tier + 1, "合成后等级");
+    state.levels[tier] -= 3;
+    state.levels[tier + 1] = (state.levels[tier + 1] || 0) + 1;
+    commitSkill(inv, id, state.levels);
+    return { skillId: id, fromLevel: tier, level: tier + 1 };
+  }
+  function consumeSkill(inv, id, amount = 1) {
+    integer(amount, "消耗份数");
+    const state = skillState(inv, id);
+    if (state.count < amount) throw new Error("技能份数不足。");
+    let remaining = amount;
+    for (const tier of Object.keys(state.levels).map(Number).sort((a, b) => b - a)) {
+      const used = Math.min(remaining, state.levels[tier]);
+      state.levels[tier] -= used;
+      remaining -= used;
+      if (remaining === 0) break;
+    }
+    commitSkill(inv, id, state.levels);
+    return true;
+  }
+
+  // No positions, world clocks, key bindings, runtime hooks, or UI side effects live here.
+  const api = Object.freeze({ create, grantWeapon, takeWeapon, selectWeapon, grantResource, takeResource,
+    grantSkill, takeSkill, mergeSkill, consumeSkill });
+  root.PixelFPSInventory = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(typeof globalThis !== "undefined" ? globalThis : this);
+</script>
 <script>(function attachPixelFPS(root) {
   "use strict";
   const Character = root.BlockCharacter || (typeof require === "function" ? require("../character.js") : null);
   if (!Character) throw new Error("PixelFPS needs BlockCharacter.");
 
+  const Content = root.PixelFPSContent || (typeof require === "function" ? require("./content.js") : null);
+  const Inventory = root.PixelFPSInventory || (typeof require === "function" ? require("./inventory.js") : null);
+  if (!Content || !Inventory) throw new Error("PixelFPS needs content and inventory modules.");
+
   // These values make the rules visible in the prototype; they are not balance decisions.
   const CONFIG = Object.freeze({ gravity: 18, jumpSpeed: 6.5, baseHP: 100, baseMana: 100,
     baseSpeed: 4.5, pickupRange: 2.2, arena: { minX: -20, maxX: 20, minZ: -24, maxZ: 12 } });
-  const WEAPONS = Object.freeze({
-    pistol: Object.freeze({ label: "手枪", damage: 26, speed: 95, interval: 0.28, ammoCost: 1, color: [1, 0.83, 0.3] }),
-    rifle: Object.freeze({ label: "步枪", damage: 16, speed: 140, interval: 0.11, ammoCost: 1, color: [0.4, 0.95, 1] }),
-    knife: Object.freeze({ label: "小刀", damage: 42, interval: 0.45, ammoCost: 0, melee: true, color: [0.95, 0.95, 1] }),
-  });
+  const WEAPONS = Content.WEAPONS;
   const add = (a, b) => a.map((v, i) => v + b[i]);
   const mul = (a, n) => a.map((v) => v * n);
   const length = (a) => Math.hypot(...a);
@@ -378,13 +560,14 @@
       const head = character.parts.find((part) => part.id === "head");
       const maxHp = CONFIG.baseHP * character.params.torsoScale ** 3;
       const maxMana = CONFIG.baseMana * character.params.headScale ** 3;
-      const skills = Object.fromEntries(["jetpack", "autoaim", "weaken"].map((name) => [name, { level: 1, count: 0, levels: {} }]));
+      const loadedSkills = Object.keys(root.PixelFPSSkills || {});
+      const inventory = Inventory.create(loadedSkills.length ? loadedSkills : ["jetpack", "autoaim", "weaken"]);
       return { id, team, label, pos: [...pos], spawnPos: [...pos], vel: [0, 0, 0], yaw: 0, pitch: 0,
         character, face, maxHp, hp: maxHp, maxMana, mana: maxMana,
         eyeHeight: head.center[1] + head.size[1] * 0.2,
         speed: CONFIG.baseSpeed * character.params.legLength / Character.DEFAULTS.legLength,
         alive: true, grounded: true, statuses: [], nextFireAt: 0, nextEnemyFireAt: 1.5,
-        inventory: { weapons: [], selected: 0, ammo: 0, manaPotions: 0, skills } };
+        inventory };
     }
 
     _training(patch = {}, current = {}) {
@@ -467,11 +650,16 @@
     }
 
     _spawnSupplies() {
-      const supply = (type, label, pos, extra = {}) => this.pickups.push({ id: `pickup-${this._nextId++}`, type, label, pos, ...extra });
+      const supply = (type, label, pos, extra = {}) => {
+        const item = { id: `pickup-${this._nextId++}`, type, label, pos, ...extra };
+        if (type === "weapon") item.weapon = { id: `weapon-${this._nextId++}`, type: item.weaponType };
+        this.pickups.push(item);
+      };
       supply("weapon", "手枪", [-0.6, 0.35, 5.6], { weaponType: "pistol" });
       supply("ammo", "通用弹药 × 120", [0.6, 0.35, 5.6], { amount: 120 });
       supply("weapon", "小刀", [-3, 0.35, 5.2], { weaponType: "knife" });
       supply("weapon", "步枪", [3, 0.35, 5.2], { weaponType: "rifle" });
+      supply("weapon", "火箭筒", [6.3, 0.35, 5.2], { weaponType: "rocket" });
       supply("mana", "蓝瓶 × 3", [4.6, 0.35, 5.2], { amount: 3 });
       supply("ammo", "通用弹药 × 240", [-4.6, 0.35, 5.2], { amount: 240 });
       for (const [index, skillId] of ["jetpack", "autoaim", "weaken"].entries()) {
@@ -498,81 +686,127 @@
     }
     lineOfSight(from, to) { return !this.obstacles.some((box) => segmentBox(from, to, box) !== null); }
 
+    _pickupOrigin() {
+      // Ground reach, rather than eye height, keeps small items accessible to tall characters.
+      return [this.player.pos[0], this.player.pos[1] + 0.35, this.player.pos[2]];
+    }
     nearestPickup() {
       let nearest = null, distance = CONFIG.pickupRange;
+      const from = this._pickupOrigin();
       for (const item of this.pickups) {
+        if ([0, 2].some((axis) => item.pos[axis] < this.bounds.min[axis] || item.pos[axis] > this.bounds.max[axis])) continue;
         const current = Math.hypot(item.pos[0] - this.player.pos[0], item.pos[2] - this.player.pos[2]);
-        // Pickups are reached from the feet so very tall bodies can still collect ground supplies.
-        if (current < distance && Math.abs(item.pos[1] - this.player.pos[1]) < 2) {
+        if (current < distance && Math.abs(item.pos[1] - this.player.pos[1]) < 2 && this.lineOfSight(from, item.pos)) {
           nearest = item; distance = current;
         }
       }
       return nearest;
     }
+    _recordTransfer(type, item) {
+      const data = { sourceId: this.player.id, itemId: item.id, itemType: item.type, amount: item.type === "weapon" ? 1 : item.amount };
+      if (item.type === "weapon") { data.weaponId = item.weapon?.type || item.weaponType; data.weaponInstanceId = item.weapon?.id ?? null; }
+      if (item.type === "skill") { data.skillId = item.skillId; data.level = item.level; }
+      this.recordCombat(type, data);
+      this.events.push({ ...data, time: this.time, type, text: `${type === "pickup" ? "拾取" : "丢弃"}：${item.label}` });
+      if (this.events.length > 30) this.events.shift();
+      return this.events.at(-1).text;
+    }
     interact() {
       if (!this.player.alive) return { ok: false, message: "倒下后需要先复位。" };
       const item = this.nearestPickup(), inventory = this.player.inventory;
       if (!item) return { ok: false, message: this.message("附近没有可拾取的物资。", "info") };
-      if (item.type === "weapon") {
-        inventory.weapons.push({ id: `weapon-${this._nextId++}`, type: item.weaponType });
-        inventory.selected = inventory.weapons.length - 1;
-      } else if (item.type === "ammo") inventory.ammo += item.amount;
-      else if (item.type === "mana") inventory.manaPotions += item.amount;
-      else if (item.type === "skill") {
-        const skill = inventory.skills[item.skillId];
-        if (!skill) return { ok: false, message: "未知技能。" };
-        const level = item.level || 1, amount = item.amount || 1;
-        skill.levels[level] = (skill.levels[level] || 0) + amount;
-        skill.count += amount;
-        skill.level = Math.max(skill.level, level);
-      } else return { ok: false, message: "未知物资。" };
+      try {
+        if (item.type === "weapon") {
+          const weapon = item.weapon || { id: `weapon-${this._nextId}`, type: item.weaponType };
+          Inventory.grantWeapon(inventory, weapon);
+          Inventory.selectWeapon(inventory, inventory.weapons.length - 1);
+          if (!item.weapon) this._nextId++;
+          item.weapon = weapon;
+        } else if (item.type === "ammo" || item.type === "mana") {
+          Inventory.grantResource(inventory, item.type, item.amount);
+        } else if (item.type === "skill") {
+          if (!this._skillDefinition(item.skillId) && !Object.hasOwn(inventory.skills, item.skillId)) throw new Error("未知技能。");
+          Inventory.grantSkill(inventory, item.skillId, item.amount ?? 1, item.level ?? 1);
+        } else throw new Error("未知物资。");
+      } catch (error) { return { ok: false, message: this.message(error.message, "info") }; }
       this.pickups.splice(this.pickups.indexOf(item), 1);
-      return { ok: true, message: this.message(`拾取：${item.label}`, "pickup"), item };
+      return { ok: true, message: this._recordTransfer("pickup", item), item };
+    }
+    _dropPosition() {
+      const from = this._pickupOrigin(), radius = 0.18;
+      const direction = [Math.sin(this.player.yaw), 0, -Math.cos(this.player.yaw)];
+      // Shorter candidates remain on the player's side of a nearby wall. Never teleport through it.
+      for (const distance of [1.2, 0.85, 0.45, 0]) {
+        const pos = add(from, mul(direction, distance));
+        if ([0, 2].some((axis) => pos[axis] - radius < this.bounds.min[axis] || pos[axis] + radius > this.bounds.max[axis])) continue;
+        if (this.obstacles.some((box) => segmentBox(from, pos, box, radius) !== null)) continue;
+        return pos;
+      }
+      return null;
+    }
+    dropItem(request) {
+      const fail = (message) => ({ ok: false, message: this.message(message, "info") });
+      if (!this.player.alive) return fail("倒下后需要先复位。");
+      if (!request || typeof request !== "object" || Array.isArray(request)) return fail("丢弃参数必须是对象。");
+      const allowed = { weapon: ["kind", "weaponId"], skill: ["kind", "skillId", "level", "amount"], ammo: ["kind", "amount"], mana: ["kind", "amount"] };
+      if (typeof request.kind !== "string" || !Object.hasOwn(allowed, request.kind) || Object.keys(request).some((key) => !allowed[request.kind].includes(key))) return fail("丢弃参数无效。");
+      const pos = this._dropPosition();
+      if (!pos) return fail("脚边没有可以放置物资的位置。");
+      const inventory = this.player.inventory;
+      let item;
+      try {
+        if (request.kind === "weapon") {
+          const existing = inventory.weapons.find((weapon) => weapon.id === request.weaponId);
+          if (existing && !Object.hasOwn(WEAPONS, existing.type)) throw new Error("未知武器类型。");
+          const weapon = Inventory.takeWeapon(inventory, request.weaponId);
+          item = { type: "weapon", weapon, weaponType: weapon.type, label: WEAPONS[weapon.type].label };
+        } else if (request.kind === "skill") {
+          const taken = Inventory.takeSkill(inventory, request.skillId, request.amount === undefined ? 1 : request.amount, request.level);
+          const definition = this._skillDefinition(request.skillId);
+          item = { type: "skill", ...taken, label: `${definition?.name || request.skillId} · ${taken.level} 级 × ${taken.amount}` };
+        } else {
+          const amount = Inventory.takeResource(inventory, request.kind, request.amount);
+          item = { type: request.kind, amount, label: `${request.kind === "ammo" ? "通用弹药" : "蓝瓶"} × ${amount}` };
+        }
+      } catch (error) { return fail(error.message); }
+      item.id = `pickup-${this._nextId++}`;
+      item.pos = pos;
+      this.pickups.push(item);
+      // Inventory transfer does not touch the skill runner's cooldowns or active instances.
+      return { ok: true, message: this._recordTransfer("drop", item), item };
     }
     selectWeapon(index) {
-      if (!Number.isInteger(index) || !this.player.inventory.weapons[index]) return false;
-      this.player.inventory.selected = index;
-      return true;
+      try { return Inventory.selectWeapon(this.player.inventory, index); }
+      catch { return false; }
     }
     useManaPotion() {
       const player = this.player;
-      if (!player.alive || player.inventory.manaPotions <= 0 || player.mana >= player.maxMana) return false;
-      player.inventory.manaPotions--;
-      // Each bottle restores 60 units rather than enlarging the character's mana capacity.
-      player.mana = Math.min(player.maxMana, player.mana + 60);
-      this.message("使用蓝瓶：恢复 60 蓝量。", "heal");
+      if (!player.alive || player.mana >= player.maxMana) return false;
+      try { Inventory.takeResource(player.inventory, "mana", 1); }
+      catch { return false; }
+      const restored = Content.RESOURCES.mana.restore;
+      player.mana = Math.min(player.maxMana, player.mana + restored);
+      this.message(`使用蓝瓶：恢复 ${restored} 蓝量。`, "heal");
       return true;
+    }
+    _skillDefinition(id) {
+      const definitions = this.skills?.definitions || root.PixelFPSSkills;
+      return definitions && Object.hasOwn(definitions, id) ? definitions[id] : null;
     }
     upgradeSkill(id) {
-      const skill = this.player.inventory.skills[id];
-      if (!skill || id === "autoaim") { this.message("本轮验证只合成普通技能。", "info"); return false; }
-      const tiers = Object.entries(skill.levels).filter(([, amount]) => amount >= 3).map(([level]) => Number(level)).sort((a, b) => a - b);
-      if (!tiers.length) { this.message("合成需要三份同名、同级普通技能。", "info"); return false; }
-      const tier = tiers[0];
-      skill.levels[tier] -= 3;
-      if (!skill.levels[tier]) delete skill.levels[tier];
-      skill.levels[tier + 1] = (skill.levels[tier + 1] || 0) + 1;
-      skill.count -= 2;
-      skill.level = Math.max(...Object.keys(skill.levels).map(Number));
-      this.message(`技能合成：${id === "jetpack" ? "弹射背包" : "虚弱榴弹"} → ${tier + 1} 级`, "upgrade");
-      return true;
+      const definition = this._skillDefinition(id);
+      if ((definition?.kind || (id === "autoaim" ? "ultimate" : "normal")) === "ultimate") {
+        this.message("本轮验证只合成普通技能。", "info"); return false;
+      }
+      try {
+        const result = Inventory.mergeSkill(this.player.inventory, id);
+        this.message(`技能合成：${definition?.name || id} → ${result.level} 级`, "upgrade");
+        return true;
+      } catch (error) { this.message(error.message, "info"); return false; }
     }
     consumeSkill(id, amount = 1) {
-      const skill = this.player.inventory.skills[id];
-      if (!skill || !Number.isInteger(amount) || amount <= 0 || skill.count < amount) return false;
-      let remaining = amount;
-      const tiers = Object.keys(skill.levels).map(Number).sort((a, b) => b - a);
-      if (tiers.reduce((sum, tier) => sum + skill.levels[tier], 0) < amount) return false;
-      for (const tier of tiers) {
-        const used = Math.min(remaining, skill.levels[tier]);
-        skill.levels[tier] -= used;
-        remaining -= used;
-        if (!skill.levels[tier]) delete skill.levels[tier];
-        if (!remaining) break;
-      }
-      skill.count -= amount;
-      skill.level = Math.max(1, ...Object.keys(skill.levels).map(Number));
-      return true;
+      try { return Inventory.consumeSkill(this.player.inventory, id, amount); }
+      catch { return false; }
     }
 
     applyStatus(actor, type, duration, sourceId = null, data = {}) {
@@ -648,9 +882,11 @@
       if (!player.alive || this.time < player.nextFireAt || this.hasStatus(player, "disarmed") || this.hasStatus(player, "stun")) return false;
       const item = player.inventory.weapons[player.inventory.selected], weapon = item && WEAPONS[item.type];
       if (!weapon) return false;
-      if (!this.cheats.infiniteAmmo && player.inventory.ammo < weapon.ammoCost) return false;
+      if (!this.cheats.infiniteAmmo && weapon.ammoCost > 0) {
+        try { Inventory.takeResource(player.inventory, "ammo", weapon.ammoCost); }
+        catch (_) { return false; }
+      }
       player.nextFireAt = this.time + weapon.interval;
-      if (!this.cheats.infiniteAmmo) player.inventory.ammo -= weapon.ammoCost;
       const from = eye(player), direction = aimDirection(player);
       if (weapon.melee) {
         const to = add(from, mul(direction, player.character.params.armLength + 0.45));
@@ -659,13 +895,39 @@
           if (hit.actor) this.damage(hit.actor, weapon.damage, { ownerId: player.id, weaponId: item.type, partId: hit.partId });
           this.addEffect({ type: "hit", pos: hit.pos, color: hit.actor ? [1, 0.25, 0.15] : [0.8, 0.8, 0.8] });
         }
-        this.addEffect({ type: "melee", pos: add(from, mul(direction, 0.6)), duration: 0.12, color: weapon.color });
+        this.addEffect({ type: "melee", ownerId: player.id, weaponId: item.type, pos: add(from, mul(direction, 0.6)), duration: 0.12, color: weapon.color });
       } else {
+        const explosive = Number.isFinite(weapon.blastRadius) && weapon.blastRadius > 0;
         this.spawnProjectile({ pos: from, vel: mul(direction, weapon.speed), ownerId: player.id, team: player.team,
-          weaponId: item.type, damage: weapon.damage, color: weapon.color });
+          weaponId: item.type, damage: explosive ? 0 : weapon.damage, color: weapon.color,
+          radius: weapon.projectileRadius, lifetime: weapon.lifetime,
+          onHit: explosive ? (hit) => this.explode({ pos: hit.pos, radius: weapon.blastRadius, damage: weapon.damage,
+            ownerId: player.id, team: player.team, weaponId: item.type, directHit: hit }) : null });
       }
-      this.addEffect({ type: "shot", pos: add(from, mul(direction, 0.35)), duration: 0.06, color: weapon.color });
+      this.addEffect({ type: "shot", ownerId: player.id, weaponId: item.type, pos: add(from, mul(direction, 0.35)), duration: 0.06, color: weapon.color });
       return true;
+    }
+
+    explode({ pos, radius, damage, ownerId, team, weaponId = null, directHit = null }) {
+      if (!Array.isArray(pos) || pos.length !== 3 || pos.some((value) => !Number.isFinite(value)) || !Number.isFinite(radius) || radius <= 0 || !Number.isFinite(damage) || damage < 0) throw new TypeError("爆炸参数无效。");
+      const sourceTeam = team ?? this.findActor(ownerId)?.team;
+      const hits = [];
+      for (const actor of this.actors) {
+        if (!actor.alive || actor.id === ownerId || actor.team === sourceTeam) continue;
+        // The real six boxes determine blast reach too; the closest visible part is sufficient.
+        const reachable = actorBoxes(actor).some((box) => {
+          const range = bounds(box);
+          const closest = pos.map((value, axis) => Math.max(range.min[axis], Math.min(range.max[axis], value)));
+          return length(sub(closest, pos)) <= radius && this.lineOfSight(pos, closest);
+        });
+        if (actor !== directHit?.actor && !reachable) continue;
+        const partId = actor === directHit?.actor ? directHit.partId : "blast";
+        const actualDamage = this.damage(actor, damage, { ownerId, weaponId, partId });
+        hits.push({ actorId: actor.id, partId, actualDamage });
+      }
+      this.addEffect({ type: "explosion", pos: [...pos], radius, duration: 0.55, color: [1, 0.45, 0.12] });
+      this.recordCombat("explosion", { sourceId: ownerId, weaponId, pos: [...pos], radius, hits: hits.map((hit) => ({ ...hit })) });
+      return hits;
     }
 
     _firstHit(from, to, radius, ownerId, team) {
@@ -985,36 +1247,6 @@
   if (typeof module !== "undefined" && module.exports) module.exports = PixelSkillRuntime;
 })(globalThis);
 </script>
-<script>(function registerJetpack(root) {
-  "use strict";
-
-  // Prototype values: one impulse, scaled by collected skill level.
-  const definition = {
-    id: "jetpack",
-    name: "弹射背包",
-    kind: "normal",
-    description: "向上弹射，并沿瞄准方向获得少量水平推力。",
-    manaCost: 10,
-    cooldown: 5,
-    duration: 0,
-    start({ world, caster, level }) {
-      const direction = world.aimDirection(caster);
-      const horizontal = Math.hypot(direction[0], direction[2]);
-      const thrust = 2.5 + (level - 1) * 0.5;
-      if (horizontal > 0.001) {
-        caster.vel[0] += direction[0] / horizontal * thrust;
-        caster.vel[2] += direction[2] / horizontal * thrust;
-      }
-      caster.vel[1] += 8 + (level - 1) * 1.8;
-      caster.grounded = false;
-      world.addEffect?.({ type: "burst", pos: [...caster.pos], radius: 0.55, color: [1, 0.73, 0.33], duration: 0.35 });
-    },
-  };
-
-  (root.PixelFPSSkills ||= Object.create(null))[definition.id] = definition;
-  if (typeof module !== "undefined" && module.exports) module.exports = definition;
-})(globalThis);
-</script>
 <script>(function registerAutoaim(root) {
   "use strict";
 
@@ -1072,8 +1304,38 @@
   (root.PixelFPSSkills ||= Object.create(null))[definition.id] = definition;
   if (typeof module !== "undefined" && module.exports) module.exports = definition;
 })(globalThis);
-</script>
-<script>(function registerWeaken(root) {
+
+(function registerJetpack(root) {
+  "use strict";
+
+  // Prototype values: one impulse, scaled by collected skill level.
+  const definition = {
+    id: "jetpack",
+    name: "弹射背包",
+    kind: "normal",
+    description: "向上弹射，并沿瞄准方向获得少量水平推力。",
+    manaCost: 10,
+    cooldown: 5,
+    duration: 0,
+    start({ world, caster, level }) {
+      const direction = world.aimDirection(caster);
+      const horizontal = Math.hypot(direction[0], direction[2]);
+      const thrust = 2.5 + (level - 1) * 0.5;
+      if (horizontal > 0.001) {
+        caster.vel[0] += direction[0] / horizontal * thrust;
+        caster.vel[2] += direction[2] / horizontal * thrust;
+      }
+      caster.vel[1] += 8 + (level - 1) * 1.8;
+      caster.grounded = false;
+      world.addEffect?.({ type: "burst", pos: [...caster.pos], radius: 0.55, color: [1, 0.73, 0.33], duration: 0.35 });
+    },
+  };
+
+  (root.PixelFPSSkills ||= Object.create(null))[definition.id] = definition;
+  if (typeof module !== "undefined" && module.exports) module.exports = definition;
+})(globalThis);
+
+(function registerWeaken(root) {
   "use strict";
 
   // Prototype: a physical grenade carrying a debuff, with no direct damage of its own.
@@ -1128,6 +1390,93 @@
   if (typeof module !== "undefined" && module.exports) module.exports = definition;
 })(globalThis);
 </script>
+<script>(function attachItemVisuals(root) {
+  'use strict';
+
+  // Presentation data only. Models face local -Z; parts never define hit boxes.
+  // SVG markup is selected from this closed catalogue, never built from user text.
+  const COLORS = {
+    pistol: '#e8ba55', rifle: '#73c4a2', knife: '#b6d8ee', rocket: '#f38d48',
+    ammo: '#56cfe3', mana: '#698bff', jetpack: '#f8cf63', autoaim: '#fa7fbd', weaken: '#af81ef',
+  };
+  const rgba = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).concat(1);
+  const steel = [0.38, 0.46, 0.51, 1], dark = [0.10, 0.15, 0.20, 1], light = [0.84, 0.91, 0.95, 1];
+  const part = (center, size, color) => ({ center, size, color });
+  const catalogue = {
+    pistol: {
+      name: '手枪', category: 'weapon', muzzle: [0, 0.045, -0.32],
+      shape: '<path d="M10 21h41v11H30v19H18V32h-8z"/><path d="M31 33h9v8H29" fill="none" stroke-width="3"/><path d="M12 19h34" fill="none"/>',
+      parts: [part([0,.04,-.07],[.16,.15,.49],steel), part([0,-.13,.075],[.13,.27,.15],dark), part([0,.105,-.035],[.17,.055,.38],rgba(COLORS.pistol)), part([0,.045,-.323],[.085,.07,.015],dark), part([0,.155,.105],[.05,.045,.045],light)],
+    },
+    rifle: {
+      name: '步枪', category: 'weapon', muzzle: [0, 0.045, -0.57],
+      shape: '<path d="M7 27h10l5-7h22v6h14v6H43v7H28l-4 14h-8l3-17H7z"/><path d="M27 17h9v5" fill="none" stroke-width="3"/>',
+      parts: [part([0,.04,-.045],[.17,.17,.53],rgba(COLORS.rifle)),part([0,.045,-.42],[.075,.075,.29],steel),part([0,-.01,.365],[.13,.23,.30],dark),part([0,-.18,.12],[.11,.25,.13],steel),part([0,-.17,-.085],[.11,.27,.16],dark),part([0,.165,.015],[.08,.075,.16],dark)],
+    },
+    knife: {
+      name: '小刀', category: 'weapon', muzzle: [0, 0.035, -0.47],
+      shape: '<path d="m13 50 12-13 6 6-12 13z"/><path d="m23 32 10 11m-4-8 23-24-5 22-12 8" fill="none" stroke-width="5"/>',
+      parts: [part([0,-.025,.215],[.095,.13,.26],dark),part([0,.025,.065],[.28,.06,.065],rgba(COLORS.knife)),part([0,.035,-.205],[.08,.055,.47],light),part([0,.035,-.453],[.045,.045,.045],light)],
+    },
+    rocket: {
+      name: '火箭筒', category: 'weapon', muzzle: [0, 0.055, -0.57],
+      shape: '<path d="M9 22h43v20H9z"/><path d="M5 18h8v28H5zm44-2h10v32H49zM22 42h9v13h-9z"/><path d="M23 17h12v5" fill="none" stroke-width="3"/>',
+      parts: [part([0,.055,-.015],[.29,.29,1.01],rgba(COLORS.rocket)),part([0,.055,.49],[.36,.36,.13],steel),part([0,.055,-.52],[.37,.37,.1],steel),part([0,.055,-.573],[.255,.255,.012],dark),part([0,-.20,.11],[.13,.27,.17],dark),part([0,.26,-.08],[.095,.13,.15],dark)],
+    },
+    ammo: {
+      name: '通用弹药', category: 'resource',
+      shape: '<rect x="9" y="20" width="46" height="33" rx="3"/><path d="M15 11h8v9h-8zm13 0h8v9h-8zm13 0h8v9h-8z"/><path d="M20 32h24m-24 9h24" stroke="#102331" fill="none" stroke-width="3"/>',
+      parts: [part([0,0,0],[.40,.27,.27],rgba(COLORS.ammo)),part([0,.17,0],[.43,.07,.30],steel),part([-.12,.24,0],[.055,.10,.095],light),part([0,.24,0],[.055,.10,.095],light),part([.12,.24,0],[.055,.10,.095],light)],
+    },
+    mana: {
+      name: '蓝瓶', category: 'consumable',
+      shape: '<path d="M25 8h14v13l11 12v21H14V33l11-12z"/><path d="M23 7h18v8H23z" fill="#d6e3f5"/><path d="M20 37h24" fill="none" stroke="#e1ecff" stroke-width="4"/>',
+      parts: [part([0,-.015,0],[.28,.33,.25],rgba(COLORS.mana)),part([0,.20,0],[.12,.14,.12],rgba(COLORS.mana)),part([0,.30,0],[.17,.08,.17],light),part([0,-.01,-.133],[.16,.065,.018],light)],
+    },
+    jetpack: {
+      name: '弹射背包', category: 'skill',
+      shape: '<path d="M14 13h13v31H14zm23 0h13v31H37zM27 22h10v13H27z"/><path d="m16 48 4 10 5-10m14 0 5 10 4-10" fill="none" stroke-width="4"/>',
+      parts: [part([-.13,0,0],[.16,.39,.22],rgba(COLORS.jetpack)),part([.13,0,0],[.16,.39,.22],rgba(COLORS.jetpack)),part([0,.025,0],[.15,.12,.14],steel),part([-.13,-.245,0],[.11,.10,.15],[1,.45,.18,1]),part([.13,-.245,0],[.11,.10,.15],[1,.45,.18,1])],
+    },
+    autoaim: {
+      name: '自瞄', category: 'skill',
+      shape: '<circle cx="32" cy="32" r="18" fill="none" stroke-width="5"/><path d="M32 4v17m0 22v17M4 32h17m22 0h17" fill="none" stroke-width="4"/><circle cx="32" cy="32" r="4"/>',
+      parts: [part([-.17,0,0],[.06,.40,.08],rgba(COLORS.autoaim)),part([.17,0,0],[.06,.40,.08],rgba(COLORS.autoaim)),part([0,.17,0],[.28,.06,.08],rgba(COLORS.autoaim)),part([0,-.17,0],[.28,.06,.08],rgba(COLORS.autoaim)),part([0,0,0],[.10,.10,.10],light)],
+    },
+    weaken: {
+      name: '虚弱榴弹', category: 'skill',
+      shape: '<path d="M25 19h14l10 13v20H15V32zM26 10h12v9H26z"/><path d="M34 10h12v12" fill="none" stroke-width="4"/><path d="m25 30 14 15m0-15L25 45" fill="none" stroke="#f3e9ff" stroke-width="4"/>',
+      parts: [part([0,-.035,0],[.32,.32,.27],rgba(COLORS.weaken)),part([0,.18,0],[.13,.11,.13],steel),part([.11,.24,0],[.21,.055,.07],light),part([.19,.17,0],[.05,.13,.07],light),part([0,-.03,-.142],[.15,.05,.017],light)],
+    },
+    unknown: {
+      name: '物资', category: 'item', color: '#b5c1ce',
+      shape: '<path d="M12 16h40v38H12z"/><path d="M12 25h40M32 16v38" fill="none" stroke="#263848" stroke-width="3"/>',
+      parts: [part([0,0,0],[.32,.32,.32],steel)],
+    },
+  };
+  function deepFreeze(value) {
+    if (value && typeof value === 'object') { Object.values(value).forEach(deepFreeze); Object.freeze(value); }
+    return value;
+  }
+  for (const [key, value] of Object.entries(catalogue)) {
+    value.color = value.color || COLORS[key];
+    value.rgba = rgba(value.color);
+    value.icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="' + value.color + '" stroke="' + value.color + '" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">' + value.shape + '</g></svg>';
+  }
+  deepFreeze(catalogue);
+  const lookup = key => Object.prototype.hasOwnProperty.call(catalogue, key) ? catalogue[key] : catalogue.unknown;
+  const api = Object.freeze({
+    keys: Object.freeze(Object.keys(COLORS)),
+    icon: key => lookup(key).icon,
+    parts: key => lookup(key).parts,
+    metadata: key => lookup(key),
+    keyForPickup: pickup => pickup?.type === 'weapon' ? pickup.weaponType || pickup.weapon?.type || 'unknown'
+      : pickup?.type === 'skill' ? pickup.skillId || 'unknown' : pickup?.type || 'unknown',
+  });
+  root.PixelFPSItemVisuals = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof globalThis !== 'undefined' ? globalThis : window);
+</script>
 <script>(function attachPixelFPSRenderer(root) {
   'use strict';
 
@@ -1139,14 +1488,15 @@
     attribute vec3 a_normal;
     attribute vec2 a_uv;
     uniform mat4 u_matrix;
+    uniform mat3 u_basis;
     uniform vec3 u_center;
     uniform vec3 u_size;
     varying vec3 v_normal;
     varying vec3 v_world;
     varying vec2 v_uv;
     void main() {
-      v_world = a_position * u_size + u_center;
-      v_normal = a_normal;
+      v_world = u_basis * (a_position * u_size) + u_center;
+      v_normal = u_basis * a_normal;
       v_uv = a_uv;
       gl_Position = u_matrix * vec4(v_world, 1.0);
     }
@@ -1173,6 +1523,9 @@
     }
   `;
   const SKY = [0.10, 0.15, 0.19, 1];
+  const IDENTITY = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+  // Ground weapons face left so their profiles can be recognized from spawn.
+  const GROUND_BASIS = [0, 0, -1, 0, 1, 0, 1, 0, 0];
   const ITEM_COLORS = {
     weapon: [0.97, 0.74, 0.29, 1], pistol: [0.97, 0.74, 0.29, 1],
     ammo: [0.25, 0.79, 0.92, 1], battery: [0.25, 0.79, 0.92, 1], energy: [0.25, 0.79, 0.92, 1],
@@ -1182,6 +1535,7 @@
   const asVec = value => Array.isArray(value) || ArrayBuffer.isView(value)
     ? value : [value?.x || 0, value?.y || 0, value?.z || 0];
   const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const transformed = (basis, point) => [0, 1, 2].map(i => basis[i] * point[0] + basis[i + 3] * point[1] + basis[i + 6] * point[2]);
 
   function colorValue(value, fallback) {
     if (Array.isArray(value) && value.length >= 3) return [value[0], value[1], value[2], value[3] ?? 1];
@@ -1281,7 +1635,7 @@
       gl.deleteShader(fragment);
       if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) throw new Error('训练场渲染程序链接失败。');
       this.loc = {};
-      ['matrix', 'center', 'size', 'color', 'eye', 'unlit', 'face', 'faceEnabled'].forEach(name => {
+      ['matrix', 'basis', 'center', 'size', 'color', 'eye', 'unlit', 'face', 'faceEnabled'].forEach(name => {
         this.loc[name] = gl.getUniformLocation(this.program, 'u_' + name);
       });
       ['position', 'normal', 'uv'].forEach(name => { this.loc[name] = gl.getAttribLocation(this.program, 'a_' + name); });
@@ -1398,7 +1752,7 @@
       return record.texture;
     }
 
-    _draw(mesh, mode, center, size, color, unlit = false, texture = null) {
+    _draw(mesh, mode, center, size, color, unlit = false, texture = null, basis = IDENTITY) {
       const gl = this.gl, loc = this.loc;
       gl.bindBuffer(gl.ARRAY_BUFFER, mesh.position);
       gl.enableVertexAttribArray(loc.position);
@@ -1415,6 +1769,7 @@
       } else { gl.disableVertexAttribArray(loc.uv); gl.vertexAttrib2f(loc.uv, 0, 0); }
       gl.uniform3fv(loc.center, center);
       gl.uniform3fv(loc.size, size);
+      gl.uniformMatrix3fv(loc.basis, false, basis);
       gl.uniform4fv(loc.color, color);
       gl.uniform1f(loc.unlit, unlit ? 1 : 0);
       gl.uniform1f(loc.faceEnabled, texture ? 1 : 0);
@@ -1425,9 +1780,72 @@
       } else gl.drawArrays(mode, 0, mesh.count);
     }
 
-    _box(center, size, color, texture = null, outline = false, unlit = false) {
-      this._draw(this.box, this.gl.TRIANGLES, center, size, color, unlit, texture);
-      if (outline) this._draw(this.edges, this.gl.LINES, center, size, [0.06, 0.09, 0.12, 0.7], true);
+    _box(center, size, color, texture = null, outline = false, unlit = false, basis = IDENTITY) {
+      this._draw(this.box, this.gl.TRIANGLES, center, size, color, unlit, texture, basis);
+      if (outline) this._draw(this.edges, this.gl.LINES, center, size, [0.06, 0.09, 0.12, 0.7], true, null, basis);
+    }
+
+    _item(key, center, scale = 1, basis = IDENTITY) {
+      const parts = root.PixelFPSItemVisuals?.parts(key);
+      if (!parts) { this._box(center, [.32, .32, .32], [.75, .77, .8, 1], null, true); return; }
+      for (const part of parts) {
+        const offset = transformed(basis, part.center.map(value => value * scale));
+        this._box(center.map((value, i) => value + offset[i]), part.size.map(value => value * scale), part.color, null, true, false, basis);
+      }
+    }
+
+    _rings(center, radius, color) {
+      const vertices = [], segments = 32;
+      for (let plane = 0; plane < 3; plane++) for (let step = 0; step < segments; step++) {
+        for (const angle of [step / segments * Math.PI * 2, (step + 1) / segments * Math.PI * 2]) {
+          const point = [0, 0, 0];
+          point[plane] = Math.cos(angle) * radius;
+          point[(plane + 1) % 3] = Math.sin(angle) * radius;
+          vertices.push(...point);
+        }
+      }
+      const gl = this.gl;
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.lines.position);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
+      this.lines.count = vertices.length / 3;
+      this._draw(this.lines, gl.LINES, center, [1, 1, 1], color, true);
+    }
+
+    _heldWeapon(world, camera, now) {
+      const player = world.player, inventory = player.inventory;
+      if (!player.alive || player.hp <= 0 || !inventory) return;
+      const item = inventory.weapons[inventory.selected];
+      if (!item || !root.PixelFPSItemVisuals) return;
+      const key = item.type, metadata = root.PixelFPSItemVisuals.metadata(key);
+      if (metadata.category !== 'weapon') return;
+      // Derive all motion from simulation time; pausing freezes the model too.
+      let shot = null, melee = null;
+      for (const effect of world.effects || []) {
+        if (effect.type !== 'shot' && effect.type !== 'melee') continue;
+        if (effect.expiresAt <= now || (effect.weaponId && effect.weaponId !== key)) continue;
+        if (effect.ownerId && effect.ownerId !== player.id) continue;
+        if (!effect.ownerId && (!effect.pos || Math.hypot(...effect.pos.map((value, i) => value - camera.eye[i])) > 1.5)) continue;
+        if (effect.type === 'shot') shot = effect;
+        else melee = effect;
+      }
+      const recoil = shot ? Math.max(0, Math.min(1, (shot.expiresAt - now) / (shot.duration || .06))) : 0;
+      const swing = melee ? Math.sin(Math.PI * Math.max(0, Math.min(1, 1 - (melee.expiresAt - now) / (melee.duration || .12)))) : 0;
+      const cameraBasis = [...camera.right, ...camera.up, ...camera.backward];
+      const tilt = key === 'knife' ? -.9 * swing : .06 * recoil;
+      const c = Math.cos(tilt), s = Math.sin(tilt);
+      const basis = [...transformed(cameraBasis, [c, s, 0]), ...transformed(cameraBasis, [-s, c, 0]), ...camera.backward];
+      const offset = transformed(cameraBasis, [.34 - .35 * swing, -.32 + .10 * swing, -.69 + .09 * recoil]);
+      const center = camera.eye.map((value, i) => value + offset[i]), scale = .62;
+      // The view model is a separate presentation pass. Walls never clip it and
+      // no model coordinate is fed back into aiming, muzzle origin or collision.
+      this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
+      this._item(key, center, scale, basis);
+      if (shot && key !== 'knife' && metadata.muzzle) {
+        const muzzleOffset = transformed(basis, metadata.muzzle.map(value => value * scale));
+        const muzzle = center.map((value, i) => value + muzzleOffset[i]);
+        this._box(muzzle, [.10, .10, .12], [1, .91, .48, .95], null, false, true, basis);
+        this._box(muzzle, [.035, .035, .19], [1, 1, .91, 1], null, false, true, basis);
+      }
     }
 
     _line(from, to, color) {
@@ -1491,18 +1909,25 @@
       }
       for (const pickup of world.pickups || []) {
         if (pickup.active === false || pickup.collected) continue;
-        const pos = asVec(pickup.pos), color = colorValue(pickup.color, ITEM_COLORS[pickup.type] || [0.97, 0.74, 0.29, 1]);
+        const key = root.PixelFPSItemVisuals?.keyForPickup(pickup) || pickup.weaponType || pickup.skillId || pickup.type;
+        const metadata = root.PixelFPSItemVisuals?.metadata(key);
+        const pos = asVec(pickup.pos), color = colorValue(pickup.color, metadata?.rgba || ITEM_COLORS[pickup.type] || [0.97, 0.74, 0.29, 1]);
         const bob = 0.06 * Math.sin(now * 2.5 + pos[0]);
-        const center = [pos[0], Math.max(0.26, pos[1]) + bob, pos[2]];
-        const weapon = pickup.type === 'weapon';
+        const center = [pos[0], Math.max(0.36, pos[1]) + bob, pos[2]];
         this._box([pos[0], 0.012, pos[2]], [0.76, 0.024, 0.76], [...color.slice(0, 3).map(value => value * 0.48), 1]);
-        this._box(center, weapon ? [0.52, 0.20, 0.20] : [0.28, 0.38, 0.28], color, null, true, true);
-        if (weapon) this._box([center[0] + 0.12, center[1] - 0.14, center[2]], [0.12, 0.20, 0.18], color, null, true);
-        else this._box([center[0], center[1] + 0.20, center[2]], [0.14, 0.04, 0.14], [0.89, 0.94, 0.96, 1]);
+        this._item(key, center, 1, metadata?.category === 'weapon' ? GROUND_BASIS : IDENTITY);
       }
       for (const projectile of world.projectiles || []) {
         const pos = asVec(projectile.pos), radius = Math.max(projectile.radius || 0.025, 0.055);
         const color = colorValue(projectile.color, projectile.type === 'weakness' ? [0.77, 0.49, 1, 1] : [1, 0.89, 0.39, 1]);
+        if (projectile.weaponId === 'rocket') {
+          const velocity = asVec(projectile.vel), speed = Math.hypot(...velocity) || 1;
+          const trail = pos.map((value, i) => value - velocity[i] / speed * .70);
+          this._line(trail, pos, [1, .48, .15, 1]);
+          this._box(pos.map((value, i) => value - velocity[i] / speed * .22), [.16, .16, .16], [1, .54, .16, 1], null, false, true);
+          this._box(pos, [.19, .19, .19], [1, .95, .73, 1], null, false, true);
+          continue;
+        }
         this._box(pos, [radius * 2, radius * 2, radius * 2], color, null, false, true);
         if (projectile.previousPos) this._line(asVec(projectile.previousPos), pos, color);
       }
@@ -1510,13 +1935,20 @@
       gl.depthMask(false);
       for (const effect of world.effects || []) {
         if (!effect.pos || (Number.isFinite(effect.expiresAt) && effect.expiresAt < now)) continue;
-        const color = colorValue(effect.color, effect.type === 'explosion' ? [0.77, 0.40, 1, 0.65] : [1, 0.92, 0.61, 0.8]);
-        const radius = Math.max(0.08, Math.min(effect.radius || 0.12, 5));
-        if (effect.type === 'explosion' || radius > 0.4) {
+        if (effect.type === 'shot' || effect.type === 'melee') continue;
+        const color = colorValue(effect.color, effect.type === 'explosion' ? [1, 0.54, 0.20, 0.8] : [1, 0.92, 0.61, 0.8]);
+        const radius = Math.max(0.08, effect.radius || 0.12);
+        if (effect.type === 'explosion' || effect.type === 'burst') {
+          const duration = effect.duration || .25;
+          const progress = Math.max(0, Math.min(1, 1 - (effect.expiresAt - now) / duration));
+          this._rings(asVec(effect.pos), radius * (.20 + .80 * progress), [...color.slice(0, 3), (1 - progress) * .8]);
+          this._rings(asVec(effect.pos), radius, [...color.slice(0, 3), (1 - progress) * .24]);
+        } else if (radius > 0.4) {
           this._draw(this.edges, gl.LINES, asVec(effect.pos), [radius * 2, radius * 2, radius * 2], color, true);
         } else this._box(asVec(effect.pos), [radius, radius, radius], color, null, false, true);
       }
       gl.depthMask(true);
+      this._heldWeapon(world, camera, now);
     }
 
     dispose() {
@@ -1544,6 +1976,7 @@
   const FPS = root.PixelFPS || (typeof require === "function" ? require("./world.js") : null);
   const Character = root.BlockCharacter || (typeof require === "function" ? require("../character.js") : null);
   const Runtime = root.PixelSkillRuntime || (typeof require === "function" ? require("./skill-runtime.js") : null);
+  const Inventory = root.PixelFPSInventory || (typeof require === "function" ? require("./inventory.js") : null);
   const STEP = 1 / 120;
   const OWN = (object, key) => Object.hasOwn(object, key);
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -1554,7 +1987,7 @@
   const CHEATS = Object.freeze({ mana: "infiniteMana", ammo: "infiniteAmmo", cooldown: "noCooldown",
     infiniteMana: "infiniteMana", infiniteAmmo: "infiniteAmmo", noCooldown: "noCooldown" });
   const STATUSES = Object.freeze(["weaken", "slow", "root", "stun", "silence", "disarmed", "invulnerable"]);
-  const BUILTINS = Object.freeze({ shooting: "基础射击", merge: "技能连续合成", weakness: "虚弱与还击" });
+  const BUILTINS = Object.freeze({ shooting: "基础射击", merge: "技能连续合成", weakness: "虚弱与还击", rocket: "火箭范围爆炸" });
   const TRAINING = Object.freeze({ behavior: "stationary", fire: false, autoRespawn: false, autoRecover: false, respawnDelay: 2 });
   const HELP = [
     "help · list [weapons|skills|dummies|scenarios|status]",
@@ -1568,7 +2001,7 @@
     "time scale <0.05–4> · time pause|resume · step [帧数，120帧/秒]",
     "clear projectiles|log · reset",
     "scenario save|load|delete <名称> · scenario list",
-    "内建实验：scenario load shooting|merge|weakness",
+    "内建实验：scenario load shooting|merge|weakness|rocket",
   ].join("\n");
 
   function record(value, label, allowed = null) {
@@ -1651,7 +2084,7 @@
         const result = [];
         for (let index = 0; index < count; index++) {
           const item = { id: `weapon-${this.world._nextId++}`, type: idOrAmount };
-          inventory.weapons.push(item); result.push(item);
+          result.push(Inventory.grantWeapon(inventory, item));
         }
         return result;
       }
@@ -1660,17 +2093,13 @@
         number(count, "技能数量", 1, 100000, true); number(level, "技能等级", 1, 99, true);
         const old = inventory.skills[idOrAmount];
         if ((old?.count || 0) + count > 100000) throw new Error("同名技能最多持有 100000 份。");
-        const item = old || (inventory.skills[idOrAmount] = { level: 1, count: 0, levels: {} });
-        item.levels[level] = (item.levels[level] || 0) + count;
-        item.count += count; item.level = Math.max(item.level, level);
-        return clone(item);
+        return clone(Inventory.grantSkill(inventory, idOrAmount, count, level));
       }
       if (!["ammo", "mana"].includes(type)) throw new Error("物资类型应为 weapon、skill、ammo 或 mana。");
       number(idOrAmount, "物资数量", 1, 1000000, true);
       const key = type === "ammo" ? "ammo" : "manaPotions";
       number(inventory[key] + idOrAmount, "持有数量", 0, 1000000, true);
-      inventory[key] += idOrAmount;
-      return inventory[key];
+      return Inventory.grantResource(inventory, type, idOrAmount);
     }
     refill() {
       const player = this.world.player;
@@ -1735,27 +2164,44 @@
     }
     snapshot() {
       const world = this.world, player = world.player, inventory = player.inventory;
-      return this._validateScenario({ version: 1,
+      return this._validateScenario({ version: 2,
         player: { parameters: { ...player.character.params }, face: clone(player.face), pos: [...player.pos], yaw: player.yaw, pitch: player.pitch,
-          inventory: { weapons: inventory.weapons.map((item) => item.type), selected: inventory.selected,
+          inventory: { weapons: inventory.weapons.map((item) => ({ id: item.id, type: item.type })), selected: inventory.selected,
             ammo: inventory.ammo, manaPotions: inventory.manaPotions,
             skills: Object.fromEntries(Object.entries(inventory.skills).filter(([id]) => OWN(world.skills?.definitions || {}, id))
               .map(([id, item]) => [id, { ...item.levels }])) } },
         dummies: world.actors.filter((actor) => actor !== player).map((actor) => ({ label: actor.label,
           parameters: { ...actor.character.params }, pos: [...actor.pos], training: { ...TRAINING, ...actor.training } })),
-        world: { targetsMoving: world.targetsMoving, enemyFire: world.enemyFire, cheats: { ...world.cheats }, supplies: world.pickups.length > 0 },
+        world: { targetsMoving: world.targetsMoving, enemyFire: world.enemyFire, cheats: { ...world.cheats }, pickups: clone(world.pickups) },
         time: { scale: this.timeScale, paused: this.paused } });
     }
     _validateScenario(value) {
       record(value, "场景", ["version", "player", "dummies", "world", "time"]);
-      if (value.version !== 1) throw new Error("场景版本应为 1。");
+      if (![1, 2].includes(value.version)) throw new Error("场景版本应为 1 或 2。");
       const player = record(value.player, "玩家", ["parameters", "face", "pos", "yaw", "pitch", "inventory"]);
       const params = parameters(player.parameters), face = Character.exportData(params, player.face).face;
       const inv = record(player.inventory, "背包", ["weapons", "selected", "ammo", "manaPotions", "skills"]);
-      if (!Array.isArray(inv.weapons) || inv.weapons.length > 1000 || inv.weapons.some((id) => typeof id !== "string" || !OWN(FPS.WEAPONS, id))) throw new Error("场景含有未知武器或武器数量过多。");
+      if (!Array.isArray(inv.weapons) || inv.weapons.length > 1000) throw new Error("场景最多包含 1000 件背包武器。");
+      const weaponIds = new Set();
+      const identifier = (id, label) => {
+        if (typeof id !== "string" || !/^[a-zA-Z0-9_-]{1,80}$/.test(id) || ["__proto__", "constructor", "prototype"].includes(id)) throw new Error(`${label}无效。`);
+        const sequence = /-(\d+)$/.exec(id);
+        if (sequence && (!Number.isSafeInteger(Number(sequence[1])) || Number(sequence[1]) > Number.MAX_SAFE_INTEGER - 1000000)) throw new Error(`${label}的序号过大。`);
+        return id;
+      };
+      const weapon = (item) => {
+        record(item, "武器实例", ["id", "type"]);
+        const id = identifier(item.id, "武器实例编号");
+        if (typeof item.type !== "string" || !OWN(FPS.WEAPONS, item.type)) throw new Error("场景含有未知武器。");
+        if (weaponIds.has(id)) throw new Error("武器实例编号在背包与地面之间不能重复。");
+        weaponIds.add(id);
+        return { id, type: item.type };
+      };
+      const weapons = inv.weapons.map((item, index) => weapon(value.version === 1 ? { id: `legacy-weapon-${index + 1}`, type: item } : item));
       record(inv.skills, "技能");
       const skills = Object.create(null);
       for (const [id, levels] of Object.entries(inv.skills)) {
+        identifier(id, "技能编号");
         if (!OWN(this.world.skills?.definitions || {}, id)) throw new Error(`场景含有未载入技能 ${id}。`);
         record(levels, "技能等级");
         let total = 0;
@@ -1784,16 +2230,46 @@
       }
       validationWorld.clearDummies();
       for (const dummy of dummies) validationWorld.spawnDummy(dummy);
-      const config = record(value.world, "世界配置", ["targetsMoving", "enemyFire", "cheats", "supplies"]);
+      const config = record(value.world, "世界配置", ["targetsMoving", "enemyFire", "cheats", value.version === 1 ? "supplies" : "pickups"]);
+      const supplies = value.version === 1 ? (boolean(config.supplies, "出生物资") ? validationWorld.pickups : []) : config.pickups;
+      if (!Array.isArray(supplies) || supplies.length > 2000) throw new Error("场景最多包含 2000 组地面物资。");
+      const pickupIds = new Set();
+      const pickups = supplies.map((item) => {
+        const fields = { weapon: ["weaponType", "weapon"], skill: ["skillId", "level", "amount"], ammo: ["amount"], mana: ["amount"] };
+        record(item, "地面物资");
+        if (!OWN(fields, item.type)) throw new Error("未知地面物资类型。");
+        record(item, "地面物资", ["id", "type", "label", "pos", ...fields[item.type]]);
+        const id = identifier(item.id, "物资编号");
+        if (pickupIds.has(id)) throw new Error("地面物资编号不能重复。");
+        pickupIds.add(id);
+        if (typeof item.label !== "string" || !item.label.trim() || item.label.length > 120) throw new Error("物资名称需要 1–120 个字符。");
+        const pos = vector(item.pos, "物资位置");
+        if (pos[1] < 0 || pos[0] < validationWorld.bounds.min[0] || pos[0] > validationWorld.bounds.max[0] ||
+            pos[2] < validationWorld.bounds.min[2] || pos[2] > validationWorld.bounds.max[2]) throw new Error("物资必须位于训练场边界及地面以上。");
+        const result = { id, type: item.type, label: item.label, pos };
+        if (item.type === "weapon") {
+          result.weapon = weapon(item.weapon);
+          if (item.weaponType !== result.weapon.type) throw new Error("物资武器类型与实例不一致。");
+          result.weaponType = item.weaponType;
+        } else {
+          result.amount = number(item.amount, "物资数量", 1, item.type === "skill" ? 100000 : 1000000, true);
+          if (item.type === "skill") {
+            if (typeof item.skillId !== "string" || !OWN(this.world.skills?.definitions || {}, item.skillId)) throw new Error("地面物资含有未载入技能。");
+            result.skillId = item.skillId;
+            result.level = number(item.level, "技能等级", 1, 99, true);
+          }
+        }
+        return result;
+      });
       const cheats = record(config.cheats, "作弊配置", ["infiniteMana", "infiniteAmmo", "noCooldown"]);
       const time = record(value.time, "时间配置", ["scale", "paused"]);
-      return { version: 1,
+      return { version: 2,
         player: { parameters: params, face, pos: playerPos, yaw: number(player.yaw, "水平朝向", -1000000, 1000000),
           pitch: number(player.pitch, "垂直朝向", -Math.PI / 2, Math.PI / 2), inventory: {
-            weapons: [...inv.weapons], selected: number(inv.selected, "武器选择", 0, Math.max(0, inv.weapons.length - 1), true),
+            weapons, selected: number(inv.selected, "武器选择", 0, Math.max(0, inv.weapons.length - 1), true),
             ammo: number(inv.ammo, "弹药", 0, 1000000, true), manaPotions: number(inv.manaPotions, "蓝瓶", 0, 1000000, true), skills } },
         dummies, world: { targetsMoving: boolean(config.targetsMoving, "全局移动"), enemyFire: boolean(config.enemyFire, "全局还击"),
-          supplies: boolean(config.supplies, "出生物资"), cheats: { infiniteMana: boolean(cheats.infiniteMana, "无限蓝量"),
+          pickups, cheats: { infiniteMana: boolean(cheats.infiniteMana, "无限蓝量"),
             infiniteAmmo: boolean(cheats.infiniteAmmo, "无限弹药"), noCooldown: boolean(cheats.noCooldown, "无冷却") } },
         time: { scale: number(time.scale, "时间倍率", 0.05, 4), paused: boolean(time.paused, "暂停") } };
     }
@@ -1810,18 +2286,24 @@
       this.setWorld(world);
       world.clearDummies();
       for (const dummy of value.dummies) world.spawnDummy(dummy);
-      const player = world.player, inventory = player.inventory, saved = value.player.inventory;
+      const player = world.player, saved = value.player.inventory;
       player.pos = [...value.player.pos]; player.spawnPos = [...value.player.pos]; player.yaw = value.player.yaw; player.pitch = value.player.pitch;
-      inventory.weapons = saved.weapons.map((type) => ({ id: `weapon-${world._nextId++}`, type }));
-      inventory.selected = saved.selected; inventory.ammo = saved.ammo; inventory.manaPotions = saved.manaPotions;
-      inventory.skills = Object.create(null);
-      for (const id of Object.keys(world.skills?.definitions || {})) {
-        const levels = { ...(saved.skills[id] || {}) };
-        inventory.skills[id] = { level: Math.max(1, ...Object.keys(levels).map(Number)),
-          count: Object.values(levels).reduce((sum, count) => sum + count, 0), levels };
-      }
+      const rebuilt = Inventory.create(Object.keys(world.skills?.definitions || {}));
+      for (const item of saved.weapons) Inventory.grantWeapon(rebuilt, { ...item });
+      if (saved.ammo) Inventory.grantResource(rebuilt, "ammo", saved.ammo);
+      if (saved.manaPotions) Inventory.grantResource(rebuilt, "mana", saved.manaPotions);
+      for (const [id, levels] of Object.entries(saved.skills)) for (const [tier, amount] of Object.entries(levels)) Inventory.grantSkill(rebuilt, id, amount, Number(tier));
+      rebuilt.selected = saved.selected;
+      player.inventory = rebuilt;
       world.targetsMoving = value.world.targetsMoving; world.enemyFire = value.world.enemyFire; world.cheats = { ...value.world.cheats };
-      if (!value.world.supplies) world.pickups = [];
+      world.pickups = clone(value.world.pickups);
+      // Imported identities must not collide with future world-generated instances.
+      const ids = [...world.actors.map((actor) => actor.id), ...rebuilt.weapons.map((item) => item.id),
+        ...world.pickups.flatMap((item) => [item.id, ...(item.weapon ? [item.weapon.id] : [])])];
+      for (const id of ids) {
+        const match = /-(\d+)$/.exec(id);
+        if (match) world._nextId = Math.max(world._nextId, Number(match[1]) + 1);
+      }
       world.combatLog = []; world.events = [];
       this.timeScale = value.time.scale; this.paused = value.time.paused;
       return this.snapshot();
@@ -1829,8 +2311,8 @@
     _builtin(id) {
       const value = this.snapshot();
       value.player.pos = [0, 0, 7]; value.player.yaw = 0; value.player.pitch = 0;
-      value.player.inventory = { weapons: ["pistol", "rifle", "knife"], selected: 0, ammo: 999, manaPotions: 10, skills: {} };
-      value.world = { targetsMoving: false, enemyFire: false, supplies: false,
+      value.player.inventory = { weapons: ["pistol", "rifle", "knife"].map((type, index) => ({ id: `weapon-${index + 1}`, type })), selected: 0, ammo: 999, manaPotions: 10, skills: {} };
+      value.world = { targetsMoving: false, enemyFire: false, pickups: [],
         cheats: { infiniteMana: false, infiniteAmmo: false, noCooldown: false } };
       value.time = { scale: 1, paused: false };
       value.dummies = [{ label: "实验木桩", parameters: { ...PRESETS.standard }, pos: [0, 0, -5],
@@ -1841,6 +2323,12 @@
         value.player.inventory.skills = { weaken: { 1: 1 } };
         value.world.cheats.infiniteMana = true; value.world.cheats.noCooldown = true;
         value.dummies[0].training.fire = true;
+      }
+      if (id === "rocket") {
+        value.player.inventory.weapons = [{ id: "weapon-1", type: "rocket" }];
+        value.player.inventory.ammo = 100;
+        value.dummies = [-1.5, 0, 1.5].map((x, index) => ({ label: `爆炸木桩 ${index + 1}`,
+          parameters: { ...PRESETS.standard }, pos: [x, 0, -5], training: { ...TRAINING, autoRespawn: true } }));
       }
       return value;
     }
@@ -1955,9 +2443,9 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const number = value => Number(value || 0).toLocaleString('zh-CN', { maximumFractionDigits: 3 });
-  const parts = { head:'头部',torso:'躯干',leftArm:'左臂',rightArm:'右臂',leftLeg:'左腿',rightLeg:'右腿' };
+  const parts = { head:'头部',torso:'躯干',leftArm:'左臂',rightArm:'右臂',leftLeg:'左腿',rightLeg:'右腿',blast:'爆炸范围' };
   const statusNames = { weaken:'虚弱',silence:'沉默',stun:'眩晕',root:'定身',slow:'减速',disarmed:'缴械',invulnerable:'无敌' };
-  const scenarioNames = { shooting:'基础射击',merge:'连续三合一',weakness:'虚弱与还击' };
+  const scenarioNames = { shooting:'基础射击',merge:'连续三合一',weakness:'虚弱与还击',rocket:'火箭筒与范围爆炸' };
   function download(name, value) {
     const url = URL.createObjectURL(new Blob([JSON.stringify(value,null,2)], {type:'application/json'}));
     const a = document.createElement('a'); a.href = url; a.download = name; a.click();
@@ -2089,6 +2577,13 @@
         }else if(event.type==='skill-cast'){
           subject=`${name(event.sourceId)} · 发动技能`;
           details=`${world.skills.definitions[event.skillId]?.name||event.skillId} · ${event.level} 级\n消耗 ${number(event.manaSpent)} 蓝量、${number(event.copiesSpent)} 份材料`;
+        }else if(event.type==='pickup'||event.type==='drop'){
+          subject=`${name(event.sourceId)} · ${event.type==='pickup'?'拾取':'丢弃'}`;
+          const label=event.itemType==='weapon'?root.PixelFPSContent.WEAPONS[event.weaponId]?.label:event.itemType==='skill'?world.skills.definitions[event.skillId]?.name:root.PixelFPSContent.RESOURCES[event.itemType]?.label;
+          details=`${label||event.itemType} × ${number(event.amount)}${event.level?` · ${event.level} 级`:''}\n${event.weaponInstanceId||event.itemId}`;
+        }else if(event.type==='explosion'){
+          subject=`${name(event.sourceId)} · 爆炸`;
+          details=`${root.PixelFPSContent.WEAPONS[event.weaponId]?.label||event.weaponId} · 半径 ${number(event.radius)} m\n命中 ${event.hits.length} 个目标`;
         }else{subject=`${name(event.targetId||event.actorId)} · ${({'recover':'自动回血','respawn':'木桩复活','dummy-spawn':'新增木桩','dummy-configure':'配置木桩','dummy-remove':'移除木桩','dummy-reset':'木桩复位'})[event.type]||event.type}`;details=event.amount!=null?`恢复 ${number(event.amount)}，生命 ${number(event.hpAfter)}`:event.label||event.reason||'';}
         for(const text of [number(event.time)+' s',subject,details]){const td=document.createElement('td');td.textContent=text;tr.append(td);}body.append(tr);
       }
@@ -2098,20 +2593,174 @@
   root.PixelFPSLabPanel=PixelFPSLabPanel;
 })(globalThis);
 </script>
+<script>(function attachPixelFPSPlayerActions(root) {
+  "use strict";
+  const CODES = Object.freeze(["KeyQ", "KeyF", "KeyG", "KeyR", "KeyC", "KeyX", "KeyZ", "KeyT"]);
+  const DEFAULTS = Object.freeze({ KeyQ: "jetpack", KeyF: "autoaim", KeyG: "weaken" });
+  const own = (object, key) => Object.hasOwn(object, key);
+
+  /** Input intent only: inventory, skill gates and transfers remain in their owning systems. */
+  class PixelFPSPlayerActions {
+    constructor(world, options = {}) {
+      this.setWorld(world);
+      this.bindings = Object.fromEntries(CODES.map((code) => [code, null]));
+      const supplied = options.bindings === undefined ? DEFAULTS : options.bindings;
+      if (!supplied || typeof supplied !== "object" || Array.isArray(supplied)) throw new Error("技能键位需要一个对象。");
+      for (const [code, id] of Object.entries(supplied)) {
+        const result = this.bindSkill(code, id);
+        if (!result.ok) throw new Error(result.message);
+      }
+    }
+    setWorld(world) {
+      if (!world?.player || typeof world.selectWeapon !== "function") throw new Error("操作入口需要有效的 World。");
+      this.world = world;
+      return this;
+    }
+    getBindings() { return { ...this.bindings }; }
+    bindSkill(code, id) {
+      if (!CODES.includes(code)) return { ok: false, message: "该按键不属于可分配技能键。" };
+      if (id !== null && (typeof id !== "string" || !own(this.world.skills?.definitions || {}, id))) {
+        return { ok: false, message: "未知技能，不能绑定。" };
+      }
+      if (id !== null) for (const key of CODES) if (this.bindings[key] === id) this.bindings[key] = null;
+      this.bindings[code] = id;
+      return { ok: true, message: id === null ? "已清除快捷键。" : `已绑定 ${code.slice(3)}。` };
+    }
+    keyForSkill(id) { return CODES.find((code) => this.bindings[code] === id) || null; }
+    useSkill(id) {
+      if (typeof id !== "string" || !own(this.world.skills?.definitions || {}, id)) return { ok: false, message: "未知技能。" };
+      return this.world.skills.cast(id);
+    }
+    selectWeapon(index) {
+      const ok = this.world.selectWeapon(index);
+      return { ok, message: ok ? "已切换武器。" : "该位置没有武器。" };
+    }
+    drop(request) { return this.world.dropItem(request); }
+    useManaPotion() {
+      const ok = this.world.useManaPotion();
+      return { ok, message: ok ? "已使用蓝瓶。" : "当前无法使用蓝瓶：需要存活、持有蓝瓶且蓝量未满。" };
+    }
+    mergeSkill(id) {
+      const count = this.world.events?.length || 0;
+      const previous = this.world.events?.at(-1);
+      const ok = this.world.upgradeSkill(id);
+      const latest = this.world.events?.at(-1);
+      return { ok, message: latest && (latest !== previous || this.world.events.length !== count)
+        ? latest.text : ok ? "技能已合成。" : "合成需要三份同名、同级普通技能。" };
+    }
+    dispatch(code) {
+      if (CODES.includes(code)) return this.bindings[code] ? this.useSkill(this.bindings[code]) : null;
+      if (/^Digit[1-9]$/.test(code)) return this.selectWeapon(Number(code.slice(5)) - 1);
+      if (code === "KeyE") return this.world.interact();
+      if (code === "KeyV") return this.useManaPotion();
+      if (code === "KeyB") {
+        const inventory = this.world.player.inventory;
+        const weapon = inventory.weapons[inventory.selected];
+        return weapon ? this.drop({ kind: "weapon", weaponId: weapon.id }) : { ok: false, message: "当前没有可丢弃的武器。" };
+      }
+      return null;
+    }
+  }
+  PixelFPSPlayerActions.CODES = CODES;
+  PixelFPSPlayerActions.DEFAULTS = DEFAULTS;
+  root.PixelFPSPlayerActions = PixelFPSPlayerActions;
+  if (typeof module !== "undefined" && module.exports) module.exports = PixelFPSPlayerActions;
+})(globalThis);
+</script>
+<script>(function (root) {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const element = (tag,className,text) => { const node=document.createElement(tag); if(className)node.className=className;if(text!==undefined)node.textContent=text;return node; };
+  function icon(key) { const node=element('span','item-icon');node.setAttribute('aria-hidden','true');node.innerHTML=root.PixelFPSItemVisuals.icon(key);return node; }
+  function button(label,run,disabled=false) { const node=element('button','',label);node.type='button';node.disabled=disabled;node.onclick=run;return node; }
+
+  /** Inventory view only. All changes go through the player's action interface. */
+  class PixelFPSInventoryPanel {
+    constructor({getWorld,getActions,onResult,onUseSkill,onBindingsChanged,onResetBindings}) {
+      this.getWorld=getWorld;this.getActions=getActions;this.onResult=onResult;this.onUseSkill=onUseSkill;this.onBindingsChanged=onBindingsChanged;
+      $('reset-bindings').onclick=()=>{onResetBindings();this.render();};
+    }
+    perform(action) { const result=action(this.getActions());this.onResult(result);this.render();return result; }
+    row(key,title,detail) {
+      const row=element('div','inventory-row');
+      const info=element('div','inventory-item');const text=element('div','item-copy');
+      text.append(element('strong','',title),element('small','',detail));info.append(icon(key),text);
+      const actions=element('div','actions');row.append(info,actions);return {row,actions};
+    }
+    amountControl(max,run,label='丢弃数量') {
+      const wrap=element('div','drop-amount');const input=element('input');input.type='number';input.min='1';input.max=String(Math.max(1,max));input.step='1';input.value='1';input.disabled=max<1;input.setAttribute('aria-label',label);
+      wrap.append(input,button('丢到地上',()=>{if(input.reportValidity())this.perform(a=>run(a,Number(input.value)));},max<1));return wrap;
+    }
+    render() {
+      const world=this.getWorld(),inventory=world.player.inventory,controls=this.getActions();
+      $('inventory-resources').textContent=`通用弹药 ${inventory.ammo}　蓝瓶 ${inventory.manaPotions}　武器 ${inventory.weapons.length} 件　击倒 ${world.kills}`;
+      const supplyRows=[['ammo','通用弹药',inventory.ammo,'所有枪械共用；不同武器每次消耗量可以不同。'],['mana','蓝瓶',inventory.manaPotions,`每瓶恢复 ${root.PixelFPSContent.RESOURCES.mana.restore} 蓝量，不改变头部决定的蓝量容量。`]].map(([key,name,count,description])=>{
+        const {row,actions}=this.row(key,`${name} × ${count}`,description);row.dataset.supply=key;
+        if(key==='mana')actions.append(button('使用一瓶',()=>this.perform(a=>a.useManaPotion()),!world.player.alive||!count||world.player.mana>=world.player.maxMana));
+        actions.append(this.amountControl(count,(a,amount)=>a.drop({kind:key,amount}),name+'丢弃数量'));return row;
+      });
+      $('inventory-supplies').replaceChildren(...supplyRows);
+      const weaponRows=inventory.weapons.map((weapon,index)=>{
+        const definition=root.PixelFPSContent.WEAPONS[weapon.type];
+        const detail=`${index===inventory.selected?'当前手持 · ':''}${definition?.description||''} · ${definition?.ammoCost?`每次 ${definition.ammoCost} 通用弹药`:'不消耗弹药'}`;
+        const {row,actions}=this.row(weapon.type,`${index+1}. ${definition?.label||weapon.type}`,detail);
+        row.dataset.weaponId=weapon.id;row.dataset.weaponType=weapon.type;row.classList.toggle('selected',index===inventory.selected);
+        actions.append(button('手持',()=>this.perform(a=>a.selectWeapon(index)),index===inventory.selected),button('丢到地上',()=>this.perform(a=>a.drop({kind:'weapon',weaponId:weapon.id}))));return row;
+      });
+      $('inventory-weapons').replaceChildren(...(weaponRows.length?weaponRows:[element('p','empty','尚未持有武器。靠近地面物资按 E 拾取，也可到实验台发放。')]));
+      const skillRows=Object.entries(world.skills.definitions).map(([id,definition])=>{
+        const state=world.skills.getState(id),stored=inventory.skills[id],tiers=Object.entries(stored?.levels||{}).filter(([,count])=>count>0).sort((a,b)=>Number(b[0])-Number(a[0]));
+        const card=element('div','inventory-skill');card.dataset.skillId=id;
+        const kind=definition.kind==='ultimate'?'消耗型终极':'普通技能';
+        const condition=state.remaining>0?`冷却 ${state.remaining.toFixed(1)} 秒`:state.count?'就绪':'尚未持有';
+        const {row,actions}=this.row(id,`${definition.name||id} · Lv.${state.level}`,`${kind} · ${state.manaCost} 蓝量 · ${condition}${state.active?' · 生效中':''}`);
+        actions.append(button('使用',()=>this.onUseSkill(id),!state.count||state.remaining>0||!world.player.alive));
+        if(definition.kind!=='ultimate')actions.append(button('三合一升级',()=>this.perform(a=>a.mergeSkill(id)),!tiers.some(([,n])=>n>=3)));
+        const bindLabel=element('label','binding-label','快捷键 '),select=element('select');select.setAttribute('aria-label',(definition.name||id)+'快捷键');select.dataset.bindSkill=id;
+        select.append(new Option('未绑定',''));
+        root.PixelFPSPlayerActions.CODES.forEach(code=>select.add(new Option(code.slice(3),code)));
+        select.value=controls.keyForSkill(id)||'';
+        select.onchange=()=>{
+          const old=controls.keyForSkill(id);
+          const result=select.value?controls.bindSkill(select.value,id):old?controls.bindSkill(old,null):{ok:true,message:'保持未绑定。'};
+          this.onResult(result);if(result.ok)this.onBindingsChanged();this.render();
+        };
+        bindLabel.append(select);actions.append(bindLabel);card.append(row);
+        if(definition.description)card.append(element('p','skill-description',definition.description));
+        for(const [level,count] of tiers){
+          const tier=element('div','inventory-tier');tier.dataset.level=level;
+          tier.append(element('span','',`${level} 级 × ${count}`),this.amountControl(count,(a,amount)=>a.drop({kind:'skill',skillId:id,level:Number(level),amount}),`${definition.name||id} ${level}级丢弃数量`));card.append(tier);
+        }
+        return card;
+      });
+      $('inventory-skills').replaceChildren(...skillRows);
+    }
+  }
+  root.PixelFPSInventoryPanel=PixelFPSInventoryPanel;
+})(globalThis);
+</script>
 <script>(function () {
   'use strict';
   const $ = id => document.getElementById(id);
   const STORAGE_KEY = 'fps.block-character.v1';
   const LAB_STORAGE_KEY = 'fps.lab.scenarios.v1';
+  const CONTROLS_STORAGE_KEY = 'fps.controls.v1';
   const keys = new Set();
-  const skillIds = ['jetpack', 'autoaim', 'weaken'];
-  const skillKeys = ['Q', 'F', 'G'];
-  let world, renderer, lab, labPanel, running = false, started = false, mouseDown = false;
+  let world, renderer, lab, labPanel, controls, inventoryPanel, running = false, started = false, mouseDown = false;
   let sensitivity = 0.002, lastTime = 0, accumulator = 0, hudTime = 0, toastUntil = 0, hitUntil = 0, damageUntil = 0;
   let previousHp = 0, lastDamageId = null, lastEvent = null, waitingCharacter = null, ignoreMouseUntil = 0;
   let project = { parameters: { ...BlockCharacter.DEFAULTS }, face: null };
   const dialogs = ['inventory-dialog', 'settings-dialog', 'character-dialog', 'lab-dialog'];
   const isDialogOpen = () => dialogs.some(id => $(id).open);
+  let savedBindings;
+  try { const saved=localStorage.getItem(CONTROLS_STORAGE_KEY); if(saved) savedBindings=JSON.parse(saved); } catch (_) {}
+  function itemIcon(key) { const span=document.createElement('span');span.className='item-icon';span.setAttribute('aria-hidden','true');span.innerHTML=PixelFPSItemVisuals.icon(key);return span; }
+  function saveBindings() {
+    try { localStorage.setItem(CONTROLS_STORAGE_KEY,JSON.stringify(controls.getBindings())); }
+    catch (_) { showToast('键位已生效；浏览器暂时无法保存设置。'); }
+    refreshHud();
+  }
+
 
   function showToast(message) {
     if (!message) return;
@@ -2134,6 +2783,11 @@
     world?.skills?.dispose();
     world = new PixelFPS.World({ parameters: options.parameters || project.parameters, face: Object.hasOwn(options,'face') ? options.face : project.face });
     world.skills = new PixelSkillRuntime(world);
+    if (controls) controls.setWorld(world);
+    else {
+      try { controls = new PixelFPSPlayerActions(world,{bindings:savedBindings}); }
+      catch (_) { controls = new PixelFPSPlayerActions(world); showToast('已恢复默认技能键位'); }
+    }
     world.targetsMoving = $('moving-targets').checked;
     world.enemyFire = $('enemy-fire').checked;
     if (lab) { lab.setWorld(world); lab.paused = false; lab.timeScale = 1; }
@@ -2187,7 +2841,7 @@
   function openDialog(id) {
     pause(false);
     $('pause-screen').hidden = true;
-    if (id === 'inventory-dialog') renderInventory();
+    if (id === 'inventory-dialog') inventoryPanel?.render();
     if (id === 'lab-dialog') labPanel?.refresh();
     if (!$(id).open) $(id).showModal();
     if (id === 'lab-dialog') $('console-input').focus();
@@ -2205,8 +2859,8 @@
   }
 
   function cast(id) {
-    doResult(world.skills.cast(id));
-    if ($('inventory-dialog').open) renderInventory();
+    doResult(controls.useSkill(id));
+    if ($('inventory-dialog').open) inventoryPanel?.render();
   }
 
   function weaponName(weapon) {
@@ -2224,22 +2878,35 @@
     const held = inventory.weapons[inventory.selected];
     $('weapon-label').textContent = weaponName(held);
     $('ammo').textContent = `通用弹药 ${inventory.ammo}`;
-    $('weapon-hint').textContent = held ? `1–${inventory.weapons.length} 切换 · 左键攻击` : '靠近物资按 E 拾取';
-    $('skill-hud').replaceChildren(...skillIds.map((id, index) => {
+    $('weapon-icon').innerHTML = held ? PixelFPSItemVisuals.icon(held.type) : '';
+    $('weapon-icon').hidden = !held;
+    $('weapon-hint').textContent = held ? `滚轮 / 1–${Math.min(9,inventory.weapons.length)} 切换 · B 丢枪` : '靠近物资按 E 拾取';
+    const slots = Object.entries(controls.getBindings()).filter(([,id]) => id && world.skills.definitions[id]);
+    $('skill-hud').replaceChildren(...slots.map(([code,id]) => {
       const state = world.skills.getState(id), item = document.createElement('div');
-      item.className = `skill-card${state.count ? '' : ' unowned'}${state.active ? ' active' : ''}`;
-      const key = document.createElement('kbd'); key.textContent = skillKeys[index];
+      item.className = `skill-card${state.count || state.active ? '' : ' unowned'}${state.active ? ' active' : ''}`;
+      const key = document.createElement('kbd'); key.textContent = code.slice(3);
       const name = document.createElement('div'); name.className = 'name'; name.textContent = `${state.name || id} Lv.${state.level || 1}`;
       const detail = document.createElement('div'); detail.className = 'detail';
-      detail.textContent = state.count || state.active ? `${state.manaCost ?? 0} 蓝 · ${id === 'autoaim' ? `剩余 ${state.count} 份` : '可重复'}` : '尚未拾取';
+      detail.textContent = state.count || state.active ? `${state.manaCost ?? 0} 蓝 · ${state.kind === 'ultimate' ? `剩余 ${state.count} 份` : '可重复'}` : '尚未拾取';
       const cooldown = document.createElement('div'); cooldown.className = 'cooldown';
       cooldown.textContent = state.active ? '生效中' : state.remaining > 0 ? `${state.remaining.toFixed(1)} s` : state.count ? '就绪' : '—';
-      item.append(key, name, detail, cooldown);
+      item.append(key, itemIcon(id), name, detail, cooldown);
       return item;
     }));
     const pickup = world.nearestPickup();
     $('pickup-prompt').hidden = !pickup || !running;
-    $('pickup-prompt').textContent = pickup ? `E 拾取 · ${pickup.label || pickup.type}` : '';
+    if (pickup) {
+      const key=pickup.weapon?.type||pickup.weaponType||pickup.skillId||pickup.type;
+      const copy=document.createElement('span');copy.textContent=`E 拾取 · ${pickup.label||pickup.type}`;
+      const hint=document.createElement('small');
+      hint.textContent=pickup.type==='weapon' ? PixelFPSContent.WEAPONS[key]?.description||'武器' : pickup.type==='skill'?`技能材料 · ${pickup.level||1} 级` : pickup.type==='ammo'?'所有枪械共用':'恢复当前蓝量';
+      copy.append(hint);$('pickup-prompt').replaceChildren(itemIcon(key),copy);
+    } else $('pickup-prompt').replaceChildren();
+    const statusNames={weaken:'虚弱',slow:'减速',root:'定身',stun:'眩晕',silence:'沉默',disarmed:'缴械',invulnerable:'无敌'};
+    $('status-hud').replaceChildren(...p.statuses.filter(s=>s.expiresAt>world.time).map(s=>{
+      const chip=document.createElement('span');chip.textContent=`${statusNames[s.type]||s.type} ${(s.expiresAt-world.time).toFixed(1)} s`;return chip;
+    }));
     const auto = world.skills.getState('autoaim');
     $('crosshair').classList.toggle('locked', auto.active > 0);
     const event = world.events?.at(-1);
@@ -2266,31 +2933,6 @@
       return { actor: a, point: head && world.lineOfSight(world.eye(p),head.center) && renderer?.project(head.center, p) };
     }).filter(a => a.point?.visible && Math.hypot(a.point.x - $('arena').clientWidth / 2, a.point.y - $('arena').clientHeight / 2) < 80).sort((a,b) => a.point.depth-b.point.depth)[0];
     $('target-label').textContent = target ? `${target.actor.label || '训练靶'} · ${Math.ceil(target.actor.hp)} / ${Math.ceil(target.actor.maxHp)}${target.actor.statuses.some(s => s.type === 'weakness' || s.type === 'weaken') ? ' · 虚弱' : ''}` : '';
-  }
-
-  function makeRow(title, detail, actions = []) {
-    const row = document.createElement('div'); row.className = 'inventory-row';
-    const text = document.createElement('div'), strong = document.createElement('strong'), small = document.createElement('small');
-    strong.textContent = title; small.textContent = detail; text.append(strong, small);
-    const buttons = document.createElement('div'); buttons.className = 'actions';
-    actions.forEach(action => { const b = document.createElement('button'); b.textContent = action.label; b.disabled = !!action.disabled; b.onclick = action.run; buttons.append(b); });
-    row.append(text, buttons); return row;
-  }
-
-  function renderInventory() {
-    const inventory = world.player.inventory;
-    $('inventory-resources').textContent = `通用弹药 ${inventory.ammo}　蓝瓶 ${inventory.manaPotions || 0}　击倒训练靶 ${world.kills || 0}`;
-    $('inventory-weapons').replaceChildren(...inventory.weapons.map((weapon, i) => makeRow(`${i + 1}. ${weaponName(weapon)}`, i === inventory.selected ? '当前手持' : '已携带', [{ label: '手持', run: () => { world.selectWeapon(i); renderInventory(); refreshHud(); } }])));
-    if (!inventory.weapons.length) $('inventory-weapons').textContent = '背包里还没有武器，靠近场地入口的物资按 E 拾取。';
-    $('inventory-skills').replaceChildren(...skillIds.map(id => {
-      const state = world.skills.getState(id), stored = inventory.skills[id] || {};
-      const levels = stored.levels || { [state.level || 1]: state.count || 0 };
-      const composition = Object.entries(levels).filter(([,n]) => n > 0).map(([l,n]) => `${l} 级 × ${n}`).join('，') || '尚未拾取';
-      const canUpgrade = id !== 'autoaim' && Object.values(levels).some(n => n >= 3);
-      const actions = [{ label: '使用', disabled: !state.count || state.remaining > 0, run: () => { closeDialog('inventory-dialog'); resume().then(() => cast(id)); } }];
-      if (id !== 'autoaim') actions.push({ label: '三合一升级', disabled: !canUpgrade, run: () => { doResult(world.upgradeSkill(id)); renderInventory(); } });
-      return makeRow(`${state.name || id} · Lv.${state.level || 1}`, `${composition} · ${state.remaining > 0 ? `冷却 ${state.remaining.toFixed(1)} 秒` : '已就绪'}`, actions);
-    }));
   }
 
   async function applyProject(next) {
@@ -2369,17 +3011,13 @@
     }
     if ($('lab-dialog').open || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
     if (isDialogOpen() && !$('inventory-dialog').open) return;
-    if (event.code === 'Tab') { event.preventDefault(); if ($('inventory-dialog').open) closeDialog('inventory-dialog'); else if (started) openDialog('inventory-dialog'); return; }
+    if (event.code === 'Tab' && !isDialogOpen()) { event.preventDefault(); if (started) openDialog('inventory-dialog'); return; }
     if (!running || isDialogOpen()) return;
     if (['Space','KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.code)) event.preventDefault();
     keys.add(event.code);
     if (event.repeat) return;
-    if (event.code === 'KeyE') doResult(world.interact());
-    if (event.code === 'KeyQ') cast('jetpack');
-    if (event.code === 'KeyF') cast('autoaim');
-    if (event.code === 'KeyG') cast('weaken');
-    if (event.code === 'KeyV') doResult(world.useManaPotion());
-    if (/^Digit[1-9]$/.test(event.code)) world.selectWeapon(Number(event.code.slice(-1)) - 1);
+    const result = controls.dispatch(event.code);
+    if (result) doResult(result);
     if (event.code === 'Escape') pause(true);
   });
   window.addEventListener('keyup', event => keys.delete(event.code));
@@ -2394,6 +3032,11 @@
     world.player.pitch = Math.max(-1.48, Math.min(1.48, world.player.pitch - event.movementY * sensitivity));
   });
   $('arena').addEventListener('contextmenu', event => event.preventDefault());
+  $('arena').addEventListener('wheel', event => {
+    if (!running || isDialogOpen() || !world.player.inventory.weapons.length) return;
+    event.preventDefault();const inventory=world.player.inventory;
+    doResult(controls.selectWeapon((inventory.selected+(event.deltaY>0?1:-1)+inventory.weapons.length)%inventory.weapons.length));
+  },{passive:false});
 
   function frame(now) {
     const elapsed = Math.min(.1, Math.max(0, (now - lastTime) / 1000)); lastTime = now;
@@ -2438,7 +3081,13 @@
       onClose:() => closeDialog('lab-dialog'),
       onPlay:() => { if (!world.player.alive) lab.refill(); resume(); }
     });
-    window.PixelFPSApp = Object.freeze({ get world(){return world;}, get renderer(){return renderer;}, get lab(){return lab;}, applyProject, pause, resume, reset:createWorld, cast });
+    inventoryPanel = new PixelFPSInventoryPanel({
+      getWorld:()=>world,getActions:()=>controls,onResult:doResult,
+      onUseSkill:id=>{closeDialog('inventory-dialog');resume().then(()=>cast(id));},
+      onBindingsChanged:saveBindings,
+      onResetBindings:()=>{controls=new PixelFPSPlayerActions(world);saveBindings();showToast('已恢复 Q / F / G 默认技能键位');}
+    });
+    window.PixelFPSApp = Object.freeze({ get world(){return world;}, get renderer(){return renderer;}, get lab(){return lab;}, get actions(){return controls;}, applyProject, pause, resume, reset:createWorld, cast });
     requestAnimationFrame(frame);
   } catch (error) {
     $('boot-error').hidden = false; $('boot-error').textContent = '训练场启动失败：' + error.message;

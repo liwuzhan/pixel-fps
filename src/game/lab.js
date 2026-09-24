@@ -3,6 +3,7 @@
   const FPS = root.PixelFPS || (typeof require === "function" ? require("./world.js") : null);
   const Character = root.BlockCharacter || (typeof require === "function" ? require("../character.js") : null);
   const Runtime = root.PixelSkillRuntime || (typeof require === "function" ? require("./skill-runtime.js") : null);
+  const Inventory = root.PixelFPSInventory || (typeof require === "function" ? require("./inventory.js") : null);
   const STEP = 1 / 120;
   const OWN = (object, key) => Object.hasOwn(object, key);
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -13,7 +14,7 @@
   const CHEATS = Object.freeze({ mana: "infiniteMana", ammo: "infiniteAmmo", cooldown: "noCooldown",
     infiniteMana: "infiniteMana", infiniteAmmo: "infiniteAmmo", noCooldown: "noCooldown" });
   const STATUSES = Object.freeze(["weaken", "slow", "root", "stun", "silence", "disarmed", "invulnerable"]);
-  const BUILTINS = Object.freeze({ shooting: "基础射击", merge: "技能连续合成", weakness: "虚弱与还击" });
+  const BUILTINS = Object.freeze({ shooting: "基础射击", merge: "技能连续合成", weakness: "虚弱与还击", rocket: "火箭范围爆炸" });
   const TRAINING = Object.freeze({ behavior: "stationary", fire: false, autoRespawn: false, autoRecover: false, respawnDelay: 2 });
   const HELP = [
     "help · list [weapons|skills|dummies|scenarios|status]",
@@ -27,7 +28,7 @@
     "time scale <0.05–4> · time pause|resume · step [帧数，120帧/秒]",
     "clear projectiles|log · reset",
     "scenario save|load|delete <名称> · scenario list",
-    "内建实验：scenario load shooting|merge|weakness",
+    "内建实验：scenario load shooting|merge|weakness|rocket",
   ].join("\n");
 
   function record(value, label, allowed = null) {
@@ -110,7 +111,7 @@
         const result = [];
         for (let index = 0; index < count; index++) {
           const item = { id: `weapon-${this.world._nextId++}`, type: idOrAmount };
-          inventory.weapons.push(item); result.push(item);
+          result.push(Inventory.grantWeapon(inventory, item));
         }
         return result;
       }
@@ -119,17 +120,13 @@
         number(count, "技能数量", 1, 100000, true); number(level, "技能等级", 1, 99, true);
         const old = inventory.skills[idOrAmount];
         if ((old?.count || 0) + count > 100000) throw new Error("同名技能最多持有 100000 份。");
-        const item = old || (inventory.skills[idOrAmount] = { level: 1, count: 0, levels: {} });
-        item.levels[level] = (item.levels[level] || 0) + count;
-        item.count += count; item.level = Math.max(item.level, level);
-        return clone(item);
+        return clone(Inventory.grantSkill(inventory, idOrAmount, count, level));
       }
       if (!["ammo", "mana"].includes(type)) throw new Error("物资类型应为 weapon、skill、ammo 或 mana。");
       number(idOrAmount, "物资数量", 1, 1000000, true);
       const key = type === "ammo" ? "ammo" : "manaPotions";
       number(inventory[key] + idOrAmount, "持有数量", 0, 1000000, true);
-      inventory[key] += idOrAmount;
-      return inventory[key];
+      return Inventory.grantResource(inventory, type, idOrAmount);
     }
     refill() {
       const player = this.world.player;
@@ -194,27 +191,44 @@
     }
     snapshot() {
       const world = this.world, player = world.player, inventory = player.inventory;
-      return this._validateScenario({ version: 1,
+      return this._validateScenario({ version: 2,
         player: { parameters: { ...player.character.params }, face: clone(player.face), pos: [...player.pos], yaw: player.yaw, pitch: player.pitch,
-          inventory: { weapons: inventory.weapons.map((item) => item.type), selected: inventory.selected,
+          inventory: { weapons: inventory.weapons.map((item) => ({ id: item.id, type: item.type })), selected: inventory.selected,
             ammo: inventory.ammo, manaPotions: inventory.manaPotions,
             skills: Object.fromEntries(Object.entries(inventory.skills).filter(([id]) => OWN(world.skills?.definitions || {}, id))
               .map(([id, item]) => [id, { ...item.levels }])) } },
         dummies: world.actors.filter((actor) => actor !== player).map((actor) => ({ label: actor.label,
           parameters: { ...actor.character.params }, pos: [...actor.pos], training: { ...TRAINING, ...actor.training } })),
-        world: { targetsMoving: world.targetsMoving, enemyFire: world.enemyFire, cheats: { ...world.cheats }, supplies: world.pickups.length > 0 },
+        world: { targetsMoving: world.targetsMoving, enemyFire: world.enemyFire, cheats: { ...world.cheats }, pickups: clone(world.pickups) },
         time: { scale: this.timeScale, paused: this.paused } });
     }
     _validateScenario(value) {
       record(value, "场景", ["version", "player", "dummies", "world", "time"]);
-      if (value.version !== 1) throw new Error("场景版本应为 1。");
+      if (![1, 2].includes(value.version)) throw new Error("场景版本应为 1 或 2。");
       const player = record(value.player, "玩家", ["parameters", "face", "pos", "yaw", "pitch", "inventory"]);
       const params = parameters(player.parameters), face = Character.exportData(params, player.face).face;
       const inv = record(player.inventory, "背包", ["weapons", "selected", "ammo", "manaPotions", "skills"]);
-      if (!Array.isArray(inv.weapons) || inv.weapons.length > 1000 || inv.weapons.some((id) => typeof id !== "string" || !OWN(FPS.WEAPONS, id))) throw new Error("场景含有未知武器或武器数量过多。");
+      if (!Array.isArray(inv.weapons) || inv.weapons.length > 1000) throw new Error("场景最多包含 1000 件背包武器。");
+      const weaponIds = new Set();
+      const identifier = (id, label) => {
+        if (typeof id !== "string" || !/^[a-zA-Z0-9_-]{1,80}$/.test(id) || ["__proto__", "constructor", "prototype"].includes(id)) throw new Error(`${label}无效。`);
+        const sequence = /-(\d+)$/.exec(id);
+        if (sequence && (!Number.isSafeInteger(Number(sequence[1])) || Number(sequence[1]) > Number.MAX_SAFE_INTEGER - 1000000)) throw new Error(`${label}的序号过大。`);
+        return id;
+      };
+      const weapon = (item) => {
+        record(item, "武器实例", ["id", "type"]);
+        const id = identifier(item.id, "武器实例编号");
+        if (typeof item.type !== "string" || !OWN(FPS.WEAPONS, item.type)) throw new Error("场景含有未知武器。");
+        if (weaponIds.has(id)) throw new Error("武器实例编号在背包与地面之间不能重复。");
+        weaponIds.add(id);
+        return { id, type: item.type };
+      };
+      const weapons = inv.weapons.map((item, index) => weapon(value.version === 1 ? { id: `legacy-weapon-${index + 1}`, type: item } : item));
       record(inv.skills, "技能");
       const skills = Object.create(null);
       for (const [id, levels] of Object.entries(inv.skills)) {
+        identifier(id, "技能编号");
         if (!OWN(this.world.skills?.definitions || {}, id)) throw new Error(`场景含有未载入技能 ${id}。`);
         record(levels, "技能等级");
         let total = 0;
@@ -243,16 +257,46 @@
       }
       validationWorld.clearDummies();
       for (const dummy of dummies) validationWorld.spawnDummy(dummy);
-      const config = record(value.world, "世界配置", ["targetsMoving", "enemyFire", "cheats", "supplies"]);
+      const config = record(value.world, "世界配置", ["targetsMoving", "enemyFire", "cheats", value.version === 1 ? "supplies" : "pickups"]);
+      const supplies = value.version === 1 ? (boolean(config.supplies, "出生物资") ? validationWorld.pickups : []) : config.pickups;
+      if (!Array.isArray(supplies) || supplies.length > 2000) throw new Error("场景最多包含 2000 组地面物资。");
+      const pickupIds = new Set();
+      const pickups = supplies.map((item) => {
+        const fields = { weapon: ["weaponType", "weapon"], skill: ["skillId", "level", "amount"], ammo: ["amount"], mana: ["amount"] };
+        record(item, "地面物资");
+        if (!OWN(fields, item.type)) throw new Error("未知地面物资类型。");
+        record(item, "地面物资", ["id", "type", "label", "pos", ...fields[item.type]]);
+        const id = identifier(item.id, "物资编号");
+        if (pickupIds.has(id)) throw new Error("地面物资编号不能重复。");
+        pickupIds.add(id);
+        if (typeof item.label !== "string" || !item.label.trim() || item.label.length > 120) throw new Error("物资名称需要 1–120 个字符。");
+        const pos = vector(item.pos, "物资位置");
+        if (pos[1] < 0 || pos[0] < validationWorld.bounds.min[0] || pos[0] > validationWorld.bounds.max[0] ||
+            pos[2] < validationWorld.bounds.min[2] || pos[2] > validationWorld.bounds.max[2]) throw new Error("物资必须位于训练场边界及地面以上。");
+        const result = { id, type: item.type, label: item.label, pos };
+        if (item.type === "weapon") {
+          result.weapon = weapon(item.weapon);
+          if (item.weaponType !== result.weapon.type) throw new Error("物资武器类型与实例不一致。");
+          result.weaponType = item.weaponType;
+        } else {
+          result.amount = number(item.amount, "物资数量", 1, item.type === "skill" ? 100000 : 1000000, true);
+          if (item.type === "skill") {
+            if (typeof item.skillId !== "string" || !OWN(this.world.skills?.definitions || {}, item.skillId)) throw new Error("地面物资含有未载入技能。");
+            result.skillId = item.skillId;
+            result.level = number(item.level, "技能等级", 1, 99, true);
+          }
+        }
+        return result;
+      });
       const cheats = record(config.cheats, "作弊配置", ["infiniteMana", "infiniteAmmo", "noCooldown"]);
       const time = record(value.time, "时间配置", ["scale", "paused"]);
-      return { version: 1,
+      return { version: 2,
         player: { parameters: params, face, pos: playerPos, yaw: number(player.yaw, "水平朝向", -1000000, 1000000),
           pitch: number(player.pitch, "垂直朝向", -Math.PI / 2, Math.PI / 2), inventory: {
-            weapons: [...inv.weapons], selected: number(inv.selected, "武器选择", 0, Math.max(0, inv.weapons.length - 1), true),
+            weapons, selected: number(inv.selected, "武器选择", 0, Math.max(0, inv.weapons.length - 1), true),
             ammo: number(inv.ammo, "弹药", 0, 1000000, true), manaPotions: number(inv.manaPotions, "蓝瓶", 0, 1000000, true), skills } },
         dummies, world: { targetsMoving: boolean(config.targetsMoving, "全局移动"), enemyFire: boolean(config.enemyFire, "全局还击"),
-          supplies: boolean(config.supplies, "出生物资"), cheats: { infiniteMana: boolean(cheats.infiniteMana, "无限蓝量"),
+          pickups, cheats: { infiniteMana: boolean(cheats.infiniteMana, "无限蓝量"),
             infiniteAmmo: boolean(cheats.infiniteAmmo, "无限弹药"), noCooldown: boolean(cheats.noCooldown, "无冷却") } },
         time: { scale: number(time.scale, "时间倍率", 0.05, 4), paused: boolean(time.paused, "暂停") } };
     }
@@ -269,18 +313,24 @@
       this.setWorld(world);
       world.clearDummies();
       for (const dummy of value.dummies) world.spawnDummy(dummy);
-      const player = world.player, inventory = player.inventory, saved = value.player.inventory;
+      const player = world.player, saved = value.player.inventory;
       player.pos = [...value.player.pos]; player.spawnPos = [...value.player.pos]; player.yaw = value.player.yaw; player.pitch = value.player.pitch;
-      inventory.weapons = saved.weapons.map((type) => ({ id: `weapon-${world._nextId++}`, type }));
-      inventory.selected = saved.selected; inventory.ammo = saved.ammo; inventory.manaPotions = saved.manaPotions;
-      inventory.skills = Object.create(null);
-      for (const id of Object.keys(world.skills?.definitions || {})) {
-        const levels = { ...(saved.skills[id] || {}) };
-        inventory.skills[id] = { level: Math.max(1, ...Object.keys(levels).map(Number)),
-          count: Object.values(levels).reduce((sum, count) => sum + count, 0), levels };
-      }
+      const rebuilt = Inventory.create(Object.keys(world.skills?.definitions || {}));
+      for (const item of saved.weapons) Inventory.grantWeapon(rebuilt, { ...item });
+      if (saved.ammo) Inventory.grantResource(rebuilt, "ammo", saved.ammo);
+      if (saved.manaPotions) Inventory.grantResource(rebuilt, "mana", saved.manaPotions);
+      for (const [id, levels] of Object.entries(saved.skills)) for (const [tier, amount] of Object.entries(levels)) Inventory.grantSkill(rebuilt, id, amount, Number(tier));
+      rebuilt.selected = saved.selected;
+      player.inventory = rebuilt;
       world.targetsMoving = value.world.targetsMoving; world.enemyFire = value.world.enemyFire; world.cheats = { ...value.world.cheats };
-      if (!value.world.supplies) world.pickups = [];
+      world.pickups = clone(value.world.pickups);
+      // Imported identities must not collide with future world-generated instances.
+      const ids = [...world.actors.map((actor) => actor.id), ...rebuilt.weapons.map((item) => item.id),
+        ...world.pickups.flatMap((item) => [item.id, ...(item.weapon ? [item.weapon.id] : [])])];
+      for (const id of ids) {
+        const match = /-(\d+)$/.exec(id);
+        if (match) world._nextId = Math.max(world._nextId, Number(match[1]) + 1);
+      }
       world.combatLog = []; world.events = [];
       this.timeScale = value.time.scale; this.paused = value.time.paused;
       return this.snapshot();
@@ -288,8 +338,8 @@
     _builtin(id) {
       const value = this.snapshot();
       value.player.pos = [0, 0, 7]; value.player.yaw = 0; value.player.pitch = 0;
-      value.player.inventory = { weapons: ["pistol", "rifle", "knife"], selected: 0, ammo: 999, manaPotions: 10, skills: {} };
-      value.world = { targetsMoving: false, enemyFire: false, supplies: false,
+      value.player.inventory = { weapons: ["pistol", "rifle", "knife"].map((type, index) => ({ id: `weapon-${index + 1}`, type })), selected: 0, ammo: 999, manaPotions: 10, skills: {} };
+      value.world = { targetsMoving: false, enemyFire: false, pickups: [],
         cheats: { infiniteMana: false, infiniteAmmo: false, noCooldown: false } };
       value.time = { scale: 1, paused: false };
       value.dummies = [{ label: "实验木桩", parameters: { ...PRESETS.standard }, pos: [0, 0, -5],
@@ -300,6 +350,12 @@
         value.player.inventory.skills = { weaken: { 1: 1 } };
         value.world.cheats.infiniteMana = true; value.world.cheats.noCooldown = true;
         value.dummies[0].training.fire = true;
+      }
+      if (id === "rocket") {
+        value.player.inventory.weapons = [{ id: "weapon-1", type: "rocket" }];
+        value.player.inventory.ammo = 100;
+        value.dummies = [-1.5, 0, 1.5].map((x, index) => ({ label: `爆炸木桩 ${index + 1}`,
+          parameters: { ...PRESETS.standard }, pos: [x, 0, -5], training: { ...TRAINING, autoRespawn: true } }));
       }
       return value;
     }

@@ -2,9 +2,9 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const number = value => Number(value || 0).toLocaleString('zh-CN', { maximumFractionDigits: 3 });
-  const parts = { head:'头部',torso:'躯干',leftArm:'左臂',rightArm:'右臂',leftLeg:'左腿',rightLeg:'右腿' };
+  const parts = { head:'头部',torso:'躯干',leftArm:'左臂',rightArm:'右臂',leftLeg:'左腿',rightLeg:'右腿',blast:'爆炸范围' };
   const statusNames = { weaken:'虚弱',silence:'沉默',stun:'眩晕',root:'定身',slow:'减速',disarmed:'缴械',invulnerable:'无敌' };
-  const scenarioNames = { shooting:'基础射击',merge:'连续三合一',weakness:'虚弱与还击' };
+  const scenarioNames = { shooting:'基础射击',merge:'连续三合一',weakness:'虚弱与还击',rocket:'火箭筒与范围爆炸' };
   function download(name, value) {
     const url = URL.createObjectURL(new Blob([JSON.stringify(value,null,2)], {type:'application/json'}));
     const a = document.createElement('a'); a.href = url; a.download = name; a.click();
@@ -136,6 +136,13 @@
         }else if(event.type==='skill-cast'){
           subject=`${name(event.sourceId)} · 发动技能`;
           details=`${world.skills.definitions[event.skillId]?.name||event.skillId} · ${event.level} 级\n消耗 ${number(event.manaSpent)} 蓝量、${number(event.copiesSpent)} 份材料`;
+        }else if(event.type==='pickup'||event.type==='drop'){
+          subject=`${name(event.sourceId)} · ${event.type==='pickup'?'拾取':'丢弃'}`;
+          const label=event.itemType==='weapon'?root.PixelFPSContent.WEAPONS[event.weaponId]?.label:event.itemType==='skill'?world.skills.definitions[event.skillId]?.name:root.PixelFPSContent.RESOURCES[event.itemType]?.label;
+          details=`${label||event.itemType} × ${number(event.amount)}${event.level?` · ${event.level} 级`:''}\n${event.weaponInstanceId||event.itemId}`;
+        }else if(event.type==='explosion'){
+          subject=`${name(event.sourceId)} · 爆炸`;
+          details=`${root.PixelFPSContent.WEAPONS[event.weaponId]?.label||event.weaponId} · 半径 ${number(event.radius)} m\n命中 ${event.hits.length} 个目标`;
         }else{subject=`${name(event.targetId||event.actorId)} · ${({'recover':'自动回血','respawn':'木桩复活','dummy-spawn':'新增木桩','dummy-configure':'配置木桩','dummy-remove':'移除木桩','dummy-reset':'木桩复位'})[event.type]||event.type}`;details=event.amount!=null?`恢复 ${number(event.amount)}，生命 ${number(event.hpAfter)}`:event.label||event.reason||'';}
         for(const text of [number(event.time)+' s',subject,details]){const td=document.createElement('td');td.textContent=text;tr.append(td);}body.append(tr);
       }

@@ -3,14 +3,14 @@
   const Character = root.BlockCharacter || (typeof require === "function" ? require("../character.js") : null);
   if (!Character) throw new Error("PixelFPS needs BlockCharacter.");
 
+  const Content = root.PixelFPSContent || (typeof require === "function" ? require("./content.js") : null);
+  const Inventory = root.PixelFPSInventory || (typeof require === "function" ? require("./inventory.js") : null);
+  if (!Content || !Inventory) throw new Error("PixelFPS needs content and inventory modules.");
+
   // These values make the rules visible in the prototype; they are not balance decisions.
   const CONFIG = Object.freeze({ gravity: 18, jumpSpeed: 6.5, baseHP: 100, baseMana: 100,
     baseSpeed: 4.5, pickupRange: 2.2, arena: { minX: -20, maxX: 20, minZ: -24, maxZ: 12 } });
-  const WEAPONS = Object.freeze({
-    pistol: Object.freeze({ label: "手枪", damage: 26, speed: 95, interval: 0.28, ammoCost: 1, color: [1, 0.83, 0.3] }),
-    rifle: Object.freeze({ label: "步枪", damage: 16, speed: 140, interval: 0.11, ammoCost: 1, color: [0.4, 0.95, 1] }),
-    knife: Object.freeze({ label: "小刀", damage: 42, interval: 0.45, ammoCost: 0, melee: true, color: [0.95, 0.95, 1] }),
-  });
+  const WEAPONS = Content.WEAPONS;
   const add = (a, b) => a.map((v, i) => v + b[i]);
   const mul = (a, n) => a.map((v) => v * n);
   const length = (a) => Math.hypot(...a);
@@ -86,13 +86,14 @@
       const head = character.parts.find((part) => part.id === "head");
       const maxHp = CONFIG.baseHP * character.params.torsoScale ** 3;
       const maxMana = CONFIG.baseMana * character.params.headScale ** 3;
-      const skills = Object.fromEntries(["jetpack", "autoaim", "weaken"].map((name) => [name, { level: 1, count: 0, levels: {} }]));
+      const loadedSkills = Object.keys(root.PixelFPSSkills || {});
+      const inventory = Inventory.create(loadedSkills.length ? loadedSkills : ["jetpack", "autoaim", "weaken"]);
       return { id, team, label, pos: [...pos], spawnPos: [...pos], vel: [0, 0, 0], yaw: 0, pitch: 0,
         character, face, maxHp, hp: maxHp, maxMana, mana: maxMana,
         eyeHeight: head.center[1] + head.size[1] * 0.2,
         speed: CONFIG.baseSpeed * character.params.legLength / Character.DEFAULTS.legLength,
         alive: true, grounded: true, statuses: [], nextFireAt: 0, nextEnemyFireAt: 1.5,
-        inventory: { weapons: [], selected: 0, ammo: 0, manaPotions: 0, skills } };
+        inventory };
     }
 
     _training(patch = {}, current = {}) {
@@ -175,11 +176,16 @@
     }
 
     _spawnSupplies() {
-      const supply = (type, label, pos, extra = {}) => this.pickups.push({ id: `pickup-${this._nextId++}`, type, label, pos, ...extra });
+      const supply = (type, label, pos, extra = {}) => {
+        const item = { id: `pickup-${this._nextId++}`, type, label, pos, ...extra };
+        if (type === "weapon") item.weapon = { id: `weapon-${this._nextId++}`, type: item.weaponType };
+        this.pickups.push(item);
+      };
       supply("weapon", "手枪", [-0.6, 0.35, 5.6], { weaponType: "pistol" });
       supply("ammo", "通用弹药 × 120", [0.6, 0.35, 5.6], { amount: 120 });
       supply("weapon", "小刀", [-3, 0.35, 5.2], { weaponType: "knife" });
       supply("weapon", "步枪", [3, 0.35, 5.2], { weaponType: "rifle" });
+      supply("weapon", "火箭筒", [6.3, 0.35, 5.2], { weaponType: "rocket" });
       supply("mana", "蓝瓶 × 3", [4.6, 0.35, 5.2], { amount: 3 });
       supply("ammo", "通用弹药 × 240", [-4.6, 0.35, 5.2], { amount: 240 });
       for (const [index, skillId] of ["jetpack", "autoaim", "weaken"].entries()) {
@@ -206,81 +212,127 @@
     }
     lineOfSight(from, to) { return !this.obstacles.some((box) => segmentBox(from, to, box) !== null); }
 
+    _pickupOrigin() {
+      // Ground reach, rather than eye height, keeps small items accessible to tall characters.
+      return [this.player.pos[0], this.player.pos[1] + 0.35, this.player.pos[2]];
+    }
     nearestPickup() {
       let nearest = null, distance = CONFIG.pickupRange;
+      const from = this._pickupOrigin();
       for (const item of this.pickups) {
+        if ([0, 2].some((axis) => item.pos[axis] < this.bounds.min[axis] || item.pos[axis] > this.bounds.max[axis])) continue;
         const current = Math.hypot(item.pos[0] - this.player.pos[0], item.pos[2] - this.player.pos[2]);
-        // Pickups are reached from the feet so very tall bodies can still collect ground supplies.
-        if (current < distance && Math.abs(item.pos[1] - this.player.pos[1]) < 2) {
+        if (current < distance && Math.abs(item.pos[1] - this.player.pos[1]) < 2 && this.lineOfSight(from, item.pos)) {
           nearest = item; distance = current;
         }
       }
       return nearest;
     }
+    _recordTransfer(type, item) {
+      const data = { sourceId: this.player.id, itemId: item.id, itemType: item.type, amount: item.type === "weapon" ? 1 : item.amount };
+      if (item.type === "weapon") { data.weaponId = item.weapon?.type || item.weaponType; data.weaponInstanceId = item.weapon?.id ?? null; }
+      if (item.type === "skill") { data.skillId = item.skillId; data.level = item.level; }
+      this.recordCombat(type, data);
+      this.events.push({ ...data, time: this.time, type, text: `${type === "pickup" ? "拾取" : "丢弃"}：${item.label}` });
+      if (this.events.length > 30) this.events.shift();
+      return this.events.at(-1).text;
+    }
     interact() {
       if (!this.player.alive) return { ok: false, message: "倒下后需要先复位。" };
       const item = this.nearestPickup(), inventory = this.player.inventory;
       if (!item) return { ok: false, message: this.message("附近没有可拾取的物资。", "info") };
-      if (item.type === "weapon") {
-        inventory.weapons.push({ id: `weapon-${this._nextId++}`, type: item.weaponType });
-        inventory.selected = inventory.weapons.length - 1;
-      } else if (item.type === "ammo") inventory.ammo += item.amount;
-      else if (item.type === "mana") inventory.manaPotions += item.amount;
-      else if (item.type === "skill") {
-        const skill = inventory.skills[item.skillId];
-        if (!skill) return { ok: false, message: "未知技能。" };
-        const level = item.level || 1, amount = item.amount || 1;
-        skill.levels[level] = (skill.levels[level] || 0) + amount;
-        skill.count += amount;
-        skill.level = Math.max(skill.level, level);
-      } else return { ok: false, message: "未知物资。" };
+      try {
+        if (item.type === "weapon") {
+          const weapon = item.weapon || { id: `weapon-${this._nextId}`, type: item.weaponType };
+          Inventory.grantWeapon(inventory, weapon);
+          Inventory.selectWeapon(inventory, inventory.weapons.length - 1);
+          if (!item.weapon) this._nextId++;
+          item.weapon = weapon;
+        } else if (item.type === "ammo" || item.type === "mana") {
+          Inventory.grantResource(inventory, item.type, item.amount);
+        } else if (item.type === "skill") {
+          if (!this._skillDefinition(item.skillId) && !Object.hasOwn(inventory.skills, item.skillId)) throw new Error("未知技能。");
+          Inventory.grantSkill(inventory, item.skillId, item.amount ?? 1, item.level ?? 1);
+        } else throw new Error("未知物资。");
+      } catch (error) { return { ok: false, message: this.message(error.message, "info") }; }
       this.pickups.splice(this.pickups.indexOf(item), 1);
-      return { ok: true, message: this.message(`拾取：${item.label}`, "pickup"), item };
+      return { ok: true, message: this._recordTransfer("pickup", item), item };
+    }
+    _dropPosition() {
+      const from = this._pickupOrigin(), radius = 0.18;
+      const direction = [Math.sin(this.player.yaw), 0, -Math.cos(this.player.yaw)];
+      // Shorter candidates remain on the player's side of a nearby wall. Never teleport through it.
+      for (const distance of [1.2, 0.85, 0.45, 0]) {
+        const pos = add(from, mul(direction, distance));
+        if ([0, 2].some((axis) => pos[axis] - radius < this.bounds.min[axis] || pos[axis] + radius > this.bounds.max[axis])) continue;
+        if (this.obstacles.some((box) => segmentBox(from, pos, box, radius) !== null)) continue;
+        return pos;
+      }
+      return null;
+    }
+    dropItem(request) {
+      const fail = (message) => ({ ok: false, message: this.message(message, "info") });
+      if (!this.player.alive) return fail("倒下后需要先复位。");
+      if (!request || typeof request !== "object" || Array.isArray(request)) return fail("丢弃参数必须是对象。");
+      const allowed = { weapon: ["kind", "weaponId"], skill: ["kind", "skillId", "level", "amount"], ammo: ["kind", "amount"], mana: ["kind", "amount"] };
+      if (typeof request.kind !== "string" || !Object.hasOwn(allowed, request.kind) || Object.keys(request).some((key) => !allowed[request.kind].includes(key))) return fail("丢弃参数无效。");
+      const pos = this._dropPosition();
+      if (!pos) return fail("脚边没有可以放置物资的位置。");
+      const inventory = this.player.inventory;
+      let item;
+      try {
+        if (request.kind === "weapon") {
+          const existing = inventory.weapons.find((weapon) => weapon.id === request.weaponId);
+          if (existing && !Object.hasOwn(WEAPONS, existing.type)) throw new Error("未知武器类型。");
+          const weapon = Inventory.takeWeapon(inventory, request.weaponId);
+          item = { type: "weapon", weapon, weaponType: weapon.type, label: WEAPONS[weapon.type].label };
+        } else if (request.kind === "skill") {
+          const taken = Inventory.takeSkill(inventory, request.skillId, request.amount === undefined ? 1 : request.amount, request.level);
+          const definition = this._skillDefinition(request.skillId);
+          item = { type: "skill", ...taken, label: `${definition?.name || request.skillId} · ${taken.level} 级 × ${taken.amount}` };
+        } else {
+          const amount = Inventory.takeResource(inventory, request.kind, request.amount);
+          item = { type: request.kind, amount, label: `${request.kind === "ammo" ? "通用弹药" : "蓝瓶"} × ${amount}` };
+        }
+      } catch (error) { return fail(error.message); }
+      item.id = `pickup-${this._nextId++}`;
+      item.pos = pos;
+      this.pickups.push(item);
+      // Inventory transfer does not touch the skill runner's cooldowns or active instances.
+      return { ok: true, message: this._recordTransfer("drop", item), item };
     }
     selectWeapon(index) {
-      if (!Number.isInteger(index) || !this.player.inventory.weapons[index]) return false;
-      this.player.inventory.selected = index;
-      return true;
+      try { return Inventory.selectWeapon(this.player.inventory, index); }
+      catch { return false; }
     }
     useManaPotion() {
       const player = this.player;
-      if (!player.alive || player.inventory.manaPotions <= 0 || player.mana >= player.maxMana) return false;
-      player.inventory.manaPotions--;
-      // Each bottle restores 60 units rather than enlarging the character's mana capacity.
-      player.mana = Math.min(player.maxMana, player.mana + 60);
-      this.message("使用蓝瓶：恢复 60 蓝量。", "heal");
+      if (!player.alive || player.mana >= player.maxMana) return false;
+      try { Inventory.takeResource(player.inventory, "mana", 1); }
+      catch { return false; }
+      const restored = Content.RESOURCES.mana.restore;
+      player.mana = Math.min(player.maxMana, player.mana + restored);
+      this.message(`使用蓝瓶：恢复 ${restored} 蓝量。`, "heal");
       return true;
+    }
+    _skillDefinition(id) {
+      const definitions = this.skills?.definitions || root.PixelFPSSkills;
+      return definitions && Object.hasOwn(definitions, id) ? definitions[id] : null;
     }
     upgradeSkill(id) {
-      const skill = this.player.inventory.skills[id];
-      if (!skill || id === "autoaim") { this.message("本轮验证只合成普通技能。", "info"); return false; }
-      const tiers = Object.entries(skill.levels).filter(([, amount]) => amount >= 3).map(([level]) => Number(level)).sort((a, b) => a - b);
-      if (!tiers.length) { this.message("合成需要三份同名、同级普通技能。", "info"); return false; }
-      const tier = tiers[0];
-      skill.levels[tier] -= 3;
-      if (!skill.levels[tier]) delete skill.levels[tier];
-      skill.levels[tier + 1] = (skill.levels[tier + 1] || 0) + 1;
-      skill.count -= 2;
-      skill.level = Math.max(...Object.keys(skill.levels).map(Number));
-      this.message(`技能合成：${id === "jetpack" ? "弹射背包" : "虚弱榴弹"} → ${tier + 1} 级`, "upgrade");
-      return true;
+      const definition = this._skillDefinition(id);
+      if ((definition?.kind || (id === "autoaim" ? "ultimate" : "normal")) === "ultimate") {
+        this.message("本轮验证只合成普通技能。", "info"); return false;
+      }
+      try {
+        const result = Inventory.mergeSkill(this.player.inventory, id);
+        this.message(`技能合成：${definition?.name || id} → ${result.level} 级`, "upgrade");
+        return true;
+      } catch (error) { this.message(error.message, "info"); return false; }
     }
     consumeSkill(id, amount = 1) {
-      const skill = this.player.inventory.skills[id];
-      if (!skill || !Number.isInteger(amount) || amount <= 0 || skill.count < amount) return false;
-      let remaining = amount;
-      const tiers = Object.keys(skill.levels).map(Number).sort((a, b) => b - a);
-      if (tiers.reduce((sum, tier) => sum + skill.levels[tier], 0) < amount) return false;
-      for (const tier of tiers) {
-        const used = Math.min(remaining, skill.levels[tier]);
-        skill.levels[tier] -= used;
-        remaining -= used;
-        if (!skill.levels[tier]) delete skill.levels[tier];
-        if (!remaining) break;
-      }
-      skill.count -= amount;
-      skill.level = Math.max(1, ...Object.keys(skill.levels).map(Number));
-      return true;
+      try { return Inventory.consumeSkill(this.player.inventory, id, amount); }
+      catch { return false; }
     }
 
     applyStatus(actor, type, duration, sourceId = null, data = {}) {
@@ -356,9 +408,11 @@
       if (!player.alive || this.time < player.nextFireAt || this.hasStatus(player, "disarmed") || this.hasStatus(player, "stun")) return false;
       const item = player.inventory.weapons[player.inventory.selected], weapon = item && WEAPONS[item.type];
       if (!weapon) return false;
-      if (!this.cheats.infiniteAmmo && player.inventory.ammo < weapon.ammoCost) return false;
+      if (!this.cheats.infiniteAmmo && weapon.ammoCost > 0) {
+        try { Inventory.takeResource(player.inventory, "ammo", weapon.ammoCost); }
+        catch (_) { return false; }
+      }
       player.nextFireAt = this.time + weapon.interval;
-      if (!this.cheats.infiniteAmmo) player.inventory.ammo -= weapon.ammoCost;
       const from = eye(player), direction = aimDirection(player);
       if (weapon.melee) {
         const to = add(from, mul(direction, player.character.params.armLength + 0.45));
@@ -367,13 +421,39 @@
           if (hit.actor) this.damage(hit.actor, weapon.damage, { ownerId: player.id, weaponId: item.type, partId: hit.partId });
           this.addEffect({ type: "hit", pos: hit.pos, color: hit.actor ? [1, 0.25, 0.15] : [0.8, 0.8, 0.8] });
         }
-        this.addEffect({ type: "melee", pos: add(from, mul(direction, 0.6)), duration: 0.12, color: weapon.color });
+        this.addEffect({ type: "melee", ownerId: player.id, weaponId: item.type, pos: add(from, mul(direction, 0.6)), duration: 0.12, color: weapon.color });
       } else {
+        const explosive = Number.isFinite(weapon.blastRadius) && weapon.blastRadius > 0;
         this.spawnProjectile({ pos: from, vel: mul(direction, weapon.speed), ownerId: player.id, team: player.team,
-          weaponId: item.type, damage: weapon.damage, color: weapon.color });
+          weaponId: item.type, damage: explosive ? 0 : weapon.damage, color: weapon.color,
+          radius: weapon.projectileRadius, lifetime: weapon.lifetime,
+          onHit: explosive ? (hit) => this.explode({ pos: hit.pos, radius: weapon.blastRadius, damage: weapon.damage,
+            ownerId: player.id, team: player.team, weaponId: item.type, directHit: hit }) : null });
       }
-      this.addEffect({ type: "shot", pos: add(from, mul(direction, 0.35)), duration: 0.06, color: weapon.color });
+      this.addEffect({ type: "shot", ownerId: player.id, weaponId: item.type, pos: add(from, mul(direction, 0.35)), duration: 0.06, color: weapon.color });
       return true;
+    }
+
+    explode({ pos, radius, damage, ownerId, team, weaponId = null, directHit = null }) {
+      if (!Array.isArray(pos) || pos.length !== 3 || pos.some((value) => !Number.isFinite(value)) || !Number.isFinite(radius) || radius <= 0 || !Number.isFinite(damage) || damage < 0) throw new TypeError("爆炸参数无效。");
+      const sourceTeam = team ?? this.findActor(ownerId)?.team;
+      const hits = [];
+      for (const actor of this.actors) {
+        if (!actor.alive || actor.id === ownerId || actor.team === sourceTeam) continue;
+        // The real six boxes determine blast reach too; the closest visible part is sufficient.
+        const reachable = actorBoxes(actor).some((box) => {
+          const range = bounds(box);
+          const closest = pos.map((value, axis) => Math.max(range.min[axis], Math.min(range.max[axis], value)));
+          return length(sub(closest, pos)) <= radius && this.lineOfSight(pos, closest);
+        });
+        if (actor !== directHit?.actor && !reachable) continue;
+        const partId = actor === directHit?.actor ? directHit.partId : "blast";
+        const actualDamage = this.damage(actor, damage, { ownerId, weaponId, partId });
+        hits.push({ actorId: actor.id, partId, actualDamage });
+      }
+      this.addEffect({ type: "explosion", pos: [...pos], radius, duration: 0.55, color: [1, 0.45, 0.12] });
+      this.recordCombat("explosion", { sourceId: ownerId, weaponId, pos: [...pos], radius, hits: hits.map((hit) => ({ ...hit })) });
+      return hits;
     }
 
     _firstHit(from, to, radius, ownerId, team) {

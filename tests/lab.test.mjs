@@ -223,3 +223,88 @@ test("scene player placement rejects underground and partly outside bodies befor
   independent.loadScenario(elevated);
   assert.deepEqual(independent.world.player.pos, [0, 1000, 0]);
 });
+
+test("v2 saves remaining ground supplies and dropped instance identity, skill tiers and quantities", () => {
+  const { lab } = fixture();
+  command(lab, "give weapon rocket");
+  command(lab, "give skill jetpack 5 3");
+  command(lab, "give ammo 120");
+  command(lab, "give mana 4");
+  const world = lab.world, gun = world.player.inventory.weapons[0];
+  for (const request of [{ kind: "weapon", weaponId: gun.id }, { kind: "skill", skillId: "jetpack", level: 3, amount: 2 },
+    { kind: "ammo", amount: 20 }, { kind: "mana", amount: 2 }]) assert.equal(world.dropItem(request).ok, true);
+  const originalCount = world.pickups.length;
+  const saved = JSON.parse(JSON.stringify(lab.snapshot()));
+  assert.equal(saved.version, 2);
+  assert.equal(saved.world.pickups.length, originalCount);
+  assert.ok(saved.world.pickups.some((item) => item.weapon?.id === gun.id));
+  lab.loadScenario(saved);
+  assert.deepEqual(JSON.parse(JSON.stringify(lab.snapshot())), saved);
+  const loaded = lab.world;
+  const dropped = loaded.pickups.filter((item) => item.weapon?.id === gun.id || item.type === "skill" && item.level === 3 ||
+    item.type === "ammo" && item.amount === 20 || item.type === "mana" && item.amount === 2);
+  for (const item of dropped) {
+    loaded.pickups = [item]; loaded.player.pos = [item.pos[0], 0, item.pos[2]];
+    assert.equal(loaded.interact().ok, true);
+  }
+  assert.equal(loaded.player.inventory.weapons[0].id, gun.id);
+  assert.deepEqual(loaded.player.inventory.skills.jetpack, { level: 3, count: 5, levels: { 3: 5 } });
+  assert.equal(loaded.player.inventory.ammo, 120);
+  assert.equal(loaded.player.inventory.manaPotions, 4);
+  const granted = lab.give("weapon", "rocket")[0];
+  assert.notEqual(granted.id, gun.id, "loaded identity cannot be reused by later grants");
+});
+
+test("v1 import migrates weapon identities and restores only the legacy supplies toggle", () => {
+  const { lab } = fixture();
+  const legacy = lab.snapshot();
+  legacy.version = 1;
+  legacy.player.inventory.weapons = ["pistol", "rifle"];
+  legacy.player.inventory.selected = 1;
+  delete legacy.world.pickups;
+  legacy.world.supplies = true;
+  lab.loadScenario(legacy);
+  assert.deepEqual(lab.world.player.inventory.weapons.map((item) => item.type), ["pistol", "rifle"]);
+  assert.equal(lab.world.player.inventory.selected, 1);
+  assert.equal(lab.snapshot().version, 2);
+  assert.ok(lab.world.pickups.length > 0);
+  legacy.world.supplies = false;
+  lab.loadScenario(legacy);
+  assert.equal(lab.world.pickups.length, 0);
+});
+
+test("v2 rejects duplicate weapon identities and malformed ground items before changing the experiment", () => {
+  let resetCount = 0;
+  const { world, lab } = fixture({ resetWorld() { resetCount++; throw new Error("must not reset"); } });
+  command(lab, "give weapon pistol");
+  const mutate = [
+    (scene) => { scene.world.pickups.find((item) => item.type === "weapon").weapon.id = scene.player.inventory.weapons[0].id; },
+    (scene) => { scene.world.pickups.push(structuredClone(scene.world.pickups[0])); },
+    (scene) => { scene.world.pickups.find((item) => item.type === "skill").level = 0; },
+    (scene) => { scene.world.pickups.find((item) => item.type === "skill").skillId = "unknown"; },
+    (scene) => { scene.world.pickups.find((item) => item.type === "ammo").amount = -1; },
+    (scene) => { scene.world.pickups[0].pos = [999, 0, 0]; },
+    (scene) => { scene.world.pickups[0].script = "injection"; },
+    (scene) => { scene.world.pickups.find((item) => item.type === "weapon").weapon.id = "weapon-999999999999999999999999999999999999999999999999999"; },
+  ];
+  const original = JSON.stringify(lab.snapshot());
+  for (const update of mutate) {
+    const bad = lab.snapshot(); update(bad);
+    assert.throws(() => lab.loadScenario(bad));
+    assert.equal(resetCount, 0);
+    assert.equal(lab.world, world);
+    assert.equal(JSON.stringify(lab.snapshot()), original);
+  }
+});
+
+test("rocket built-in prepares grouped targets and a usable launcher", () => {
+  const { lab } = fixture();
+  command(lab, "scenario load rocket");
+  const world = lab.world;
+  assert.equal(world.player.inventory.weapons[0].type, "rocket");
+  assert.equal(world.actors.length, 4);
+  assert.equal(world.pickups.length, 0);
+  assert.ok(world.actors.slice(1).every((actor) => actor.training.autoRespawn));
+  assert.equal(world.fire(), true);
+  assert.equal(world.projectiles.length, 1);
+});

@@ -3,15 +3,23 @@
   const $ = id => document.getElementById(id);
   const STORAGE_KEY = 'fps.block-character.v1';
   const LAB_STORAGE_KEY = 'fps.lab.scenarios.v1';
+  const CONTROLS_STORAGE_KEY = 'fps.controls.v1';
   const keys = new Set();
-  const skillIds = ['jetpack', 'autoaim', 'weaken'];
-  const skillKeys = ['Q', 'F', 'G'];
-  let world, renderer, lab, labPanel, running = false, started = false, mouseDown = false;
+  let world, renderer, lab, labPanel, controls, inventoryPanel, running = false, started = false, mouseDown = false;
   let sensitivity = 0.002, lastTime = 0, accumulator = 0, hudTime = 0, toastUntil = 0, hitUntil = 0, damageUntil = 0;
   let previousHp = 0, lastDamageId = null, lastEvent = null, waitingCharacter = null, ignoreMouseUntil = 0;
   let project = { parameters: { ...BlockCharacter.DEFAULTS }, face: null };
   const dialogs = ['inventory-dialog', 'settings-dialog', 'character-dialog', 'lab-dialog'];
   const isDialogOpen = () => dialogs.some(id => $(id).open);
+  let savedBindings;
+  try { const saved=localStorage.getItem(CONTROLS_STORAGE_KEY); if(saved) savedBindings=JSON.parse(saved); } catch (_) {}
+  function itemIcon(key) { const span=document.createElement('span');span.className='item-icon';span.setAttribute('aria-hidden','true');span.innerHTML=PixelFPSItemVisuals.icon(key);return span; }
+  function saveBindings() {
+    try { localStorage.setItem(CONTROLS_STORAGE_KEY,JSON.stringify(controls.getBindings())); }
+    catch (_) { showToast('键位已生效；浏览器暂时无法保存设置。'); }
+    refreshHud();
+  }
+
 
   function showToast(message) {
     if (!message) return;
@@ -34,6 +42,11 @@
     world?.skills?.dispose();
     world = new PixelFPS.World({ parameters: options.parameters || project.parameters, face: Object.hasOwn(options,'face') ? options.face : project.face });
     world.skills = new PixelSkillRuntime(world);
+    if (controls) controls.setWorld(world);
+    else {
+      try { controls = new PixelFPSPlayerActions(world,{bindings:savedBindings}); }
+      catch (_) { controls = new PixelFPSPlayerActions(world); showToast('已恢复默认技能键位'); }
+    }
     world.targetsMoving = $('moving-targets').checked;
     world.enemyFire = $('enemy-fire').checked;
     if (lab) { lab.setWorld(world); lab.paused = false; lab.timeScale = 1; }
@@ -87,7 +100,7 @@
   function openDialog(id) {
     pause(false);
     $('pause-screen').hidden = true;
-    if (id === 'inventory-dialog') renderInventory();
+    if (id === 'inventory-dialog') inventoryPanel?.render();
     if (id === 'lab-dialog') labPanel?.refresh();
     if (!$(id).open) $(id).showModal();
     if (id === 'lab-dialog') $('console-input').focus();
@@ -105,8 +118,8 @@
   }
 
   function cast(id) {
-    doResult(world.skills.cast(id));
-    if ($('inventory-dialog').open) renderInventory();
+    doResult(controls.useSkill(id));
+    if ($('inventory-dialog').open) inventoryPanel?.render();
   }
 
   function weaponName(weapon) {
@@ -124,22 +137,35 @@
     const held = inventory.weapons[inventory.selected];
     $('weapon-label').textContent = weaponName(held);
     $('ammo').textContent = `通用弹药 ${inventory.ammo}`;
-    $('weapon-hint').textContent = held ? `1–${inventory.weapons.length} 切换 · 左键攻击` : '靠近物资按 E 拾取';
-    $('skill-hud').replaceChildren(...skillIds.map((id, index) => {
+    $('weapon-icon').innerHTML = held ? PixelFPSItemVisuals.icon(held.type) : '';
+    $('weapon-icon').hidden = !held;
+    $('weapon-hint').textContent = held ? `滚轮 / 1–${Math.min(9,inventory.weapons.length)} 切换 · B 丢枪` : '靠近物资按 E 拾取';
+    const slots = Object.entries(controls.getBindings()).filter(([,id]) => id && world.skills.definitions[id]);
+    $('skill-hud').replaceChildren(...slots.map(([code,id]) => {
       const state = world.skills.getState(id), item = document.createElement('div');
-      item.className = `skill-card${state.count ? '' : ' unowned'}${state.active ? ' active' : ''}`;
-      const key = document.createElement('kbd'); key.textContent = skillKeys[index];
+      item.className = `skill-card${state.count || state.active ? '' : ' unowned'}${state.active ? ' active' : ''}`;
+      const key = document.createElement('kbd'); key.textContent = code.slice(3);
       const name = document.createElement('div'); name.className = 'name'; name.textContent = `${state.name || id} Lv.${state.level || 1}`;
       const detail = document.createElement('div'); detail.className = 'detail';
-      detail.textContent = state.count || state.active ? `${state.manaCost ?? 0} 蓝 · ${id === 'autoaim' ? `剩余 ${state.count} 份` : '可重复'}` : '尚未拾取';
+      detail.textContent = state.count || state.active ? `${state.manaCost ?? 0} 蓝 · ${state.kind === 'ultimate' ? `剩余 ${state.count} 份` : '可重复'}` : '尚未拾取';
       const cooldown = document.createElement('div'); cooldown.className = 'cooldown';
       cooldown.textContent = state.active ? '生效中' : state.remaining > 0 ? `${state.remaining.toFixed(1)} s` : state.count ? '就绪' : '—';
-      item.append(key, name, detail, cooldown);
+      item.append(key, itemIcon(id), name, detail, cooldown);
       return item;
     }));
     const pickup = world.nearestPickup();
     $('pickup-prompt').hidden = !pickup || !running;
-    $('pickup-prompt').textContent = pickup ? `E 拾取 · ${pickup.label || pickup.type}` : '';
+    if (pickup) {
+      const key=pickup.weapon?.type||pickup.weaponType||pickup.skillId||pickup.type;
+      const copy=document.createElement('span');copy.textContent=`E 拾取 · ${pickup.label||pickup.type}`;
+      const hint=document.createElement('small');
+      hint.textContent=pickup.type==='weapon' ? PixelFPSContent.WEAPONS[key]?.description||'武器' : pickup.type==='skill'?`技能材料 · ${pickup.level||1} 级` : pickup.type==='ammo'?'所有枪械共用':'恢复当前蓝量';
+      copy.append(hint);$('pickup-prompt').replaceChildren(itemIcon(key),copy);
+    } else $('pickup-prompt').replaceChildren();
+    const statusNames={weaken:'虚弱',slow:'减速',root:'定身',stun:'眩晕',silence:'沉默',disarmed:'缴械',invulnerable:'无敌'};
+    $('status-hud').replaceChildren(...p.statuses.filter(s=>s.expiresAt>world.time).map(s=>{
+      const chip=document.createElement('span');chip.textContent=`${statusNames[s.type]||s.type} ${(s.expiresAt-world.time).toFixed(1)} s`;return chip;
+    }));
     const auto = world.skills.getState('autoaim');
     $('crosshair').classList.toggle('locked', auto.active > 0);
     const event = world.events?.at(-1);
@@ -166,31 +192,6 @@
       return { actor: a, point: head && world.lineOfSight(world.eye(p),head.center) && renderer?.project(head.center, p) };
     }).filter(a => a.point?.visible && Math.hypot(a.point.x - $('arena').clientWidth / 2, a.point.y - $('arena').clientHeight / 2) < 80).sort((a,b) => a.point.depth-b.point.depth)[0];
     $('target-label').textContent = target ? `${target.actor.label || '训练靶'} · ${Math.ceil(target.actor.hp)} / ${Math.ceil(target.actor.maxHp)}${target.actor.statuses.some(s => s.type === 'weakness' || s.type === 'weaken') ? ' · 虚弱' : ''}` : '';
-  }
-
-  function makeRow(title, detail, actions = []) {
-    const row = document.createElement('div'); row.className = 'inventory-row';
-    const text = document.createElement('div'), strong = document.createElement('strong'), small = document.createElement('small');
-    strong.textContent = title; small.textContent = detail; text.append(strong, small);
-    const buttons = document.createElement('div'); buttons.className = 'actions';
-    actions.forEach(action => { const b = document.createElement('button'); b.textContent = action.label; b.disabled = !!action.disabled; b.onclick = action.run; buttons.append(b); });
-    row.append(text, buttons); return row;
-  }
-
-  function renderInventory() {
-    const inventory = world.player.inventory;
-    $('inventory-resources').textContent = `通用弹药 ${inventory.ammo}　蓝瓶 ${inventory.manaPotions || 0}　击倒训练靶 ${world.kills || 0}`;
-    $('inventory-weapons').replaceChildren(...inventory.weapons.map((weapon, i) => makeRow(`${i + 1}. ${weaponName(weapon)}`, i === inventory.selected ? '当前手持' : '已携带', [{ label: '手持', run: () => { world.selectWeapon(i); renderInventory(); refreshHud(); } }])));
-    if (!inventory.weapons.length) $('inventory-weapons').textContent = '背包里还没有武器，靠近场地入口的物资按 E 拾取。';
-    $('inventory-skills').replaceChildren(...skillIds.map(id => {
-      const state = world.skills.getState(id), stored = inventory.skills[id] || {};
-      const levels = stored.levels || { [state.level || 1]: state.count || 0 };
-      const composition = Object.entries(levels).filter(([,n]) => n > 0).map(([l,n]) => `${l} 级 × ${n}`).join('，') || '尚未拾取';
-      const canUpgrade = id !== 'autoaim' && Object.values(levels).some(n => n >= 3);
-      const actions = [{ label: '使用', disabled: !state.count || state.remaining > 0, run: () => { closeDialog('inventory-dialog'); resume().then(() => cast(id)); } }];
-      if (id !== 'autoaim') actions.push({ label: '三合一升级', disabled: !canUpgrade, run: () => { doResult(world.upgradeSkill(id)); renderInventory(); } });
-      return makeRow(`${state.name || id} · Lv.${state.level || 1}`, `${composition} · ${state.remaining > 0 ? `冷却 ${state.remaining.toFixed(1)} 秒` : '已就绪'}`, actions);
-    }));
   }
 
   async function applyProject(next) {
@@ -269,17 +270,13 @@
     }
     if ($('lab-dialog').open || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
     if (isDialogOpen() && !$('inventory-dialog').open) return;
-    if (event.code === 'Tab') { event.preventDefault(); if ($('inventory-dialog').open) closeDialog('inventory-dialog'); else if (started) openDialog('inventory-dialog'); return; }
+    if (event.code === 'Tab' && !isDialogOpen()) { event.preventDefault(); if (started) openDialog('inventory-dialog'); return; }
     if (!running || isDialogOpen()) return;
     if (['Space','KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.code)) event.preventDefault();
     keys.add(event.code);
     if (event.repeat) return;
-    if (event.code === 'KeyE') doResult(world.interact());
-    if (event.code === 'KeyQ') cast('jetpack');
-    if (event.code === 'KeyF') cast('autoaim');
-    if (event.code === 'KeyG') cast('weaken');
-    if (event.code === 'KeyV') doResult(world.useManaPotion());
-    if (/^Digit[1-9]$/.test(event.code)) world.selectWeapon(Number(event.code.slice(-1)) - 1);
+    const result = controls.dispatch(event.code);
+    if (result) doResult(result);
     if (event.code === 'Escape') pause(true);
   });
   window.addEventListener('keyup', event => keys.delete(event.code));
@@ -294,6 +291,11 @@
     world.player.pitch = Math.max(-1.48, Math.min(1.48, world.player.pitch - event.movementY * sensitivity));
   });
   $('arena').addEventListener('contextmenu', event => event.preventDefault());
+  $('arena').addEventListener('wheel', event => {
+    if (!running || isDialogOpen() || !world.player.inventory.weapons.length) return;
+    event.preventDefault();const inventory=world.player.inventory;
+    doResult(controls.selectWeapon((inventory.selected+(event.deltaY>0?1:-1)+inventory.weapons.length)%inventory.weapons.length));
+  },{passive:false});
 
   function frame(now) {
     const elapsed = Math.min(.1, Math.max(0, (now - lastTime) / 1000)); lastTime = now;
@@ -338,7 +340,13 @@
       onClose:() => closeDialog('lab-dialog'),
       onPlay:() => { if (!world.player.alive) lab.refill(); resume(); }
     });
-    window.PixelFPSApp = Object.freeze({ get world(){return world;}, get renderer(){return renderer;}, get lab(){return lab;}, applyProject, pause, resume, reset:createWorld, cast });
+    inventoryPanel = new PixelFPSInventoryPanel({
+      getWorld:()=>world,getActions:()=>controls,onResult:doResult,
+      onUseSkill:id=>{closeDialog('inventory-dialog');resume().then(()=>cast(id));},
+      onBindingsChanged:saveBindings,
+      onResetBindings:()=>{controls=new PixelFPSPlayerActions(world);saveBindings();showToast('已恢复 Q / F / G 默认技能键位');}
+    });
+    window.PixelFPSApp = Object.freeze({ get world(){return world;}, get renderer(){return renderer;}, get lab(){return lab;}, get actions(){return controls;}, applyProject, pause, resume, reset:createWorld, cast });
     requestAnimationFrame(frame);
   } catch (error) {
     $('boot-error').hidden = false; $('boot-error').textContent = '训练场启动失败：' + error.message;
