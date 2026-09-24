@@ -20,6 +20,7 @@ game_files = [
     ('WORLD', 'game/world.js'), ('SKILL_RUNTIME', 'game/skill-runtime.js'),
     ('JETPACK', 'skills/jetpack.js'), ('AUTOAIM', 'skills/autoaim.js'),
     ('WEAKEN', 'skills/weaken.js'), ('GAME_RENDERER', 'game/renderer.js'),
+    ('LAB', 'game/lab.js'), ('LAB_PANEL', 'game/lab-panel.js'),
     ('GAME_APP', 'game/app.js'),
 ]
 for token, name in game_files:

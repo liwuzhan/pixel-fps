@@ -2,14 +2,15 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const STORAGE_KEY = 'fps.block-character.v1';
+  const LAB_STORAGE_KEY = 'fps.lab.scenarios.v1';
   const keys = new Set();
   const skillIds = ['jetpack', 'autoaim', 'weaken'];
   const skillKeys = ['Q', 'F', 'G'];
-  let world, renderer, running = false, started = false, mouseDown = false;
+  let world, renderer, lab, labPanel, running = false, started = false, mouseDown = false;
   let sensitivity = 0.002, lastTime = 0, accumulator = 0, hudTime = 0, toastUntil = 0, hitUntil = 0, damageUntil = 0;
-  let previousHp = 0, lastEvent = null, waitingCharacter = null, ignoreMouseUntil = 0;
+  let previousHp = 0, lastDamageId = null, lastEvent = null, waitingCharacter = null, ignoreMouseUntil = 0;
   let project = { parameters: { ...BlockCharacter.DEFAULTS }, face: null };
-  const dialogs = ['inventory-dialog', 'settings-dialog', 'character-dialog'];
+  const dialogs = ['inventory-dialog', 'settings-dialog', 'character-dialog', 'lab-dialog'];
   const isDialogOpen = () => dialogs.some(id => $(id).open);
 
   function showToast(message) {
@@ -25,27 +26,31 @@
   } catch (_) { /* An invalid or unavailable local save falls back to the default body. */ }
 
   function describeCharacter() {
-    const c = BlockCharacter.createCharacter(project.parameters);
-    return `当前角色 ${c.standingHeight.toFixed(2)} m · 头部 ×${c.params.headScale.toFixed(2)} · 躯干 ×${c.params.torsoScale.toFixed(2)}${project.face ? ' · 已绘制面部' : ''}`;
+    const c = world?.player.character || BlockCharacter.createCharacter(project.parameters);
+    return `当前角色 ${c.standingHeight.toFixed(2)} m · 头部 ×${c.params.headScale.toFixed(2)} · 躯干 ×${c.params.torsoScale.toFixed(2)}${(world?.player.face || (!world && project.face)) ? ' · 已绘制面部' : ''}`;
   }
 
-  function createWorld() {
+  function createWorld(options = {}) {
     world?.skills?.dispose();
-    world = new PixelFPS.World({ parameters: project.parameters, face: project.face });
+    world = new PixelFPS.World({ parameters: options.parameters || project.parameters, face: Object.hasOwn(options,'face') ? options.face : project.face });
     world.skills = new PixelSkillRuntime(world);
     world.targetsMoving = $('moving-targets').checked;
     world.enemyFire = $('enemy-fire').checked;
+    if (lab) { lab.setWorld(world); lab.paused = false; lab.timeScale = 1; }
+    else lab = new PixelFPSLab(world,{resetWorld:createWorld});
     previousHp = world.player.hp;
     $('resume-game').textContent = '继续训练';
-    lastEvent = null;
+    lastEvent = null; lastDamageId = null;
     accumulator = 0;
     $('character-summary').textContent = describeCharacter();
     $('settings-character').textContent = describeCharacter();
     refreshHud();
+    return world;
   }
 
   function pause(showPanel = true) {
     running = false;
+    accumulator = 0;
     mouseDown = false;
     keys.clear();
     if (document.pointerLockElement === $('arena')) document.exitPointerLock();
@@ -83,7 +88,9 @@
     pause(false);
     $('pause-screen').hidden = true;
     if (id === 'inventory-dialog') renderInventory();
+    if (id === 'lab-dialog') labPanel?.refresh();
     if (!$(id).open) $(id).showModal();
+    if (id === 'lab-dialog') $('console-input').focus();
   }
 
   function closeDialog(id) {
@@ -143,6 +150,17 @@
     }
     if (p.hp < previousHp) damageUntil = performance.now() + 240;
     previousHp = p.hp;
+    const damage = world.combatLog?.findLast(e => e.type === 'damage' && e.sourceId === p.id && e.actualDamage > 0);
+    if (damage && damage.id !== lastDamageId) { lastDamageId = damage.id; hitUntil = performance.now() + 160; }
+    const flags = [];
+    if (world.cheats?.infiniteMana) flags.push('无限蓝量');
+    if (world.cheats?.infiniteAmmo) flags.push('无限弹药');
+    if (world.cheats?.noCooldown) flags.push('无技能冷却');
+    if (lab?.paused) flags.push('时间暂停');
+    if (lab && lab.timeScale !== 1) flags.push('时间 '+lab.timeScale+'×');
+    $('lab-badge').hidden = !flags.length;
+    $('lab-badge').textContent = flags.join(' · ');
+    if ($('lab-dialog').open) labPanel?.update();
     const target = world.actors.filter(a => a !== p && a.alive).map(a => {
       const head = world.actorBoxes(a).find(b => b.id === 'head');
       return { actor: a, point: head && world.lineOfSight(world.eye(p),head.center) && renderer?.project(head.center, p) };
@@ -200,6 +218,7 @@
   $('close-inventory').onclick = () => closeDialog('inventory-dialog');
   $('open-settings').onclick = () => openDialog('settings-dialog'); $('close-settings').onclick = () => closeDialog('settings-dialog');
   $('pause-settings').onclick = () => openDialog('settings-dialog');
+  ['open-lab','start-lab','pause-lab'].forEach(id => $(id).onclick = () => openDialog('lab-dialog'));
   $('cancel-character').onclick = () => closeDialog('character-dialog');
   $('reset-game').onclick = () => { createWorld(); resume(); };
   $('reset-all').onclick = () => { createWorld(); closeDialog('settings-dialog'); showToast('训练场与物资已重置'); };
@@ -223,7 +242,7 @@
   };
   window.addEventListener('message', async event => {
     if (event.source === $('character-frame').contentWindow && event.data?.type === 'pixel-fps:editor-ready') {
-      event.source.postMessage({type:'pixel-fps:set-character',character:BlockCharacter.exportData(project.parameters,project.face)}, '*');
+      event.source.postMessage({type:'pixel-fps:set-character',character:BlockCharacter.exportData(world.player.character.params,world.player.face)}, '*');
       return;
     }
     if (event.source !== $('character-frame').contentWindow || event.data?.type !== 'pixel-fps:character' || event.data.token !== waitingCharacter?.token) return;
@@ -242,6 +261,14 @@
   });
   document.addEventListener('pointerlockerror', () => { ignoreMouseUntil = 0; if (!isDialogOpen()) { enterPlay(); showToast('拖动鼠标瞄准，或再次点击画面锁定鼠标'); } });
   window.addEventListener('keydown', event => {
+    if ((event.code === 'F2' || event.code === 'Backquote') && !event.repeat && !$('character-dialog').open) {
+      event.preventDefault();
+      if ($('lab-dialog').open) closeDialog('lab-dialog');
+      else if (!isDialogOpen()) openDialog('lab-dialog');
+      return;
+    }
+    if ($('lab-dialog').open || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
+    if (isDialogOpen() && !$('inventory-dialog').open) return;
     if (event.code === 'Tab') { event.preventDefault(); if ($('inventory-dialog').open) closeDialog('inventory-dialog'); else if (started) openDialog('inventory-dialog'); return; }
     if (!running || isDialogOpen()) return;
     if (['Space','KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.code)) event.preventDefault();
@@ -270,8 +297,8 @@
 
   function frame(now) {
     const elapsed = Math.min(.1, Math.max(0, (now - lastTime) / 1000)); lastTime = now;
-    if (running) {
-      accumulator += elapsed;
+    if (running && !lab.paused) {
+      accumulator += elapsed * lab.timeScale;
       while (accumulator >= 1 / 120) {
         world.update(1 / 120, {forward:(keys.has('KeyW')?1:0)-(keys.has('KeyS')?1:0),right:(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),jump:keys.has('Space'),fire:mouseDown,sprint:keys.has('ShiftLeft')||keys.has('ShiftRight')});
         accumulator -= 1 / 120;
@@ -280,6 +307,7 @@
         pause(true); $('pause-title').textContent = '本轮训练结束'; $('pause-copy').textContent = '可以重新开始，或调整体型再试一次。'; $('resume-game').textContent = '重新开始训练';
       }
     }
+    if (lab?.paused) accumulator = 0;
     if (now - hudTime > 90) { refreshHud(); hudTime = now; }
     $('hit-marker').style.opacity = now < hitUntil ? '1' : '0';
     document.body.classList.toggle('damage', now < damageUntil);
@@ -291,7 +319,26 @@
   try {
     renderer = new PixelFPSRenderer($('arena'));
     createWorld();
-    window.PixelFPSApp = Object.freeze({ get world(){return world;}, get renderer(){return renderer;}, applyProject, pause, resume, reset:createWorld, cast });
+    try {
+      const saved = localStorage.getItem(LAB_STORAGE_KEY);
+      if (saved) lab.importScenarios(JSON.parse(saved));
+    } catch (_) { showToast('已跳过不可读取的实验配置，可重新导入 JSON'); }
+    labPanel = new PixelFPSLabPanel({
+      getLab:() => lab,
+      onChange:() => {
+        accumulator = 0;
+        $('moving-targets').checked = world.targetsMoving;
+        $('enemy-fire').checked = world.enemyFire;
+        $('character-summary').textContent = describeCharacter();
+        $('settings-character').textContent = describeCharacter();
+        try { localStorage.setItem(LAB_STORAGE_KEY,JSON.stringify(lab.scenarios)); }
+        catch (_) { showToast('当前实验仍可使用；浏览器无法保存，请导出配置 JSON'); }
+        refreshHud();
+      },
+      onClose:() => closeDialog('lab-dialog'),
+      onPlay:() => { if (!world.player.alive) lab.refill(); resume(); }
+    });
+    window.PixelFPSApp = Object.freeze({ get world(){return world;}, get renderer(){return renderer;}, get lab(){return lab;}, applyProject, pause, resume, reset:createWorld, cast });
     requestAnimationFrame(frame);
   } catch (error) {
     $('boot-error').hidden = false; $('boot-error').textContent = '训练场启动失败：' + error.message;

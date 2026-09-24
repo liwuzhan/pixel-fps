@@ -29,7 +29,7 @@
         level,
         count: Math.max(0, Number(owned?.count) || 0),
         cooldown: definition ? valueAt(definition.cooldown, level) : 0,
-        remaining: Math.max(0, this.cooldowns[id] || 0),
+        remaining: this.world.cheats?.noCooldown ? 0 : Math.max(0, this.cooldowns[id] || 0),
         active: this.instances.filter((instance) => instance.skillId === id).length,
         manaCost: definition ? valueAt(definition.manaCost, level) : 0,
         duration: definition ? valueAt(definition.duration, level) : 0,
@@ -54,7 +54,7 @@
       if (!Number.isFinite(state.manaCost) || state.manaCost < 0 ||
           !Number.isFinite(state.duration) || state.duration < 0 ||
           !Number.isFinite(state.cooldown) || state.cooldown < 0) return fail("技能参数无效。");
-      if (!Number.isFinite(caster.mana) || caster.mana < state.manaCost) return fail("蓝量不足。");
+      if (!world.cheats?.infiniteMana && (!Number.isFinite(caster.mana) || caster.mana < state.manaCost)) return fail("蓝量不足。");
 
       const instance = {
         id: `${caster.id || "player"}:${id}:${this.nextInstanceId++}`,
@@ -94,8 +94,8 @@
           owned.count -= 1;
         }
       }
-      caster.mana -= state.manaCost;
-      this.cooldowns[id] = state.cooldown;
+      if (!world.cheats?.infiniteMana) caster.mana -= state.manaCost;
+      this.cooldowns[id] = world.cheats?.noCooldown ? 0 : state.cooldown;
       try {
         if (definition.start && definition.start(instance) === false) throw new Error("技能未能启动。");
       } catch (error) {
@@ -110,6 +110,7 @@
       else if (definition.end) definition.end(instance, "complete");
       const message = `${definition.name || id} · ${state.level} 级`;
       if (world.message) world.message(message, "skill");
+      world.recordCombat?.("skill-cast", { sourceId: caster.id, skillId: id, level: state.level, manaSpent: previousMana - caster.mana, copiesSpent: definition.kind === "ultimate" ? 1 : 0 });
       return { ok: true, message };
     }
 

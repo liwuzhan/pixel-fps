@@ -48,6 +48,9 @@
     constructor(options = {}) {
       this.options = { parameters: Character.normalizeParams(options.parameters || {}), face: options.face || null };
       this._nextId = 1;
+      this._nextCombatId = 1;
+      this.combatLog = [];
+      this.cheats = { infiniteMana: false, infiniteAmmo: false, noCooldown: false };
       this.time = 0;
       this.kills = 0;
       this.targetsMoving = false;
@@ -63,6 +66,7 @@
         this._actor("target-2", 1, "长腿靶", [0, 0, -15], { ...Character.DEFAULTS, legLength: 1.4 }),
         this._actor("target-3", 1, "大头靶", [5, 0, -10], { ...Character.DEFAULTS, headScale: 1.5 }),
       ];
+      for (const actor of this.actors.slice(1)) actor.training = this._training({ behavior: null, fire: null });
       this.obstacles = [
         { id: "cover-left", center: [-7.5, 0.75, -3], size: [3, 1.5, 1], color: [0.27, 0.32, 0.36] },
         { id: "cover-right", center: [7.5, 1.4, -3], size: [3, 2.8, 1], color: [0.3, 0.34, 0.39] },
@@ -89,6 +93,85 @@
         speed: CONFIG.baseSpeed * character.params.legLength / Character.DEFAULTS.legLength,
         alive: true, grounded: true, statuses: [], nextFireAt: 0, nextEnemyFireAt: 1.5,
         inventory: { weapons: [], selected: 0, ammo: 0, manaPotions: 0, skills } };
+    }
+
+    _training(patch = {}, current = {}) {
+      if (!patch || typeof patch !== "object" || Array.isArray(patch)) throw new TypeError("木桩行为必须是对象。");
+      const result = { behavior: "stationary", fire: false, autoRespawn: false, autoRecover: false, respawnDelay: 1, ...current };
+      for (const [key, value] of Object.entries(patch)) {
+        if (!Object.hasOwn(result, key)) throw new TypeError(`未知木桩行为：${key}`);
+        if (key === "behavior") {
+          if (value !== null && value !== "stationary" && value !== "strafe") throw new TypeError("木桩行为只能是 stationary 或 strafe。");
+        } else if (key === "respawnDelay") {
+          if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 3600) throw new TypeError("复活延迟必须是 0 至 3600 秒的有限数字。");
+        } else if (typeof value !== "boolean" && !(key === "fire" && value === null)) throw new TypeError(`木桩参数 ${key} 必须是布尔值。`);
+        result[key] = value;
+      }
+      return result;
+    }
+    _dummySpec(patch, current = null) {
+      if (!patch || typeof patch !== "object" || Array.isArray(patch)) throw new TypeError("木桩配置必须是对象。");
+      const keys = ["label", "parameters", "pos", "training"];
+      for (const key of Object.keys(patch)) if (!keys.includes(key)) throw new TypeError(`未知木桩配置：${key}`);
+      const label = Object.hasOwn(patch, "label") ? patch.label : current?.label ?? "实验木桩";
+      if (typeof label !== "string" || !label.trim() || label.length > 80) throw new TypeError("木桩名称需要 1 至 80 个字符。");
+      if (patch.parameters !== undefined && (!patch.parameters || typeof patch.parameters !== "object" || Array.isArray(patch.parameters))) throw new TypeError("木桩体型必须是对象。");
+      const character = Character.createCharacter({ ...(current?.character.params || Character.DEFAULTS), ...patch.parameters });
+      const pos = Object.hasOwn(patch, "pos") ? patch.pos : current?.spawnPos ?? [0, 0, -8];
+      if (!Array.isArray(pos) || pos.length !== 3 || pos.some((value) => typeof value !== "number" || !Number.isFinite(value))) throw new TypeError("木桩位置需要三个有限数字。");
+      if (pos[1] < 0 || pos[1] > this.bounds.max[1]) throw new RangeError("木桩高度超出训练场范围。");
+      for (const axis of [0, 2]) if (pos[axis] + character.bounds.min[axis] < this.bounds.min[axis] || pos[axis] + character.bounds.max[axis] > this.bounds.max[axis]) throw new RangeError("木桩完整体型必须位于训练场边界内。");
+      const training = this._training(Object.hasOwn(patch, "training") ? patch.training : {}, current?.training);
+      return { label: label.trim(), character, pos: [...pos], training };
+    }
+    spawnDummy(options = {}) {
+      if (this.actors.filter((actor) => actor !== this.player).length >= 64) throw new RangeError("实验环境最多同时放置 64 个木桩。");
+      const spec = this._dummySpec(options);
+      const actor = this._actor(`dummy-${this._nextId++}`, 1, spec.label, spec.pos, spec.character.params);
+      actor.training = spec.training;
+      this.actors.push(actor);
+      this.recordCombat("dummy-spawn", { targetId: actor.id, label: actor.label });
+      return actor;
+    }
+    configureDummy(id, patch = {}) {
+      const actor = this.findActor(id);
+      if (!actor || actor === this.player) throw new Error("找不到这个木桩。");
+      // Validate the complete proposal before mutating the existing actor.
+      const spec = this._dummySpec(patch, actor);
+      const rebuilt = this._actor(actor.id, actor.team, spec.label, spec.pos, spec.character.params, actor.face);
+      actor.label = spec.label;
+      actor.training = spec.training;
+      if (patch.parameters !== undefined) {
+        actor.hp = actor.alive ? rebuilt.maxHp * Math.max(0, Math.min(1, actor.hp / actor.maxHp)) : 0;
+        actor.mana = rebuilt.maxMana * Math.max(0, Math.min(1, actor.mana / actor.maxMana));
+        for (const key of ["character", "maxHp", "maxMana", "eyeHeight", "speed"]) actor[key] = rebuilt[key];
+      }
+      if (patch.pos !== undefined || patch.parameters !== undefined) {
+        actor.pos = [...spec.pos]; actor.spawnPos = [...spec.pos]; actor.vel = [0, 0, 0];
+      }
+      if (!actor.alive) actor.respawnAt = spec.training.autoRespawn ? this.time + spec.training.respawnDelay : null;
+      this.recordCombat("dummy-configure", { targetId: actor.id, label: actor.label });
+      return actor;
+    }
+    removeDummy(id) {
+      const actor = this.findActor(id);
+      if (!actor || actor === this.player) return false;
+      this.removeStatus(actor, undefined, "dummy-removed");
+      this.actors.splice(this.actors.indexOf(actor), 1);
+      this.projectiles = this.projectiles.filter((projectile) => projectile.ownerId !== id);
+      this.recordCombat("dummy-remove", { targetId: id });
+      return true;
+    }
+    clearDummies() {
+      const ids = this.actors.filter((actor) => actor !== this.player).map((actor) => actor.id);
+      for (const id of ids) this.removeDummy(id);
+      return ids.length;
+    }
+    recordCombat(type, data = {}) {
+      const entry = { ...data, id: this._nextCombatId++, time: this.time, type };
+      this.combatLog.push(entry);
+      if (this.combatLog.length > 500) this.combatLog.splice(0, this.combatLog.length - 500);
+      return entry;
     }
 
     _spawnSupplies() {
@@ -201,35 +284,69 @@
     }
 
     applyStatus(actor, type, duration, sourceId = null, data = {}) {
-      if (!actor || !actor.alive || !Number.isFinite(duration) || duration <= 0) return null;
+      if (!actor || !actor.alive || typeof type !== "string" || !type || !Number.isFinite(duration) || duration <= 0 || !Number.isFinite(this.time + duration)) return null;
+      if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+      for (const key of ["multiplier", "damageMultiplier"]) if (Object.hasOwn(data, key) && (!Number.isFinite(data[key]) || data[key] < 0)) return null;
       const status = { id: `status-${this._nextId++}`, type, expiresAt: this.time + duration, sourceId, data: { ...data } };
       actor.statuses.push(status);
+      this.recordCombat("status-add", { sourceId, targetId: actor.id, statusId: status.id, statusType: type, expiresAt: status.expiresAt, data: { ...status.data } });
       return status;
+    }
+    removeStatus(actor, idOrType, reason = "removed") {
+      if (!actor) return 0;
+      const removed = actor.statuses.filter((status) => idOrType === undefined || status.id === idOrType || status.type === idOrType);
+      const ids = new Set(removed.map((status) => status.id));
+      actor.statuses = actor.statuses.filter((status) => !ids.has(status.id));
+      for (const status of removed) this.recordCombat(reason === "expired" ? "status-expire" : "status-remove", {
+        sourceId: status.sourceId, targetId: actor.id, statusId: status.id, statusType: status.type, reason, expiresAt: status.expiresAt,
+      });
+      return removed.length;
     }
     hasStatus(actor, type) { return actor.statuses.some((status) => status.type === type && status.expiresAt > this.time); }
     damage(actor, amount, source = null) {
-      if (!actor || !actor.alive || !(amount > 0) || this.hasStatus(actor, "invulnerable")) return 0;
-      const sourceId = typeof source === "string" ? source : source?.ownerId || source?.id;
+      if (!actor || !Number.isFinite(amount) || !(amount > 0)) return 0;
+      const sourceId = (typeof source === "string" ? source : source?.ownerId || source?.sourceId || source?.id) ?? null;
       const attacker = this.findActor(sourceId);
       let multiplier = 1;
+      const modifiers = [];
       if (attacker) for (const status of attacker.statuses) {
-        if (status.type === "weaken" && status.expiresAt > this.time) multiplier = Math.min(multiplier, status.data.damageMultiplier ?? 0.45);
+        if (status.type === "weaken" && status.expiresAt > this.time) {
+          const factor = status.data.damageMultiplier ?? 0.45;
+          if (Number.isFinite(factor) && factor >= 0) {
+            multiplier = Math.min(multiplier, factor);
+            modifiers.push({ statusId: status.id, statusType: status.type, sourceId: status.sourceId, multiplier: factor });
+          }
+        }
       }
-      const actual = Math.min(actor.hp, amount * multiplier);
+      const hpBefore = actor.hp, modifiedDamage = amount * multiplier;
+      const blockedReason = !actor.alive ? "dead" : this.hasStatus(actor, "invulnerable") ? "invulnerable" : null;
+      const actual = blockedReason ? 0 : Math.min(actor.hp, modifiedDamage);
       actor.hp = Math.max(0, actor.hp - actual);
-      if (actor.hp <= 0) {
+      const fatal = !blockedReason && hpBefore > 0 && actor.hp <= 0;
+      this.recordCombat("damage", { sourceId, targetId: actor.id, weaponId: source?.weaponId ?? null, partId: source?.partId ?? null,
+        baseDamage: amount, multiplier, modifiers, modifiedDamage, actualDamage: actual, hpBefore, hpAfter: actor.hp, blockedReason, fatal });
+      if (fatal) {
         actor.alive = false;
         actor.vel = [0, 0, 0];
+        actor.respawnAt = actor.training?.autoRespawn ? this.time + actor.training.respawnDelay : null;
         if (actor !== this.player && attacker?.team === this.player.team) this.kills++;
         this.message(actor === this.player ? "你已倒下。点击「重新开始」复位训练场。" : `${actor.label}已击倒。`, "death");
+      } else if (actual > 0 && actor.training?.autoRecover) {
+        const recovered = actor.maxHp - actor.hp;
+        actor.hp = actor.maxHp;
+        this.recordCombat("recover", { targetId: actor.id, amount: recovered, hpAfter: actor.hp });
       }
       return actual;
     }
 
     spawnProjectile(options) {
+      if (!options || typeof options !== "object") throw new TypeError("投射物参数必须是对象。");
+      for (const key of ["pos", "vel"]) if (!Array.isArray(options[key]) || options[key].length !== 3 || options[key].some((value) => typeof value !== "number" || !Number.isFinite(value))) throw new TypeError(`投射物 ${key} 需要三个有限数字。`);
+      for (const key of ["damage", "radius", "gravity", "lifetime"]) if (options[key] !== undefined && (typeof options[key] !== "number" || !Number.isFinite(options[key]) || ((key !== "gravity") && options[key] < 0))) throw new TypeError(`投射物 ${key} 数值无效。`);
+      if (options.onHit != null && typeof options.onHit !== "function") throw new TypeError("投射物命中处理必须是函数。");
       const projectile = { id: `projectile-${this._nextId++}`, pos: [...options.pos], previousPos: [...options.pos],
         vel: [...options.vel], ownerId: options.ownerId, team: options.team ?? this.findActor(options.ownerId)?.team,
-        damage: options.damage || 0, radius: options.radius ?? 0.045, gravity: options.gravity ?? 0,
+        weaponId: options.weaponId ?? null, damage: options.damage || 0, radius: options.radius ?? 0.045, gravity: options.gravity ?? 0,
         expiresAt: this.time + (options.lifetime ?? 4), color: options.color || [1, 0.8, 0.3], onHit: options.onHit || null };
       this.projectiles.push(projectile);
       return projectile;
@@ -239,21 +356,21 @@
       if (!player.alive || this.time < player.nextFireAt || this.hasStatus(player, "disarmed") || this.hasStatus(player, "stun")) return false;
       const item = player.inventory.weapons[player.inventory.selected], weapon = item && WEAPONS[item.type];
       if (!weapon) return false;
-      if (player.inventory.ammo < weapon.ammoCost) return false;
+      if (!this.cheats.infiniteAmmo && player.inventory.ammo < weapon.ammoCost) return false;
       player.nextFireAt = this.time + weapon.interval;
-      player.inventory.ammo -= weapon.ammoCost;
+      if (!this.cheats.infiniteAmmo) player.inventory.ammo -= weapon.ammoCost;
       const from = eye(player), direction = aimDirection(player);
       if (weapon.melee) {
         const to = add(from, mul(direction, player.character.params.armLength + 0.45));
         const hit = this._firstHit(from, to, 0.11, player.id, player.team);
         if (hit) {
-          if (hit.actor) this.damage(hit.actor, weapon.damage, player.id);
+          if (hit.actor) this.damage(hit.actor, weapon.damage, { ownerId: player.id, weaponId: item.type, partId: hit.partId });
           this.addEffect({ type: "hit", pos: hit.pos, color: hit.actor ? [1, 0.25, 0.15] : [0.8, 0.8, 0.8] });
         }
         this.addEffect({ type: "melee", pos: add(from, mul(direction, 0.6)), duration: 0.12, color: weapon.color });
       } else {
         this.spawnProjectile({ pos: from, vel: mul(direction, weapon.speed), ownerId: player.id, team: player.team,
-          damage: weapon.damage, color: weapon.color });
+          weaponId: item.type, damage: weapon.damage, color: weapon.color });
       }
       this.addEffect({ type: "shot", pos: add(from, mul(direction, 0.35)), duration: 0.06, color: weapon.color });
       return true;
@@ -291,7 +408,7 @@
         const hit = this._firstHit(projectile.pos, to, projectile.radius, projectile.ownerId, projectile.team);
         if (hit) {
           projectile.pos = hit.pos;
-          if (hit.actor && projectile.damage > 0) this.damage(hit.actor, projectile.damage, projectile.ownerId);
+          if (hit.actor && projectile.damage > 0) this.damage(hit.actor, projectile.damage, { ownerId: projectile.ownerId, weaponId: projectile.weaponId, partId: hit.partId });
           this.addEffect({ type: "hit", pos: [...hit.pos], color: hit.actor ? [1, 0.3, 0.12] : [0.85, 0.85, 0.7], duration: 0.17 });
           if (projectile.onHit) projectile.onHit({ world: this, projectile, ...hit });
         } else {
@@ -358,16 +475,23 @@
     }
     _updateTargets(dt) {
       for (const [index, actor] of this.actors.slice(1).entries()) {
-        if (!actor.alive) continue;
-        if (this.targetsMoving && !this.hasStatus(actor, "root") && !this.hasStatus(actor, "stun")) {
-          this._moveAxis(actor, 0, actor.spawnPos[0] + Math.sin(this.time * 0.8 + index) * 1.7 - actor.pos[0]);
+        if (!actor.alive) {
+          if (actor.training?.autoRespawn && actor.respawnAt !== null && actor.respawnAt <= this.time) this._restoreDummy(actor, "respawn");
+          else continue;
         }
-        if (!this.enemyFire || !this.player.alive || this.time < actor.nextEnemyFireAt || this.hasStatus(actor, "stun") || this.hasStatus(actor, "disarmed")) continue;
+        const moving = actor.training?.behavior == null ? this.targetsMoving : actor.training.behavior === "strafe";
+        const firing = actor.training?.fire == null ? this.enemyFire : actor.training.fire;
+        if (moving && !this.hasStatus(actor, "root") && !this.hasStatus(actor, "stun")) {
+          const minimum = this.bounds.min[0] - actor.character.bounds.min[0], maximum = this.bounds.max[0] - actor.character.bounds.max[0];
+          const destination = Math.max(minimum, Math.min(maximum, actor.spawnPos[0] + Math.sin(this.time * 0.8 + index) * 1.7));
+          this._moveAxis(actor, 0, destination - actor.pos[0]);
+        }
+        if (!firing || !this.player.alive || this.time < actor.nextEnemyFireAt || this.hasStatus(actor, "stun") || this.hasStatus(actor, "disarmed")) continue;
         actor.nextEnemyFireAt = this.time + 1.4;
         const from = eye(actor), to = eye(this.player);
         if (!this.lineOfSight(from, to)) continue;
         const direction = normalized(sub(to, from));
-        this.spawnProjectile({ pos: from, vel: mul(direction, 22), ownerId: actor.id, team: actor.team, damage: 9,
+        this.spawnProjectile({ pos: from, vel: mul(direction, 22), ownerId: actor.id, team: actor.team, weaponId: "training-gun", damage: 9,
           color: [1, 0.28, 0.2], radius: 0.065, lifetime: 4 });
       }
     }
@@ -375,7 +499,7 @@
       if (!Number.isFinite(dt) || dt <= 0) return;
       dt = Math.min(dt, 0.25);
       this.time += dt;
-      for (const actor of this.actors) actor.statuses = actor.statuses.filter((status) => status.expiresAt > this.time);
+      for (const actor of this.actors) for (const status of [...actor.statuses]) if (status.expiresAt <= this.time) this.removeStatus(actor, status.id, "expired");
       if (this.skills?.update) this.skills.update(dt);
       this._movePlayer(dt, input);
       if (input.fire) this.fire();
@@ -383,23 +507,31 @@
       this._updateProjectiles(dt);
       this.effects = this.effects.filter((effect) => effect.expiresAt > this.time);
     }
+    _restoreDummy(actor, reason = "reset") {
+      actor.pos = [...actor.spawnPos]; actor.vel = [0, 0, 0]; actor.alive = true; actor.hp = actor.maxHp; actor.mana = actor.maxMana;
+      actor.grounded = true; actor.respawnAt = null; actor.nextEnemyFireAt = this.time + 1.5;
+      this.removeStatus(actor, undefined, reason);
+      this.recordCombat(reason === "respawn" ? "respawn" : "dummy-reset", { targetId: actor.id, hpAfter: actor.hp });
+    }
     resetTargets() {
       this.kills = 0;
       this.projectiles = [];
       for (const actor of this.actors.slice(1)) {
-        actor.pos = [...actor.spawnPos]; actor.vel = [0, 0, 0]; actor.alive = true; actor.hp = actor.maxHp;
-        actor.statuses = []; actor.nextEnemyFireAt = this.time + 1.5;
+        this._restoreDummy(actor);
       }
       this.message("训练靶已复位。", "info");
     }
     resetPlayer() {
       const player = this.player;
       player.pos = [...player.spawnPos]; player.vel = [0, 0, 0]; player.hp = player.maxHp; player.mana = player.maxMana;
-      player.alive = true; player.grounded = true; player.statuses = []; player.nextFireAt = this.time;
+      player.alive = true; player.grounded = true; this.removeStatus(player, undefined, "reset"); player.nextFireAt = this.time;
     }
     reset() {
       this.resetPlayer(); this.resetTargets();
       this.effects = [];
+      this.skills?.dispose?.();
+      this.cheats = { infiniteMana: false, infiniteAmmo: false, noCooldown: false };
+      this.combatLog = [];
       this.message("训练场已复位，保留已拾取的物品。", "info");
     }
   }
