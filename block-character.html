@@ -1,0 +1,1548 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><meta name="description" content="六方块角色构建器：调整体型，自由画脸，只有头部正面使用绘制的贴图。离线运行。">
+<title>方块人 · 角色构建器</title>
+<style>:root{color-scheme:dark;--bg:#10171e;--panel:#1b232b;--line:#303b45;--ink:#eef0ed;--muted:#a3afb7;--accent:#e2b080;--field:#111a22;--soft:#27323c;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-synthesis:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-size:14px}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:4px}button{color:inherit;border:1px solid var(--line);background:transparent;border-radius:7px;padding:8px 12px;line-height:1.4}button:hover{background:var(--soft)}button:active{transform:translateY(1px)}button[aria-pressed=true]{color:var(--accent);background:#3a3027;border-color:#80634a}.app{max-width:1800px;margin:auto;min-height:100vh;display:flex;flex-direction:column}.header{height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;gap:14px;align-items:center}.brand-mark{height:34px;width:32px;position:relative;background:var(--accent);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}.brand-mark:after{content:"";position:absolute;inset:8px;background:var(--bg);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}h1{margin:0;font-size:19px;font-weight:600;letter-spacing:.04em}.eyebrow{font-size:10px;letter-spacing:.16em;color:var(--muted);margin-top:5px}.actions{display:flex;align-items:center;gap:8px}.actions .primary{background:var(--accent);color:#23221e;border-color:var(--accent);font-weight:600}.primary:hover{background:#edbf95}.module-tag{margin-left:14px;padding-left:18px;border-left:1px solid var(--line);color:var(--muted);font-size:12px}.workspace{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 350px;min-height:700px}.studio{position:relative;display:flex;flex-direction:column;background:#151d25;min-width:0;overflow:hidden}.studio-head{padding:26px 28px 0;display:flex;justify-content:space-between;align-items:start;position:absolute;left:0;right:0;top:0;z-index:3;pointer-events:none}.metric-label{color:var(--muted);font-size:12px;letter-spacing:.08em}.height-number{font-size:38px;font-weight:450;letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin:4px 0 3px}.height-number span{font-size:15px;letter-spacing:0;color:var(--muted);margin-left:6px}.metric-formula{color:#84949f;font-size:11px}.studio-badge{border:1px solid #3b4852;padding:6px 10px;border-radius:5px;color:#b2c0c9;font-size:11px;letter-spacing:.08em}.viewport-wrap{position:absolute;inset:0;overflow:hidden}.viewport-wrap canvas{display:block;width:100%;height:100%}#viewport{touch-action:none;cursor:grab}#viewport:active{cursor:grabbing}.studio-footer{position:absolute;left:28px;right:28px;bottom:23px;display:flex;flex-direction:column;gap:16px;pointer-events:none;z-index:3}.view-bar{display:flex;gap:6px;pointer-events:auto;align-self:center;background:#111a22e6;padding:5px;border:1px solid #34414b;border-radius:9px;box-shadow:0 8px 24px #0002}.view-bar button{border:0;font-size:12px;padding:7px 12px}.view-bar button[aria-pressed=true]{background:#384550;color:#f2f3ef}.view-bar .fit{border-left:1px solid var(--line);border-radius:0;margin-left:2px}.stage-caption{display:flex;justify-content:space-between;align-items:center;gap:14px;color:#8697a2;font-size:11px}.selection-caption{color:#c4ccd0;max-width:60%}.viewport-error{position:absolute;inset:35% 12%;color:#f4c196;text-align:center;line-height:1.8;z-index:3}.inspector{background:var(--panel);border-left:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:21px}.inspector-title{display:flex;align-items:center;justify-content:space-between}.inspector h2{font-size:16px;font-weight:550;margin:0}.subtle{font-size:11px;color:var(--muted)}.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.preset{padding:10px 5px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;background:#171f27}.preset small{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}.group{border-top:1px solid var(--line);padding-top:17px}.group-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:8px}.group-title h3{font-size:12px;margin:0;color:#b2bfc7;font-weight:500}.link-toggle{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;cursor:pointer}.link-toggle input{accent-color:var(--accent);width:14px;height:14px;margin:0}.param-row{margin-top:15px;padding-left:10px;border-left:2px solid transparent;transition:border-color .15s}.param-row:first-child{margin-top:0}.param-row.selected{border-left-color:var(--accent)}.param-top{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:9px}.part-label{font-size:13px}.selected .part-label{color:var(--accent)}.number-wrap{display:flex;align-items:center;border:1px solid #3a4650;border-radius:5px;background:var(--field);height:29px;padding-right:9px;gap:5px}.number-wrap input{background:none;border:0;color:var(--ink);text-align:right;width:62px;min-width:0;padding:4px 0 4px 5px;font-size:12px;font-variant-numeric:tabular-nums;appearance:textfield;-moz-appearance:textfield}.number-wrap input::-webkit-inner-spin-button{appearance:none}.number-wrap span{font-size:10px;color:var(--muted);min-width:9px}.param-row input[type=range]{width:100%;height:4px;display:block;appearance:none;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--fill,17%),#3b4853 var(--fill,17%),#3b4853 100%);border-radius:3px;margin:13px 0 11px;cursor:ew-resize;accent-color:var(--accent)}input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:#eac098;border:2px solid #202730;box-shadow:0 0 0 1px #b0845e}input[type=range]::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:#eac098;border:2px solid #202730}.dimension{font-size:10px;color:#95a5af;min-height:14px;font-variant-numeric:tabular-nums}.group-note{font-size:10px;color:#83949f;margin:10px 0 0 12px;line-height:1.65}.inspector-bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}.reset{font-size:11px;padding:6px 9px;color:#bdc7cc}.save-state{font-size:10px;color:#8b9ea9}.save-state:before{content:"";display:inline-block;width:5px;height:5px;background:#9daf98;border-radius:100%;margin-right:6px}.notice{font-size:11px;line-height:1.65;color:#e6b47f;border:1px solid #725737;background:#342b22;padding:9px 12px;border-radius:5px;margin:0}.notice:empty{display:none}.app-footer{display:flex;align-items:center;justify-content:space-between;padding:11px 28px;color:#82939f;font-size:10px;border-top:1px solid var(--line);gap:12px;letter-spacing:.03em}.footer-left{display:flex;gap:18px}.status-message{color:#d7b390;min-height:14px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(min-width:1250px){.workspace{grid-template-columns:minmax(0,1fr) 372px}.inspector{padding:26px 28px}}@media(min-height:980px) and (min-width:761px){.workspace{min-height:850px}.param-row{margin-top:22px}.inspector{gap:25px}}@media(max-width:900px){.header{padding:0 20px}.module-tag{display:none}.workspace{grid-template-columns:minmax(0,1fr) 310px}.inspector{padding:20px;gap:18px}.studio-head{padding:24px 20px}.studio-footer{left:20px;right:20px}.stage-caption{flex-direction:column;align-items:start;gap:4px}.selection-caption{max-width:100%}.height-number{font-size:32px}.studio-badge{display:none}}@media(max-width:760px){.header{height:72px;padding:0 16px}.brand{gap:10px}h1{font-size:17px}.brand-mark{width:25px;height:27px}.eyebrow{font-size:8px}.actions button{padding:7px 9px;font-size:12px}.workspace{display:flex;flex-direction:column;min-height:0}.studio{height:510px;flex:none}.inspector{border-left:0;border-top:1px solid var(--line);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px}.inspector-title,.presets,.notice,.inspector-bottom{grid-column:1/-1}.scale-group{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}.scale-group .param-row{margin-top:0}.scale-group .group-note{grid-column:1/-1;margin-top:0}.height-number{font-size:30px}.stage-caption{flex-direction:row}.app-footer{padding:12px 20px;flex-wrap:wrap}.footer-left{gap:12px}}@media(max-width:440px){.header{gap:8px}.brand-mark{display:none}.header .actions{gap:5px}.actions button{font-size:11px;padding:7px 8px}.studio{height:430px}.studio-head{padding:20px}.metric-formula{font-size:10px}.stage-caption{font-size:10px;flex-direction:column;gap:5px}.studio-footer{bottom:16px;gap:13px}.view-bar button{padding:7px 10px}.inspector{display:flex;gap:22px;padding:22px}.scale-group{display:block}.scale-group .param-row+.param-row{margin-top:20px}.group-note{margin-top:12px!important}.footer-left{flex-wrap:wrap;gap:8px}.preset{min-height:50px}.link-toggle{min-height:28px}.param-row input[type=range]{height:6px;margin-top:17px;margin-bottom:15px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+[hidden]{display:none!important}.body-panel{display:flex;flex-direction:column;gap:21px;flex:1}.module-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:#121b23;border:1px solid var(--line);border-radius:8px}.module-tabs button{border:0;font-size:12px;display:flex;gap:8px;justify-content:center;align-items:center}.module-tabs button span{font-size:10px;opacity:.65;font-variant-numeric:tabular-nums}.module-tabs button[aria-selected=true]{background:#3a3027;color:#edbd90}.body-actions{display:flex;align-items:center;justify-content:space-between;gap:8px}.next-step{font-size:11px;border-color:#766046;color:var(--accent);padding:6px 9px}.face-panel{display:flex;flex-direction:column;gap:18px}.face-stage-title{font-size:26px;margin:8px 0;letter-spacing:-.03em}.paint-tools{display:flex;align-items:center;gap:6px}.paint-tools button{font-size:12px;padding:7px 12px}.paint-tool-hint{font-size:10px;color:var(--muted);margin-left:auto}.paint-board{padding:8px;border:1px solid #45515b;background:#111a22;border-radius:5px}.paint-board canvas{display:block;width:100%;height:auto;aspect-ratio:1;background:#c8c5b9;image-rendering:pixelated;touch-action:none;cursor:crosshair;outline:1px solid #707570;user-select:none}.paint-history{display:flex;align-items:center;gap:6px}.paint-history button{font-size:11px;padding:6px 10px}.paint-history button:last-child{margin-left:auto}.paint-history button:disabled{opacity:.35;cursor:default;transform:none}.paint-history button:disabled:hover{background:transparent}.paint-section-heading{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:12px}.custom-color{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted);cursor:pointer}.custom-color input{width:30px;height:26px;padding:2px;border:1px solid #495761;border-radius:5px;background:var(--field);cursor:pointer}.paint-palette{display:grid;grid-template-columns:repeat(8,1fr);gap:7px}.paint-palette button{height:28px;min-width:0;padding:3px;border-radius:4px;border:1px solid transparent;background:transparent}.paint-palette button span{display:block;width:100%;height:100%;background:var(--swatch);border:1px solid #ffffff22;border-radius:2px}.paint-palette button[aria-pressed=true]{border-color:var(--accent);background:transparent}.brush-size{display:flex;flex-direction:column;gap:14px;font-size:12px}.brush-size>span{display:flex;align-items:center;gap:6px}.brush-size output{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--accent)}.brush-size small{font-size:10px;color:var(--muted)}.brush-size input{width:100%;accent-color:var(--accent);margin:0;height:16px}.paint-note{font-size:11px;color:#96a7b1;line-height:1.9;margin:0}.face-mode .workspace{grid-template-columns:minmax(0,1fr) 390px}.face-mode .inspector-bottom{margin-top:auto}.inspector .inspector-bottom{flex:none}.face-mode .paint-board{box-shadow:0 10px 30px #0002}
+@media(min-height:980px) and (min-width:761px){.body-panel{gap:25px}}@media(max-width:900px){.body-panel{gap:18px}.face-mode .workspace{grid-template-columns:minmax(0,1fr) 330px}.face-panel{gap:16px}.paint-tools button{padding:7px 10px}.paint-tool-hint{font-size:9px}}@media(max-width:760px){.inspector{display:flex}.body-panel{display:grid;grid-template-columns:1fr 1fr;gap:24px}.body-actions{grid-column:1/-1}.module-tabs{flex:none}.face-panel{max-width:480px;width:100%;align-self:center}.face-mode .studio{height:470px}.face-mode .studio-head{padding-top:20px}.face-stage-title{font-size:22px}.module-tabs button{min-height:40px}.paint-tools button,.paint-history button{min-height:38px}.paint-palette button{height:34px}.custom-color input{height:32px;width:38px}}@media(max-width:440px){.body-panel{display:flex;gap:22px}.paint-tool-hint{font-size:10px}.face-mode .studio{height:390px}.face-stage-title{font-size:20px}.face-mode .metric-formula{max-width:90px;line-height:1.7}.paint-palette{gap:6px}.paint-palette button{height:32px}.face-panel{gap:17px}}
+</style>
+</head>
+<body>
+<main class="app" aria-busy="true" inert>
+  <header class="header">
+    <div class="brand"><div class="brand-mark" aria-hidden="true"></div><div><h1>方块人</h1><div class="eyebrow">CHARACTER BUILDER</div></div><span class="module-tag">FPS · 体型与画脸</span></div>
+    <div class="actions"><button id="import-button" type="button">导入</button><button id="export-button" type="button" class="primary">导出角色 ↗</button></div>
+    <input type="file" id="import-file" accept=".json,application/json" hidden>
+  </header>
+  <div class="workspace">
+    <section class="studio" aria-label="角色三维预览">
+      <div class="studio-head">
+        <div id="body-metric"><div class="metric-label">自然身高</div><div class="height-number"><output id="height-value">1.80</output><span>m</span></div><div class="metric-formula">头高 + 躯干高 + 腿长</div></div>
+        <div id="face-metric" hidden><div class="metric-label">画脸</div><div class="face-stage-title">头部预览</div><div class="metric-formula">正面贴图 · 实时同步</div></div>
+        <div class="studio-badge" id="studio-badge">6 个方块 · 实时预览</div>
+      </div>
+      <div class="viewport-wrap" id="viewport-wrap"><canvas id="viewport" aria-label="六方块角色三维预览；拖动旋转，滚轮缩放，点击选择部件。也可使用下方视角按钮。">浏览器需要支持 Canvas 和 WebGL 才能显示三维角色。</canvas></div>
+      <div class="viewport-error" id="viewport-error" role="alert" hidden></div>
+      <div class="studio-footer">
+        <div class="view-bar" role="group" aria-label="视角"><button data-view="perspective" aria-pressed="true" type="button">三维</button><button data-view="front" aria-pressed="false" type="button">正面</button><button data-view="side" aria-pressed="false" type="button">侧面</button><button class="fit" id="fit-button" type="button">适配画面</button></div>
+        <div class="stage-caption"><span id="selection-caption" class="selection-caption">头部 · 40 × 40 × 40 cm</span><span>拖动旋转 · 滚轮缩放 · 点击选择</span></div>
+      </div>
+    </section>
+    <aside class="inspector" aria-label="角色编辑器">
+      <div class="module-tabs" role="tablist" aria-label="角色编辑步骤"><button id="body-tab" role="tab" aria-controls="body-panel" aria-selected="true" type="button"><span>01</span>调整体型</button><button id="face-tab" role="tab" aria-controls="face-panel" aria-selected="false" type="button"><span>02</span>画脸</button></div>
+      <div id="body-panel" class="body-panel" role="tabpanel" aria-labelledby="body-tab">
+      <div class="inspector-title"><h2>尺寸参数</h2><span class="subtle">拖动滑杆 · 输入后回车</span></div>
+      <div class="presets" role="group" aria-label="起始体型">
+        <button type="button" class="preset" data-preset="small" aria-pressed="false">迷你<small>组合示例 · 0.50 m</small></button>
+        <button type="button" class="preset" data-preset="default" aria-pressed="true">标准<small>组合示例 · 1.80 m</small></button>
+        <button type="button" class="preset" data-preset="tall" aria-pressed="false">高大<small>组合示例 · 5.00 m</small></button>
+      </div>
+      <div class="group scale-group" id="scale-controls"></div>
+      <section class="group"><div class="group-title"><h3>手臂 · 两侧等长</h3></div><div id="arm-controls"></div><p class="group-note">宽 16 cm、深 22 cm 保持不变</p></section>
+      <section class="group"><div class="group-title"><h3>腿部 · 两侧等长</h3></div><div id="leg-controls"></div><p class="group-note">宽 20 cm、深 24 cm 保持不变</p></section>
+      <p id="geometry-notice" class="notice"></p>
+      <div class="body-actions"><button id="reset-button" class="reset" type="button">恢复初始体型</button><button id="start-face-button" class="next-step" type="button">下一步：画脸 →</button></div>
+      </div>
+      <section id="face-panel" class="face-panel" role="tabpanel" aria-labelledby="face-tab" hidden>
+        <div class="inspector-title"><h2>正面画板</h2><span class="subtle">空白处保留头部底色</span></div>
+        <div class="paint-tools" role="group" aria-label="绘画工具"><button id="brush-button" type="button" aria-pressed="true">画笔</button><button id="eraser-button" type="button" aria-pressed="false">橡皮</button><span class="paint-tool-hint" id="paint-tool-hint">按住拖动绘制</span></div>
+        <div class="paint-board"><canvas id="face-canvas" width="128" height="128" tabindex="0" aria-label="头部正面画板，使用鼠标或手指绘制；内容实时贴到角色头部正面。Ctrl 或 Command 加 Z 撤销。">请使用支持 Canvas 的浏览器进行绘制。</canvas></div>
+        <div class="paint-history"><button id="undo-button" type="button" disabled>撤销</button><button id="redo-button" type="button" disabled>重做</button><button id="clear-face-button" type="button">清空画板</button></div>
+        <div class="paint-colors"><div class="paint-section-heading"><span>颜色</span><label class="custom-color">自选<input id="paint-color" type="color" value="#20242b" aria-label="自选画笔颜色"></label></div><div id="paint-palette" class="paint-palette" role="group" aria-label="常用画笔颜色"></div></div>
+        <label class="brush-size" for="brush-size"><span>画笔粗细 <output id="brush-size-value">4</output><small>像素</small></span><input id="brush-size" type="range" min="1" max="24" value="4" step="1"></label>
+        <p class="paint-note">只绘制头部正面。橡皮恢复底色，清空后也可以撤销；返回调整体型不会丢失画好的脸。</p>
+      </section>
+      <div class="inspector-bottom"><span class="subtle" id="module-state">体型编辑</span><span class="save-state" id="save-state">自动保存于此浏览器</span></div>
+    </aside>
+  </div>
+  <footer class="app-footer"><div class="footer-left"><span>六个独立方块</span><span>仅正面贴图</span><span>体型与绘画一起保存</span></div><span class="status-message" id="status" role="status" aria-live="polite">就绪</span></footer>
+  <span class="sr-only" id="announcer" aria-live="polite"></span>
+</main>
+<script>(function attachBlockCharacter(root) {
+  "use strict";
+
+  const DEFAULTS = Object.freeze({
+    headScale: 1,
+    torsoScale: 1,
+    armLength: 0.65,
+    legLength: 0.8,
+  });
+  const KEYS = Object.freeze(Object.keys(DEFAULTS));
+  const LEGACY_KEYS = Object.freeze([
+    "headScale", "torsoScale", "leftArmLength", "rightArmLength", "leftLegLength", "rightLegLength",
+  ]);
+  const LIMITS = Object.freeze(Object.fromEntries(KEYS.map((key) => [
+    key,
+    Object.freeze(key.endsWith("Scale")
+      ? { min: 0.15, max: 5, step: 0.01 }
+      : { min: 0.04, max: 4, step: 0.01 }),
+  ])));
+  const PRESETS = Object.freeze({
+    default: DEFAULTS,
+    small: Object.freeze({
+      headScale: 0.25,
+      torsoScale: 0.25,
+      armLength: 0.18,
+      legLength: 0.25,
+    }),
+    tall: Object.freeze({
+      headScale: 2.5,
+      torsoScale: 2.5,
+      armLength: 1.8,
+      legLength: 2.5,
+    }),
+    longArms: Object.freeze({ ...DEFAULTS, armLength: 2.4 }),
+  });
+
+  function assertRecord(value, label) {
+    if (value === null || typeof value !== "object" || Array.isArray(value)) {
+      throw new TypeError(`${label}必须是对象。`);
+    }
+  }
+
+  /** Fill omitted values and clamp valid numeric edits. Imports use strict validation below. */
+  function normalizeParams(params = {}) {
+    assertRecord(params, "角色参数");
+    for (const key of Object.keys(params)) {
+      if (!KEYS.includes(key)) throw new TypeError(`未知角色参数：${key}`);
+    }
+    return Object.fromEntries(KEYS.map((key) => {
+      const value = Object.hasOwn(params, key) ? params[key] : DEFAULTS[key];
+      if (typeof value !== "number" || !Number.isFinite(value)) {
+        throw new TypeError(`参数 ${key} 必须是有限数字。`);
+      }
+      return [key, Math.min(LIMITS[key].max, Math.max(LIMITS[key].min, value))];
+    }));
+  }
+
+  /** Meter units; character left is +X, up is +Y, and front is +Z. */
+  function createCharacter(input = {}) {
+    const params = normalizeParams(input);
+    const head = [0.4, 0.4, 0.4].map((length) => length * params.headScale);
+    const torso = [0.48, 0.6, 0.28].map((length) => length * params.torsoScale);
+    const hipY = params.legLength;
+    const shoulderY = hipY + torso[1];
+    // When arms extend below the feet, the lowest arm endpoint defines the floor.
+    const floorOffset = Math.max(0, params.armLength - shoulderY);
+    const legX = Math.max(0.1, torso[0] / 4);
+    const armX = torso[0] / 2 + 0.08;
+    const part = (id, name, size, center) => ({
+      id, name, size, center: [center[0], center[1] + floorOffset, center[2]],
+    });
+    const parts = [
+      part("head", "头部", head, [0, shoulderY + head[1] / 2, 0]),
+      part("torso", "躯干", torso, [0, hipY + torso[1] / 2, 0]),
+      part("leftArm", "左臂", [0.16, params.armLength, 0.22], [armX, shoulderY - params.armLength / 2, 0]),
+      part("rightArm", "右臂", [0.16, params.armLength, 0.22], [-armX, shoulderY - params.armLength / 2, 0]),
+      part("leftLeg", "左腿", [0.2, params.legLength, 0.24], [legX, hipY - params.legLength / 2, 0]),
+      part("rightLeg", "右腿", [0.2, params.legLength, 0.24], [-legX, hipY - params.legLength / 2, 0]),
+    ];
+    const min = [0, 1, 2].map((axis) => Math.min(...parts.map((box) => box.center[axis] - box.size[axis] / 2)));
+    const max = [0, 1, 2].map((axis) => Math.max(...parts.map((box) => box.center[axis] + box.size[axis] / 2)));
+    // Avoid displaying negative zero or roundoff below the floor.
+    if (Math.abs(min[1]) < 1e-12) min[1] = 0;
+    const bounds = { min, max, size: max.map((value, axis) => value - min[axis]) };
+    const notes = [
+      "头部和躯干保持各自比例，缩放参数作用于三条边；体积随缩放倍数的三次方变化。",
+      "手臂截面固定为 0.16 × 0.22 米，腿部截面固定为 0.20 × 0.24 米。",
+      "左右手臂共用臂长，左右腿共用腿长。",
+      "总高度按全部六个方块的最高点和最低点计算；身高由头部高度、躯干高度及腿长自然得出。",
+    ];
+    if (floorOffset > 0) {
+      notes.push("手臂低于脚底，模型以最低手臂端点落地；显示总高度包含这段长度。");
+    }
+    return {
+      params,
+      parts,
+      bounds,
+      height: bounds.size[1],
+      standingHeight: hipY + torso[1] + head[1],
+      totalVolume: parts.reduce((sum, box) => sum + box.size[0] * box.size[1] * box.size[2], 0),
+      metadata: {
+        unit: "m",
+        axes: { x: "角色左侧", y: "上方", z: "正面" },
+        floorOffset,
+        notes,
+      },
+    };
+  }
+
+  /** Check the bounded PNG envelope; pixel decoding remains the browser's responsibility. */
+  function validateFace(face) {
+    if (face === null) return null;
+    assertRecord(face, "面部贴图");
+    const keys = Object.keys(face);
+    if (keys.length !== 3 || !["width", "height", "png"].every((key) => Object.hasOwn(face, key))) {
+      throw new TypeError("面部贴图必须只包含 width、height 和 png。");
+    }
+    if (face.width !== 128 || face.height !== 128) throw new RangeError("面部贴图必须为 128 × 128 像素。");
+    const prefix = "data:image/png;base64,";
+    if (typeof face.png !== "string" || !face.png.startsWith(prefix)) {
+      throw new TypeError("面部贴图必须是 PNG 的 Base64 数据地址。");
+    }
+    if (face.png.length >= 200 * 1024) throw new RangeError("面部贴图数据地址必须小于 200 KiB。");
+    const encoded = face.png.slice(prefix.length);
+    if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(encoded)) {
+      throw new TypeError("面部贴图包含无效的 Base64 数据。");
+    }
+    let bytes;
+    try {
+      if (typeof root.atob === "function") {
+        bytes = Uint8Array.from(root.atob(encoded), (character) => character.charCodeAt(0));
+      } else if (typeof Buffer !== "undefined") {
+        bytes = Uint8Array.from(Buffer.from(encoded, "base64"));
+      } else {
+        throw new Error("Base64 decoding unavailable");
+      }
+    } catch {
+      throw new TypeError("无法解码面部贴图的 Base64 数据。");
+    }
+    const signature = [137, 80, 78, 71, 13, 10, 26, 10];
+    if (bytes.length < 33 || !signature.every((byte, index) => bytes[index] === byte)) {
+      throw new TypeError("面部贴图不是有效的 PNG 文件。");
+    }
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const chunkType = (offset) => String.fromCharCode(...bytes.subarray(offset + 4, offset + 8));
+    if (view.getUint32(8) !== 13 || chunkType(8) !== "IHDR") {
+      throw new TypeError("面部贴图缺少有效的 PNG 图像头。");
+    }
+    if (view.getUint32(16) !== 128 || view.getUint32(20) !== 128) {
+      throw new RangeError("面部 PNG 的实际尺寸必须为 128 × 128 像素。");
+    }
+    const bitDepths = { 0: [1, 2, 4, 8, 16], 2: [8, 16], 3: [1, 2, 4, 8], 4: [8, 16], 6: [8, 16] };
+    if (!bitDepths[bytes[25]]?.includes(bytes[24]) || bytes[26] !== 0 || bytes[27] !== 0 || bytes[28] > 1) {
+      throw new TypeError("面部贴图的 PNG 图像头无效。");
+    }
+    let offset = 8, hasPixels = false, hasEnd = false;
+    while (offset < bytes.length) {
+      if (offset + 12 > bytes.length) throw new TypeError("面部 PNG 数据不完整。");
+      const length = view.getUint32(offset), type = chunkType(offset);
+      if (offset + length + 12 > bytes.length) throw new TypeError("面部 PNG 数据块不完整。");
+      if (type === "IHDR" && offset !== 8) throw new TypeError("面部 PNG 包含重复的图像头。");
+      if (type === "IDAT" && length > 0) hasPixels = true;
+      offset += length + 12;
+      if (type === "IEND") {
+        if (length !== 0 || offset !== bytes.length) throw new TypeError("面部 PNG 的结束数据块无效。");
+        hasEnd = true;
+        break;
+      }
+    }
+    if (!hasPixels || !hasEnd) throw new TypeError("面部 PNG 缺少像素数据或结束数据块。");
+    return { width: 128, height: 128, png: face.png };
+  }
+
+  function exportData(params = {}, face = null) {
+    const character = createCharacter(params);
+    return {
+      format: "fps-block-character",
+      version: 3,
+      parameters: character.params,
+      face: validateFace(face),
+      computed: {
+        unit: "m",
+        height: character.height,
+        standingHeight: character.standingHeight,
+        totalVolume: character.totalVolume,
+      },
+    };
+  }
+
+  /** Validate old schemas before migration. Computed fields are never trusted as input. */
+  function parseProject(data) {
+    let parsed = data;
+    if (typeof data === "string") {
+      try { parsed = JSON.parse(data); }
+      catch { throw new TypeError("文件不是有效的 JSON。"); }
+    }
+    assertRecord(parsed, "导入文件");
+    if (parsed.format !== "fps-block-character") throw new TypeError("文件不是方块角色格式（fps-block-character）。");
+    if (![1, 2, 3].includes(parsed.version)) throw new TypeError("不支持此角色文件版本；当前支持版本 1、2 和 3。");
+    const allowed = ["format", "version", "parameters", "computed", ...(parsed.version >= 2 ? ["face"] : [])];
+    for (const key of Object.keys(parsed)) {
+      if (!allowed.includes(key)) throw new TypeError(`导入文件包含未知字段：${key}`);
+    }
+    assertRecord(parsed.parameters, "文件中的 parameters");
+    if (Object.hasOwn(parsed, "computed")) assertRecord(parsed.computed, "文件中的 computed");
+    const sourceKeys = parsed.version === 3 ? KEYS : LEGACY_KEYS;
+    for (const key of Object.keys(parsed.parameters)) {
+      if (!sourceKeys.includes(key)) throw new TypeError(`未知角色参数：${key}`);
+    }
+    for (const key of sourceKeys) {
+      if (!Object.hasOwn(parsed.parameters, key)) throw new TypeError(`导入文件缺少参数：${key}`);
+      const value = parsed.parameters[key];
+      if (typeof value !== "number" || !Number.isFinite(value)) throw new TypeError(`参数 ${key} 必须是有限数字。`);
+      const limit = LIMITS[key] || (key.includes("Arm") ? LIMITS.armLength : LIMITS.legLength);
+      if (value < limit.min || value > limit.max) {
+        throw new RangeError(`参数 ${key} 超出范围 ${limit.min}–${limit.max}；文件未导入。`);
+      }
+    }
+    const migrationNotes = [];
+    let parameters = parsed.parameters;
+    if (parsed.version < 3) {
+      // Averaging each pair preserves the combined limb volume with fixed cross sections.
+      parameters = {
+        headScale: parsed.parameters.headScale,
+        torsoScale: parsed.parameters.torsoScale,
+        armLength: (parsed.parameters.leftArmLength + parsed.parameters.rightArmLength) / 2,
+        legLength: (parsed.parameters.leftLegLength + parsed.parameters.rightLegLength) / 2,
+      };
+      if (parsed.parameters.leftArmLength !== parsed.parameters.rightArmLength) {
+        migrationNotes.push("旧版左右手臂长度不同，已取两者平均值作为统一臂长。");
+      }
+      if (parsed.parameters.leftLegLength !== parsed.parameters.rightLegLength) {
+        migrationNotes.push("旧版左右腿长度不同，已取两者平均值作为统一腿长。");
+      }
+    }
+    return {
+      parameters: normalizeParams(parameters),
+      face: parsed.version >= 2 && Object.hasOwn(parsed, "face") ? validateFace(parsed.face) : null,
+      migrationNotes,
+    };
+  }
+
+  /** Preserve the original parameters-only API for existing geometry consumers. */
+  function parseData(data) {
+    return parseProject(data).parameters;
+  }
+
+  const api = Object.freeze({ DEFAULTS, LIMITS, PRESETS, createCharacter, normalizeParams, exportData, parseData, parseProject });
+  root.BlockCharacter = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(globalThis);
+</script>
+<script>(function (global) {
+  'use strict';
+
+  const VERTEX = `
+    attribute vec3 a_position;
+    attribute vec3 a_normal;
+    attribute vec2 a_uv;
+    uniform mat4 u_matrix;
+    uniform vec3 u_center;
+    uniform vec3 u_size;
+    varying vec3 v_normal;
+    varying vec3 v_world;
+    varying vec2 v_uv;
+    void main() {
+      v_world = a_position * u_size + u_center;
+      v_normal = a_normal;
+      v_uv = a_uv;
+      gl_Position = u_matrix * vec4(v_world, 1.0);
+    }
+  `;
+  const FRAGMENT = `
+    precision mediump float;
+    uniform vec4 u_color;
+    uniform float u_unlit;
+    uniform float u_gridFade;
+    uniform vec3 u_target;
+    uniform sampler2D u_faceTexture;
+    uniform float u_faceEnabled;
+    varying vec3 v_normal;
+    varying vec3 v_world;
+    varying vec2 v_uv;
+    void main() {
+      float key = max(dot(v_normal, normalize(vec3(-0.65, 0.9, 0.8))), 0.0);
+      float fill = max(dot(v_normal, normalize(vec3(0.8, 0.2, -0.6))), 0.0);
+      float lighting = mix(0.61 + key * 0.39 + fill * 0.13, 1.0, u_unlit);
+      float fade = 1.0;
+      if (u_gridFade > 0.0) {
+        float distance = length(v_world.xz - u_target.xz);
+        fade = 1.0 - smoothstep(u_gridFade * 0.35, u_gridFade, distance);
+      }
+      vec3 color = u_color.rgb * lighting;
+      if (u_faceEnabled > 0.5 && v_normal.z > 0.5) {
+        vec4 paint = texture2D(u_faceTexture, v_uv);
+        // Paint retains its chosen color; transparent pixels reveal the material.
+        color = mix(color, paint.rgb, paint.a);
+      }
+      gl_FragColor = vec4(color, u_color.a * fade);
+    }
+  `;
+
+  const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const addScaled = (a, b, scale) => a.map((v, i) => v + b[i] * scale);
+  const subtract = (a, b) => a.map((v, i) => v - b[i]);
+
+  function multiply(a, b) {
+    const result = new Float32Array(16);
+    for (let column = 0; column < 4; column++) {
+      for (let row = 0; row < 4; row++) {
+        let sum = 0;
+        for (let k = 0; k < 4; k++) sum += a[k * 4 + row] * b[column * 4 + k];
+        result[column * 4 + row] = sum;
+      }
+    }
+    return result;
+  }
+
+  function boxGeometry() {
+    const positions = [], normals = [], indices = [], uvs = [];
+    const faces = [
+      [[0, 0, 1], [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]]],
+      [[0, 0, -1], [[1, -1, -1], [-1, -1, -1], [-1, 1, -1], [1, 1, -1]]],
+      [[1, 0, 0], [[1, -1, 1], [1, -1, -1], [1, 1, -1], [1, 1, 1]]],
+      [[-1, 0, 0], [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]]],
+      [[0, 1, 0], [[-1, 1, 1], [1, 1, 1], [1, 1, -1], [-1, 1, -1]]],
+      [[0, -1, 0], [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]]],
+    ];
+    faces.forEach(([normal, vertices], index) => {
+      vertices.forEach((vertex, vertexIndex) => {
+        positions.push(...vertex.map(v => v * 0.5));
+        normals.push(...normal);
+        // With UNPACK_FLIP_Y=false, image row zero maps to UV v=0.
+        // +Z vertices run bottom-left, bottom-right, top-right, top-left.
+        uvs.push(...(index === 0 ? [[0,1], [1,1], [1,0], [0,0]][vertexIndex] : [0,0]));
+      });
+      const first = index * 4;
+      indices.push(first, first + 1, first + 2, first, first + 2, first + 3);
+    });
+    const corners = [
+      [-0.5, -0.5, -0.5], [0.5, -0.5, -0.5], [0.5, 0.5, -0.5], [-0.5, 0.5, -0.5],
+      [-0.5, -0.5, 0.5], [0.5, -0.5, 0.5], [0.5, 0.5, 0.5], [-0.5, 0.5, 0.5],
+    ];
+    const edges = [[0,1], [1,2], [2,3], [3,0], [4,5], [5,6], [6,7], [7,4], [0,4], [1,5], [2,6], [3,7]];
+    return { positions, normals, indices, uvs, edges: edges.flatMap(edge => edge.flatMap(i => corners[i])) };
+  }
+
+  class BlockViewport {
+    constructor(canvas, options = {}) {
+      if (!canvas || !canvas.parentElement) throw new Error('三维画布需要放在容器中。');
+      this.canvas = canvas;
+      this.parent = canvas.parentElement;
+      this.onSelect = typeof options.onSelect === 'function' ? options.onSelect : () => {};
+      this.gl = canvas.getContext('webgl', { antialias: true, alpha: true, depth: true, premultipliedAlpha: true });
+      if (!this.gl) throw new Error('当前浏览器未能开启 WebGL。请开启硬件加速后重新打开。');
+      this.character = null;
+      this.selected = null;
+      this.focusPartId = null;
+      this._faceSource = null;
+      this._faceTexture = null;
+      this._faceReady = false;
+      this.yaw = 0.58;
+      this.pitch = 0.19;
+      this.view = 'perspective';
+      this.zoom = 1;
+      this.width = 1;
+      this.height = 1;
+      this._frame = null;
+      this._disposed = false;
+      this._pointers = new Map();
+      this._dragged = false;
+      this._buffers = [];
+      this._gridKey = '';
+      if (getComputedStyle(this.parent).position === 'static') this.parent.style.position = 'relative';
+      Object.assign(canvas.style, { width: '100%', height: '100%', display: 'block', touchAction: 'none', cursor: 'grab' });
+      this.overlay = document.createElement('canvas');
+      this.overlay.setAttribute('aria-hidden', 'true');
+      Object.assign(this.overlay.style, { position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none' });
+      this.parent.appendChild(this.overlay);
+      this.ctx = this.overlay.getContext('2d');
+      this._initGL();
+      this._bindEvents();
+      this.resizeObserver = new ResizeObserver(() => this._resize());
+      this.resizeObserver.observe(this.parent);
+      this._resize();
+    }
+
+    _initGL() {
+      const gl = this.gl;
+      const shaders = [];
+      const compile = (type, source) => {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          const message = gl.getShaderInfoLog(shader);
+          gl.deleteShader(shader);
+          throw new Error('三维着色器初始化失败：' + message);
+        }
+        shaders.push(shader);
+        return shader;
+      };
+      const program = gl.createProgram();
+      gl.attachShader(program, compile(gl.VERTEX_SHADER, VERTEX));
+      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAGMENT));
+      gl.linkProgram(program);
+      shaders.forEach(shader => gl.deleteShader(shader));
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('三维渲染程序初始化失败。');
+      this.program = program;
+      this.loc = {};
+      ['matrix', 'center', 'size', 'color', 'unlit', 'gridFade', 'target', 'faceTexture', 'faceEnabled'].forEach(name => {
+        this.loc[name] = gl.getUniformLocation(program, 'u_' + name);
+      });
+      this.loc.position = gl.getAttribLocation(program, 'a_position');
+      this.loc.normal = gl.getAttribLocation(program, 'a_normal');
+      this.loc.uv = gl.getAttribLocation(program, 'a_uv');
+      const mesh = boxGeometry();
+      this.box = this._makeGeometry(mesh.positions, mesh.normals, mesh.indices, mesh.uvs);
+      this.edges = this._makeGeometry(mesh.edges);
+      this.gridMinor = this._makeGeometry([]);
+      this.gridMajor = this._makeGeometry([]);
+      this._faceTexture = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this._faceTexture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      this._uploadFaceTexture();
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LEQUAL);
+      gl.enable(gl.BLEND);
+      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.enable(gl.CULL_FACE);
+      gl.cullFace(gl.BACK);
+      gl.clearColor(0, 0, 0, 0);
+    }
+
+    _makeGeometry(positions, normals, indices, uvs) {
+      const gl = this.gl;
+      const make = (type, data) => {
+        const buffer = gl.createBuffer();
+        this._buffers.push(buffer);
+        gl.bindBuffer(type, buffer);
+        gl.bufferData(type, data, gl.STATIC_DRAW);
+        return buffer;
+      };
+      return {
+        position: make(gl.ARRAY_BUFFER, new Float32Array(positions)),
+        normal: normals ? make(gl.ARRAY_BUFFER, new Float32Array(normals)) : null,
+        uv: uvs ? make(gl.ARRAY_BUFFER, new Float32Array(uvs)) : null,
+        indices: indices ? make(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices)) : null,
+        count: indices ? indices.length : positions.length / 3,
+      };
+    }
+
+    _bindEvents() {
+      this._handlers = {
+        pointerdown: event => {
+          if (event.button !== 0 && event.pointerType !== 'touch') return;
+          this.canvas.setPointerCapture(event.pointerId);
+          this._pointers.set(event.pointerId, [event.clientX, event.clientY]);
+          if (this._pointers.size === 1) {
+            this._start = [event.clientX, event.clientY];
+            this._dragged = false;
+          } else {
+            this._dragged = true;
+            this._pinch = this._pinchDistance();
+          }
+          this.canvas.style.cursor = 'grabbing';
+        },
+        pointermove: event => {
+          const previous = this._pointers.get(event.pointerId);
+          if (!previous) return;
+          const dx = event.clientX - previous[0], dy = event.clientY - previous[1];
+          this._pointers.set(event.pointerId, [event.clientX, event.clientY]);
+          if (this._pointers.size > 1) {
+            const distance = this._pinchDistance();
+            if (this._pinch > 0 && distance > 0) this.zoomBy(distance / this._pinch);
+            this._pinch = distance;
+          } else {
+            if (Math.hypot(event.clientX - this._start[0], event.clientY - this._start[1]) > 4) this._dragged = true;
+            if (this._dragged) {
+              this.yaw -= dx * 0.008;
+              this.pitch = clamp(this.pitch + dy * 0.006, -0.2, 1.25);
+              this.view = 'perspective';
+              this._invalidate();
+            }
+          }
+        },
+        pointerup: event => {
+          if (!this._pointers.has(event.pointerId)) return;
+          if (!this._dragged && this._pointers.size === 1) {
+            const rect = this.canvas.getBoundingClientRect();
+            this.onSelect(this._pick(event.clientX - rect.left, event.clientY - rect.top));
+          }
+          this._pointers.delete(event.pointerId);
+          if (this.canvas.hasPointerCapture(event.pointerId)) this.canvas.releasePointerCapture(event.pointerId);
+          this.canvas.style.cursor = this._pointers.size ? 'grabbing' : 'grab';
+        },
+        pointercancel: event => {
+          this._pointers.delete(event.pointerId);
+          this._dragged = true;
+          this.canvas.style.cursor = this._pointers.size ? 'grabbing' : 'grab';
+        },
+        wheel: event => {
+          event.preventDefault();
+          const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? this.height : 1);
+          this.zoomBy(Math.exp(-clamp(delta, -200, 200) * 0.0015));
+        },
+        webglcontextlost: event => { event.preventDefault(); this._contextLost = true; },
+        webglcontextrestored: () => {
+          this._contextLost = false;
+          this._buffers = [];
+          this._gridKey = '';
+          this._initGL();
+          this._invalidate();
+        },
+      };
+      Object.entries(this._handlers).forEach(([name, handler]) => this.canvas.addEventListener(name, handler, name === 'wheel' ? { passive: false } : undefined));
+    }
+
+    _pinchDistance() {
+      const points = [...this._pointers.values()];
+      return points.length > 1 ? Math.hypot(points[1][0] - points[0][0], points[1][1] - points[0][1]) : 0;
+    }
+
+    _resize() {
+      if (this._disposed) return;
+      const rect = this.parent.getBoundingClientRect();
+      this.width = Math.max(1, rect.width);
+      this.height = Math.max(1, rect.height);
+      const dpr = Math.min(2, global.devicePixelRatio || 1);
+      this.dpr = dpr;
+      [this.canvas, this.overlay].forEach(canvas => {
+        canvas.width = Math.round(this.width * dpr);
+        canvas.height = Math.round(this.height * dpr);
+      });
+      this._invalidate();
+    }
+
+    setCharacter(character) {
+      this.character = character;
+      this.zoom = 1;
+      this._invalidate();
+    }
+
+    setSelected(partId) {
+      this.selected = partId || null;
+      this._invalidate();
+    }
+
+    /** Upload the current pixels; call again after drawing on the same canvas. */
+    setFaceTexture(source) {
+      if (this._disposed) return;
+      if (source != null) {
+        const width = source.naturalWidth === undefined ? source.width : source.naturalWidth;
+        const height = source.naturalHeight === undefined ? source.height : source.naturalHeight;
+        if (!(width > 0 && height > 0)) throw new Error('面部画布不能为空，图片需要先完成加载。');
+      }
+      this._faceSource = source || null;
+      if (!this._contextLost) this._uploadFaceTexture();
+      this._invalidate();
+    }
+
+    _uploadFaceTexture() {
+      const gl = this.gl;
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this._faceTexture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+      this._faceReady = false;
+      if (this._faceSource) {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._faceSource);
+        this._faceReady = true;
+      } else {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
+      }
+    }
+
+    /** Isolate a part in this preview; the six-box character data stays intact. */
+    setFocusPart(partId) {
+      this.focusPartId = typeof partId === 'string' && partId ? partId : null;
+      this.zoom = 1;
+      this._invalidate();
+    }
+
+    setView(view) {
+      if (view === 'front') { this.yaw = 0; this.pitch = 0; }
+      else if (view === 'side') { this.yaw = Math.PI / 2; this.pitch = 0; }
+      else { view = 'perspective'; this.yaw = 0.58; this.pitch = 0.19; }
+      this.view = view;
+      this.zoom = 1;
+      this._invalidate();
+    }
+
+    fit() { this.zoom = 1; this._invalidate(); }
+
+    zoomBy(factor) {
+      if (Number.isFinite(factor) && factor > 0) this.zoom = clamp(this.zoom / factor, 0.35, 3.5);
+      this._invalidate();
+    }
+
+    _invalidate() {
+      if (this._disposed || this._frame !== null) return;
+      this._frame = requestAnimationFrame(() => { this._frame = null; this._render(); });
+    }
+
+    _camera() {
+      const focusPart = this.character.parts.find(part => part.id === this.focusPartId) || null;
+      const bounds = focusPart ? {
+        min: focusPart.center.map((value, axis) => value - focusPart.size[axis] / 2),
+        max: focusPart.center.map((value, axis) => value + focusPart.size[axis] / 2),
+        size: focusPart.size,
+      } : this.character.bounds;
+      const target = bounds.min.map((v, i) => (v + bounds.max[i]) / 2);
+      const sy = Math.sin(this.yaw), cy = Math.cos(this.yaw), sp = Math.sin(this.pitch), cp = Math.cos(this.pitch);
+      const right = [cy, 0, -sy], up = [-sy * sp, cp, -cy * sp], forward = [sy * cp, sp, cy * cp];
+      let extentX = 0, extentY = 0;
+      for (let x = 0; x < 2; x++) for (let y = 0; y < 2; y++) for (let z = 0; z < 2; z++) {
+        const corner = [x ? bounds.max[0] : bounds.min[0], y ? bounds.max[1] : bounds.min[1], z ? bounds.max[2] : bounds.min[2]];
+        const offset = subtract(corner, target);
+        extentX = Math.max(extentX, Math.abs(dot(right, offset)));
+        extentY = Math.max(extentY, Math.abs(dot(up, offset)));
+      }
+      const aspect = this.width / this.height;
+      const compact = this.height < 600;
+      const topReserve = focusPart ? 96 : 64;
+      const centerY = compact ? (topReserve + this.height - 120) / 2 : this.height / 2;
+      const availableX = this.width > 500 ? 0.73 : 0.67;
+      const availableY = compact ? Math.max(0.15, (this.height - topReserve - 120) / this.height) : focusPart ? 0.68 : 0.76;
+      const halfHeight = Math.max(0.08, extentY / availableY, extentX / aspect / availableX) * this.zoom;
+      const halfWidth = halfHeight * aspect;
+      const span = Math.max(...bounds.size, 0.2);
+      const sceneSpan = Math.max(...this.character.bounds.size, span);
+      const distance = Math.max(20, sceneSpan * 5);
+      const eye = addScaled(target, forward, distance);
+      const near = 0.01, far = distance * 2 + sceneSpan * 10;
+      const view = new Float32Array([
+        right[0], up[0], forward[0], 0,
+        right[1], up[1], forward[1], 0,
+        right[2], up[2], forward[2], 0,
+        -dot(right, eye), -dot(up, eye), -dot(forward, eye), 1,
+      ]);
+      const projection = new Float32Array([
+        1 / halfWidth, 0, 0, 0, 0, 1 / halfHeight, 0, 0, 0, 0, -2 / (far - near), 0,
+        0, 2 * (this.height / 2 - centerY) / this.height, -(far + near) / (far - near), 1,
+      ]);
+      return { target, right, up, forward, halfHeight, halfWidth, centerY, compact, distance, span, bounds, focusPart, matrix: multiply(projection, view) };
+    }
+
+    _updateGrid(camera) {
+      const gl = this.gl;
+      const step = camera.span < 1.5 ? 0.1 : camera.span < 3 ? 0.25 : camera.span < 6 ? 0.5 : 1;
+      const radius = Math.max(camera.span * 2.8, camera.halfWidth * 1.8, camera.halfHeight * 2.4);
+      const count = Math.min(180, Math.ceil(radius / step));
+      const extent = count * step;
+      const originX = Math.round(camera.target[0] / step) * step;
+      const originZ = Math.round(camera.target[2] / step) * step;
+      const key = [step, count, originX, originZ].join(':');
+      this.gridStep = step;
+      this.gridExtent = extent;
+      if (key === this._gridKey) return;
+      this._gridKey = key;
+      const minor = [], major = [];
+      for (let i = -count; i <= count; i++) {
+        const array = i % 4 === 0 ? major : minor;
+        const offset = i * step;
+        array.push(originX + offset, 0, originZ - extent, originX + offset, 0, originZ + extent);
+        array.push(originX - extent, 0, originZ + offset, originX + extent, 0, originZ + offset);
+      }
+      [[this.gridMinor, minor], [this.gridMajor, major]].forEach(([geometry, data]) => {
+        gl.bindBuffer(gl.ARRAY_BUFFER, geometry.position);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.DYNAMIC_DRAW);
+        geometry.count = data.length / 3;
+      });
+    }
+
+    _draw(geometry, mode, center, size, color, unlit, gridFade = 0, faceEnabled = false) {
+      const gl = this.gl, loc = this.loc;
+      gl.bindBuffer(gl.ARRAY_BUFFER, geometry.position);
+      gl.enableVertexAttribArray(loc.position);
+      gl.vertexAttribPointer(loc.position, 3, gl.FLOAT, false, 0, 0);
+      if (geometry.normal) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, geometry.normal);
+        gl.enableVertexAttribArray(loc.normal);
+        gl.vertexAttribPointer(loc.normal, 3, gl.FLOAT, false, 0, 0);
+      } else {
+        gl.disableVertexAttribArray(loc.normal);
+        gl.vertexAttrib3f(loc.normal, 0, 1, 0);
+      }
+      if (geometry.uv) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, geometry.uv);
+        gl.enableVertexAttribArray(loc.uv);
+        gl.vertexAttribPointer(loc.uv, 2, gl.FLOAT, false, 0, 0);
+      } else {
+        gl.disableVertexAttribArray(loc.uv);
+        gl.vertexAttrib2f(loc.uv, 0, 0);
+      }
+      gl.uniform3fv(loc.center, center);
+      gl.uniform3fv(loc.size, size);
+      gl.uniform4fv(loc.color, color);
+      gl.uniform1f(loc.unlit, unlit);
+      gl.uniform1f(loc.gridFade, gridFade);
+      gl.uniform1f(loc.faceEnabled, faceEnabled ? 1 : 0);
+      if (geometry.indices) {
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, geometry.indices);
+        gl.drawElements(mode, geometry.count, gl.UNSIGNED_SHORT, 0);
+      } else gl.drawArrays(mode, 0, geometry.count);
+    }
+
+    _render() {
+      if (this._disposed || this._contextLost) return;
+      const gl = this.gl;
+      gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      this.ctx.clearRect(0, 0, this.overlay.width, this.overlay.height);
+      if (!this.character || !this.character.parts.length) return;
+      const camera = this._camera();
+      const visibleParts = camera.focusPart ? [camera.focusPart] : this.character.parts;
+      this._currentCamera = camera;
+      this._updateGrid(camera);
+      gl.useProgram(this.program);
+      gl.uniformMatrix4fv(this.loc.matrix, false, camera.matrix);
+      gl.uniform3fv(this.loc.target, camera.target);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this._faceTexture);
+      gl.uniform1i(this.loc.faceTexture, 0);
+      if (!camera.focusPart) {
+        gl.depthMask(false);
+        this._draw(this.gridMinor, gl.LINES, [0,0,0], [1,1,1], [0.48, 0.59, 0.63, 0.11], 1, this.gridExtent);
+        this._draw(this.gridMajor, gl.LINES, [0,0,0], [1,1,1], [0.56, 0.65, 0.69, 0.17], 1, this.gridExtent);
+        gl.depthMask(true);
+      }
+      gl.enable(gl.POLYGON_OFFSET_FILL);
+      gl.polygonOffset(1, 1);
+      const isSelected = part => part.id === this.selected ||
+        (this.selected?.endsWith('Arm') && part.id.endsWith('Arm')) ||
+        (this.selected?.endsWith('Leg') && part.id.endsWith('Leg'));
+      visibleParts.forEach(part => {
+        const color = isSelected(part) ? [0.863, 0.647, 0.424, 1] : [0.784, 0.773, 0.725, 1];
+        this._draw(this.box, gl.TRIANGLES, part.center, part.size, color, 0, 0, part.id === 'head' && this._faceReady);
+      });
+      gl.disable(gl.POLYGON_OFFSET_FILL);
+      visibleParts.forEach(part => {
+        const color = isSelected(part) ? [0.98, 0.77, 0.54, 0.70] : [0.88, 0.88, 0.81, 0.21];
+        this._draw(this.edges, gl.LINES, part.center, part.size, color, 1);
+      });
+      this._drawOverlay(camera);
+    }
+
+    _project(point, camera) {
+      const offset = subtract(point, camera.target);
+      return [
+        this.width * 0.5 + dot(offset, camera.right) / camera.halfWidth * this.width * 0.5,
+        camera.centerY - dot(offset, camera.up) / camera.halfHeight * this.height * 0.5,
+      ];
+    }
+
+    _drawOverlay(camera) {
+      const ctx = this.ctx, width = this.width, height = this.height;
+      ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      ctx.font = '11px system-ui, -apple-system, sans-serif';
+      ctx.textBaseline = 'middle';
+      const bounds = camera.bounds;
+      const top = this._project([camera.target[0], bounds.max[1], camera.target[2]], camera)[1];
+      const bottom = this._project([camera.target[0], bounds.min[1], camera.target[2]], camera)[1];
+      const rulerX = width - (width < 500 ? 27 : 38);
+      if (bottom - top > 45 && bottom > 50 && top < height - 50) {
+        const safeTop = Math.max(44, top), safeBottom = Math.min(height - (camera.compact ? 115 : 56), bottom);
+        ctx.strokeStyle = 'rgba(157, 175, 183, 0.36)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(rulerX + 0.5, safeTop); ctx.lineTo(rulerX + 0.5, safeBottom);
+        ctx.stroke();
+        const total = bounds.max[1] - bounds.min[1];
+        const tickStep = total < 0.9 ? 0.1 : total < 2 ? 0.25 : total < 4 ? 0.5 : total < 8 ? 1 : 2;
+        ctx.textAlign = 'right';
+        ctx.fillStyle = 'rgba(176, 189, 195, 0.70)';
+        for (let value = 0; value < total - tickStep * 0.18; value += tickStep) {
+          const y = bottom - value / total * (bottom - top);
+          if (y < safeTop + 5 || y > safeBottom + 1) continue;
+          ctx.beginPath(); ctx.moveTo(rulerX - 5, y + 0.5); ctx.lineTo(rulerX + 5, y + 0.5); ctx.stroke();
+          ctx.fillText(Number(value.toFixed(2)).toString(), rulerX - 10, y);
+        }
+        if (top >= 44 && top <= height - 70) {
+          ctx.strokeStyle = 'rgba(220, 165, 108, 0.72)';
+          ctx.beginPath(); ctx.moveTo(rulerX - 6, top + 0.5); ctx.lineTo(rulerX + 6, top + 0.5); ctx.stroke();
+          ctx.fillStyle = 'rgba(175, 187, 193, 0.85)';
+          ctx.font = '10px system-ui, -apple-system, sans-serif';
+          ctx.fillText(camera.focusPart ? camera.focusPart.name + '高' : '总高', rulerX + 6, top - 37);
+          ctx.fillStyle = '#e0c6a4';
+          ctx.font = '500 13px system-ui, -apple-system, sans-serif';
+          ctx.fillText(total.toFixed(2) + ' m', rulerX + 6, top - 19);
+        }
+      }
+      const scale = this.gridStep;
+      const scaleWidth = scale / camera.halfHeight * height * 0.5;
+      // Reserve the stage footer (view toolbar and two-line mobile caption).
+      const sx = width < 500 ? 20 : 28, sy = height - 126;
+      if (scaleWidth >= 12 && scaleWidth < width * 0.45) {
+        ctx.strokeStyle = 'rgba(164, 182, 190, 0.50)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - 4); ctx.lineTo(sx, sy + 1); ctx.lineTo(sx + scaleWidth, sy + 1); ctx.lineTo(sx + scaleWidth, sy - 4);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(167, 181, 189, 0.72)';
+        ctx.font = '10px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText((camera.focusPart ? '刻度 ' : '网格 ') + scale + ' m', sx, sy - 13);
+      }
+      this._drawAxes(camera);
+    }
+
+    _drawAxes(camera) {
+      const ctx = this.ctx;
+      const origin = [this.width - 76, this.height - 126];
+      const axes = [
+        { vector: [1,0,0], color: '#a57670', label: 'X' },
+        { vector: [0,1,0], color: '#8ba18c', label: 'Y' },
+        { vector: [0,0,1], color: '#7292a8', label: 'Z' },
+      ].sort((a, b) => dot(a.vector, camera.forward) - dot(b.vector, camera.forward));
+      ctx.font = '9px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      axes.forEach(axis => {
+        const dx = dot(axis.vector, camera.right) * 18;
+        const dy = -dot(axis.vector, camera.up) * 18;
+        if (Math.hypot(dx, dy) < 3) return;
+        ctx.strokeStyle = axis.color; ctx.fillStyle = axis.color; ctx.lineWidth = 1.1;
+        ctx.beginPath(); ctx.moveTo(...origin); ctx.lineTo(origin[0] + dx, origin[1] + dy); ctx.stroke();
+        ctx.fillText(axis.label, origin[0] + dx * 1.32, origin[1] + dy * 1.32);
+      });
+    }
+
+    _pick(x, y) {
+      if (!this.character) return null;
+      const camera = this._camera();
+      const visibleParts = camera.focusPart ? [camera.focusPart] : this.character.parts;
+      let origin = addScaled(camera.target, camera.right, (x / this.width * 2 - 1) * camera.halfWidth);
+      origin = addScaled(origin, camera.up, (camera.centerY - y) / this.height * 2 * camera.halfHeight);
+      origin = addScaled(origin, camera.forward, camera.distance);
+      const direction = camera.forward.map(v => -v);
+      let nearest = Infinity, selected = null;
+      visibleParts.forEach(part => {
+        let near = 0, far = Infinity;
+        for (let axis = 0; axis < 3; axis++) {
+          const low = part.center[axis] - part.size[axis] / 2;
+          const high = part.center[axis] + part.size[axis] / 2;
+          if (Math.abs(direction[axis]) < 1e-9) {
+            if (origin[axis] < low || origin[axis] > high) return;
+          } else {
+            const first = (low - origin[axis]) / direction[axis], second = (high - origin[axis]) / direction[axis];
+            near = Math.max(near, Math.min(first, second));
+            far = Math.min(far, Math.max(first, second));
+            if (near > far) return;
+          }
+        }
+        if (near < nearest) { nearest = near; selected = part.id; }
+      });
+      return selected;
+    }
+
+    dispose() {
+      this._disposed = true;
+      if (this._frame !== null) cancelAnimationFrame(this._frame);
+      this.resizeObserver.disconnect();
+      Object.entries(this._handlers).forEach(([name, handler]) => this.canvas.removeEventListener(name, handler));
+      this._buffers.forEach(buffer => this.gl.deleteBuffer(buffer));
+      this.gl.deleteTexture(this._faceTexture);
+      this._faceTexture = null;
+      this._faceSource = null;
+      this.gl.deleteProgram(this.program);
+      this.overlay.remove();
+      this._pointers.clear();
+    }
+  }
+
+  global.BlockViewport = BlockViewport;
+})(globalThis);
+</script>
+<script>(function attachFacePainter(root) {
+  'use strict';
+
+  const SIZE = 128;
+  const HISTORY_LIMIT = 31;
+  const PNG_PREFIX = 'data:image/png;base64,';
+  const noop = () => {};
+  const copyImage = image => new ImageData(new Uint8ClampedArray(image.data), SIZE, SIZE);
+  const sameImage = (a, b) => {
+    for (let i = 0; i < a.data.length; i++) if (a.data[i] !== b.data[i]) return false;
+    return true;
+  };
+
+  // Clip a stroke segment, rather than clamping pointer coordinates to an edge.
+  // This preserves natural lines when a captured pointer leaves the canvas.
+  function clipSegment(a, b, margin) {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    let start = 0, end = 1;
+    const p = [-dx, dx, -dy, dy];
+    const q = [a.x + margin, SIZE + margin - a.x, a.y + margin, SIZE + margin - a.y];
+    for (let i = 0; i < 4; i++) {
+      if (!p[i]) { if (q[i] < 0) return null; continue; }
+      const ratio = q[i] / p[i];
+      if (p[i] < 0) start = Math.max(start, ratio);
+      else end = Math.min(end, ratio);
+      if (start > end) return null;
+    }
+    return [a.x + start * dx, a.y + start * dy, a.x + end * dx, a.y + end * dy];
+  }
+
+  class FacePainter {
+    constructor(canvas, { onChange = noop, onCommit = noop, onHistoryChange = noop } = {}) {
+      if (!canvas || typeof canvas.getContext !== 'function') throw new TypeError('需要一个画布。');
+      this.canvas = canvas;
+      canvas.width = canvas.height = SIZE;
+      this.context = canvas.getContext('2d', { willReadFrequently: true });
+      if (!this.context) throw new Error('浏览器无法创建面部画布。');
+      canvas.style.touchAction = 'none';
+      canvas.style.imageRendering = 'pixelated';
+      this.context.imageSmoothingEnabled = false;
+      this.imageData = this.context.createImageData(SIZE, SIZE);
+      this.tool = 'brush';
+      this.color = '#161616';
+      this.size = 4;
+      this._rgba = [22, 22, 22, 255];
+      this._onChange = onChange;
+      this._onCommit = onCommit;
+      this._onHistoryChange = onHistoryChange;
+      this._history = [copyImage(this.imageData)];
+      this._historyIndex = 0;
+      this._stroke = null;
+      this._handlers = {
+        down: event => this._pointerDown(event),
+        move: event => this._pointerMove(event),
+        up: event => this._pointerUp(event),
+        cancel: event => { if (this._stroke?.pointerId === event.pointerId) this._cancelStroke(); },
+        lost: event => { if (this._stroke?.pointerId === event.pointerId) this.finishStroke(); },
+        blur: () => this.finishStroke(),
+      };
+      canvas.addEventListener('pointerdown', this._handlers.down);
+      canvas.addEventListener('lostpointercapture', this._handlers.lost);
+      // Window listeners also cover browsers where pointer capture is unavailable.
+      root.addEventListener('pointermove', this._handlers.move, { passive: false });
+      root.addEventListener('pointerup', this._handlers.up);
+      root.addEventListener('pointercancel', this._handlers.cancel);
+      root.addEventListener('blur', this._handlers.blur);
+      root.addEventListener('pagehide', this._handlers.blur);
+      this._emitHistory();
+    }
+
+    setTool(tool) {
+      if (!['brush', 'eraser'].includes(tool)) throw new TypeError('未知画笔工具。');
+      this.tool = tool;
+    }
+
+    setColor(color) {
+      if (typeof color !== 'string' || !/^#[\da-f]{6}$/i.test(color)) throw new TypeError('颜色应为六位十六进制值。');
+      this.color = color.toLowerCase();
+      this._rgba = [1, 3, 5].map(offset => parseInt(color.slice(offset, offset + 2), 16)).concat(255);
+    }
+
+    setSize(size) {
+      if (!Number.isInteger(size) || size < 1 || size > 24) throw new RangeError('笔宽应为 1–24 像素的整数。');
+      this.size = size;
+    }
+
+    _point(event) {
+      const rect = this.canvas.getBoundingClientRect();
+      const scaleX = rect.width / (this.canvas.offsetWidth || rect.width || 1);
+      const scaleY = rect.height / (this.canvas.offsetHeight || rect.height || 1);
+      const width = (this.canvas.clientWidth || rect.width) * scaleX;
+      const height = (this.canvas.clientHeight || rect.height) * scaleY;
+      if (!width || !height) return null;
+      return {
+        x: (event.clientX - rect.left - this.canvas.clientLeft * scaleX) * SIZE / width,
+        y: (event.clientY - rect.top - this.canvas.clientTop * scaleY) * SIZE / height,
+      };
+    }
+
+    _pointerDown(event) {
+      if (this._stroke || event.button !== 0 || event.isPrimary === false) return;
+      const point = this._point(event);
+      if (!point) return;
+      event.preventDefault();
+      this.canvas.focus({ preventScroll: true });
+      this._stroke = {
+        pointerId: event.pointerId, last: point,
+        size: this.size, rgba: this.tool === 'eraser' ? [0, 0, 0, 0] : this._rgba.slice(),
+      };
+      try { this.canvas.setPointerCapture(event.pointerId); } catch (_) { /* Window listeners remain active. */ }
+      if (this._line(point, point)) this._publish();
+    }
+
+    _pointerMove(event) {
+      if (!this._stroke || this._stroke.pointerId !== event.pointerId) return;
+      event.preventDefault();
+      let events = [];
+      try { events = event.getCoalescedEvents?.() || []; } catch (_) { /* A normal event is sufficient. */ }
+      if (!events.length) events = [event];
+      let changed = false;
+      for (const sample of events) {
+        const point = this._point(sample);
+        if (!point) continue;
+        changed = this._line(this._stroke.last, point) || changed;
+        this._stroke.last = point;
+      }
+      if (changed) this._publish();
+    }
+
+    _pointerUp(event) {
+      if (!this._stroke || this._stroke.pointerId !== event.pointerId) return;
+      this._pointerMove(event);
+      this.finishStroke();
+    }
+
+    _line(a, b) {
+      if (![a.x, a.y, b.x, b.y].every(Number.isFinite)) return false;
+      const clipped = clipSegment(a, b, this._stroke.size);
+      if (!clipped) return false;
+      let [x, y, endX, endY] = clipped.map(Math.floor);
+      const dx = Math.abs(endX - x), dy = -Math.abs(endY - y);
+      const sx = x < endX ? 1 : -1, sy = y < endY ? 1 : -1;
+      let error = dx + dy, changed = false;
+      while (true) {
+        changed = this._stamp(x, y) || changed;
+        if (x === endX && y === endY) break;
+        const twice = error * 2;
+        if (twice >= dy) { error += dy; x += sx; }
+        if (twice <= dx) { error += dx; y += sy; }
+      }
+      return changed;
+    }
+
+    _stamp(x, y) {
+      const { size, rgba } = this._stroke;
+      const originX = x - Math.floor(size / 2), originY = y - Math.floor(size / 2);
+      const center = (size - 1) / 2, radiusSquared = size * size / 4;
+      const pixels = this.imageData.data;
+      let changed = false;
+      for (let row = 0; row < size; row++) {
+        const py = originY + row;
+        if (py < 0 || py >= SIZE) continue;
+        for (let column = 0; column < size; column++) {
+          const px = originX + column;
+          if (px < 0 || px >= SIZE || (column - center) ** 2 + (row - center) ** 2 > radiusSquared) continue;
+          const offset = (py * SIZE + px) * 4;
+          for (let channel = 0; channel < 4; channel++) {
+            if (pixels[offset + channel] !== rgba[channel]) {
+              pixels[offset + channel] = rgba[channel];
+              changed = true;
+            }
+          }
+        }
+      }
+      return changed;
+    }
+
+    _publish() {
+      this.context.putImageData(this.imageData, 0, 0);
+      this._onChange(this.canvas);
+    }
+
+    _emitHistory() {
+      this._onHistoryChange({ canUndo: this._historyIndex > 0, canRedo: this._historyIndex < this._history.length - 1 });
+    }
+
+    _record() {
+      if (sameImage(this.imageData, this._history[this._historyIndex])) return false;
+      this._history.splice(this._historyIndex + 1);
+      this._history.push(copyImage(this.imageData));
+      if (this._history.length > HISTORY_LIMIT) this._history.shift();
+      this._historyIndex = this._history.length - 1;
+      this._emitHistory();
+      this._onCommit();
+      return true;
+    }
+
+    _releasePointer() {
+      const pointerId = this._stroke?.pointerId;
+      this._stroke = null;
+      if (pointerId !== undefined) {
+        try { this.canvas.releasePointerCapture(pointerId); } catch (_) { /* Capture can already be released. */ }
+      }
+    }
+
+    finishStroke() {
+      if (!this._stroke) return false;
+      this._releasePointer();
+      return this._record();
+    }
+
+    _cancelStroke(notify = true) {
+      if (!this._stroke) return;
+      this._releasePointer();
+      const original = this._history[this._historyIndex];
+      const changed = !sameImage(this.imageData, original);
+      this.imageData = copyImage(original);
+      if (changed && notify) this._publish();
+    }
+
+    undo() {
+      this.finishStroke();
+      if (this._historyIndex === 0) return false;
+      this.imageData = copyImage(this._history[--this._historyIndex]);
+      this._publish(); this._emitHistory(); this._onCommit();
+      return true;
+    }
+
+    redo() {
+      this.finishStroke();
+      if (this._historyIndex === this._history.length - 1) return false;
+      this.imageData = copyImage(this._history[++this._historyIndex]);
+      this._publish(); this._emitHistory(); this._onCommit();
+      return true;
+    }
+
+    clear() {
+      this.finishStroke();
+      const empty = this.context.createImageData(SIZE, SIZE);
+      if (sameImage(this.imageData, empty)) return false;
+      this.imageData = empty;
+      this._publish();
+      return this._record();
+    }
+
+    getFaceData() {
+      this.finishStroke();
+      for (let i = 3; i < this.imageData.data.length; i += 4) {
+        if (this.imageData.data[i]) return { width: SIZE, height: SIZE, png: this.canvas.toDataURL('image/png') };
+      }
+      return null;
+    }
+
+    /** Decode before applying the rest of an imported character: failure changes nothing. */
+    async decodeFace(face) {
+      if (face == null) return null;
+      if (typeof face !== 'object' || Array.isArray(face) || face.width !== SIZE || face.height !== SIZE ||
+          typeof face.png !== 'string' || face.png.length > 512 * 1024 ||
+          !/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(face.png)) {
+        throw new TypeError('面部贴图必须是 128 × 128 的 PNG。');
+      }
+      let header;
+      try { header = atob(face.png.slice(PNG_PREFIX.length, PNG_PREFIX.length + 44)); }
+      catch (_) { throw new TypeError('面部 PNG 编码无效。'); }
+      const signature = [137, 80, 78, 71, 13, 10, 26, 10];
+      if (header.length < 24 || signature.some((value, index) => header.charCodeAt(index) !== value) ||
+          header.slice(12, 16) !== 'IHDR') throw new TypeError('面部 PNG 文件头无效。');
+      const dimension = offset => [0, 1, 2, 3].reduce((value, index) => value * 256 + header.charCodeAt(offset + index), 0);
+      if (dimension(16) !== SIZE || dimension(20) !== SIZE) throw new TypeError('面部 PNG 尺寸必须是 128 × 128。');
+      const image = await new Promise((resolve, reject) => {
+        const candidate = new Image();
+        candidate.onload = () => resolve(candidate);
+        candidate.onerror = () => reject(new TypeError('面部 PNG 无法读取。'));
+        candidate.src = face.png;
+      });
+      return this._stageImage(image);
+    }
+
+    _stageImage(image) {
+      if (image == null) return this.context.createImageData(SIZE, SIZE);
+      const width = image.naturalWidth ?? image.width, height = image.naturalHeight ?? image.height;
+      if (width !== SIZE || height !== SIZE) throw new TypeError('面部贴图尺寸必须是 128 × 128。');
+      if (image instanceof ImageData) return copyImage(image);
+      const stage = document.createElement('canvas');
+      stage.width = stage.height = SIZE;
+      const context = stage.getContext('2d', { willReadFrequently: true });
+      context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, SIZE, SIZE);
+    }
+
+    /** Replace only after staging succeeds; silent imports still update the visible canvas. */
+    replaceFace(decodedOrNull, { notify = true, resetHistory = true } = {}) {
+      const image = this._stageImage(decodedOrNull);
+      this._cancelStroke(false);
+      const changed = !sameImage(this.imageData, image);
+      this.imageData = image;
+      this.context.putImageData(this.imageData, 0, 0);
+      if (resetHistory) {
+        this._history = [copyImage(image)];
+        this._historyIndex = 0;
+      } else if (changed) {
+        this._history.splice(this._historyIndex + 1);
+        this._history.push(copyImage(image));
+        if (this._history.length > HISTORY_LIMIT) this._history.shift();
+        this._historyIndex = this._history.length - 1;
+      }
+      this._emitHistory();
+      if (notify) { this._onChange(this.canvas); this._onCommit(); }
+      return changed;
+    }
+
+    async loadFace(face, options) {
+      const decoded = await this.decodeFace(face);
+      return this.replaceFace(decoded, options);
+    }
+
+    destroy() {
+      this.finishStroke();
+      this.canvas.removeEventListener('pointerdown', this._handlers.down);
+      this.canvas.removeEventListener('lostpointercapture', this._handlers.lost);
+      root.removeEventListener('pointermove', this._handlers.move);
+      root.removeEventListener('pointerup', this._handlers.up);
+      root.removeEventListener('pointercancel', this._handlers.cancel);
+      root.removeEventListener('blur', this._handlers.blur);
+      root.removeEventListener('pagehide', this._handlers.blur);
+    }
+  }
+
+  FacePainter.SIZE = SIZE;
+  root.FacePainter = FacePainter;
+})(globalThis);
+</script>
+<script>(async function () {
+  'use strict';
+  const Model = globalThis.BlockCharacter;
+  const STORAGE_KEY = 'fps.block-character.v1';
+  const $ = id => document.getElementById(id);
+  const controls = [
+    { key:'headScale', part:'head', parts:['head'], label:'头部大小', group:'scale-controls', unit:'×' },
+    { key:'torsoScale', part:'torso', parts:['torso'], label:'躯干大小', group:'scale-controls', unit:'×' },
+    { key:'armLength', part:'leftArm', parts:['leftArm','rightArm'], label:'手臂长度', group:'arm-controls', unit:'m' },
+    { key:'legLength', part:'leftLeg', parts:['leftLeg','rightLeg'], label:'腿部长度', group:'leg-controls', unit:'m' }
+  ];
+  let params = { ...Model.DEFAULTS };
+  let character, selected = 'head', viewport = null, painter = null, announceTimer, statusTimer;
+  let currentFace = null, editMode = 'body';
+  let storageAvailable = true;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const state = JSON.parse(saved);
+      const project = Model.parseProject(state.character);
+      params = project.parameters;
+      currentFace = project.face;
+      if (project.migrationNotes.length) $('status').textContent = project.migrationNotes.join(' ');
+    }
+  } catch (error) {
+    if (error.name === 'SecurityError') storageAvailable = false;
+    else $('status').textContent = '已跳过无效的本机存档';
+  }
+  const cm = n => +(n * 100).toFixed(1);
+  const dimensions = part => part.size.map(cm).join(' × ') + ' cm';
+  const volume = part => +(part.size.reduce((v,n) => v*n, 1000)).toFixed(2);
+  function status(message) {
+    clearTimeout(statusTimer);
+    $('status').textContent = message;
+    statusTimer = setTimeout(() => { $('status').textContent = '就绪'; }, 4500);
+  }
+  function save() {
+    if (window.parent !== window) {
+      $('save-state').textContent = '点击「应用角色」保存到训练场';
+      return;
+    }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ character: Model.exportData(params, currentFace) }));
+      storageAvailable = true;
+    } catch (_) { storageAvailable = false; }
+    $('save-state').textContent = storageAvailable ? '已保存于此浏览器' : '可导出角色文件保存';
+  }
+  function select(partId, focus = false) {
+    if (!character.parts.some(p => p.id === partId)) return;
+    selected = partId;
+    viewport?.setSelected(editMode === 'face' ? null : partId);
+    for (const c of controls) $(c.key + '-row').classList.toggle('selected', c.parts.includes(partId));
+    const part = character.parts.find(p => p.id === partId);
+    const label = part.id.endsWith('Arm') ? '双臂（每侧）' : part.id.endsWith('Leg') ? '双腿（每侧）' : part.name;
+    $('selection-caption').textContent = `${label} · ${dimensions(part)}`;
+    if (focus) controls.find(c => c.parts.includes(partId)) && $(controls.find(c => c.parts.includes(partId)).key + '-number').focus({preventScroll:true});
+  }
+  function render(persist = true) {
+    character = Model.createCharacter(params);
+    params = character.params;
+    for (const c of controls) {
+      const range = $(c.key + '-range'), number = $(c.key + '-number');
+      range.value = params[c.key];
+      number.value = params[c.key] === +params[c.key].toFixed(2) ? params[c.key].toFixed(2) : String(params[c.key]);
+      range.style.setProperty('--fill', ((params[c.key] - Model.LIMITS[c.key].min) / (Model.LIMITS[c.key].max - Model.LIMITS[c.key].min) * 100) + '%');
+      const part = character.parts.find(p => p.id === c.part);
+      $(c.key + '-dimension').textContent = dimensions(part) + (c.unit === '×' ? ` · ${volume(part)} L` : '');
+    }
+    $('height-value').value = character.standingHeight.toFixed(2);
+    for (const button of document.querySelectorAll('[data-preset]')) {
+      const preset = Model.PRESETS[button.dataset.preset];
+      button.setAttribute('aria-pressed', String(Object.keys(Model.DEFAULTS).every(k => Math.abs(params[k] - preset[k]) < 1e-8)));
+    }
+    const notes = [];
+    if (character.height - character.standingHeight > 1e-8) notes.push(`手臂低于脚底，模型总高 ${character.height.toFixed(2)} m；预览以最低点落地。`);
+    $('geometry-notice').textContent = notes.join(' ');
+    viewport?.setCharacter(character);
+    select(selected);
+    if (persist) save();
+    clearTimeout(announceTimer);
+    announceTimer = setTimeout(() => { $('announcer').textContent = `身高 ${character.standingHeight.toFixed(2)} 米，六个部件已更新。`; }, 250);
+  }
+  function update(c, raw) {
+    const value = Number(raw), bounds = Model.LIMITS[c.key];
+    if (!Number.isFinite(value) || raw === '') { render(false); status('请输入有效数字'); return; }
+    const clamped = Math.min(bounds.max, Math.max(bounds.min, value));
+    params[c.key] = +clamped.toFixed(2);
+    selected = c.part;
+    render();
+    if (clamped !== value) status(`已限制到 ${bounds.min}–${bounds.max} ${c.unit}`);
+  }
+  for (const c of controls) {
+    const limit = Model.LIMITS[c.key];
+    const row = document.createElement('div');
+    row.className = 'param-row'; row.id = c.key + '-row';
+    row.innerHTML = `<div class="param-top"><label class="part-label" for="${c.key}-range">${c.label}</label><label class="number-wrap"><span class="sr-only">${c.label}数值</span><input id="${c.key}-number" type="number" min="${limit.min}" max="${limit.max}" step="0.01" inputmode="decimal" aria-describedby="${c.key}-dimension"><span>${c.unit}</span></label></div><input id="${c.key}-range" type="range" min="${limit.min}" max="${limit.max}" step="0.01" aria-describedby="${c.key}-dimension"><div class="dimension" id="${c.key}-dimension"></div>`;
+    $(c.group).appendChild(row);
+    $(c.key + '-range').addEventListener('input', e => update(c, e.target.value));
+    $(c.key + '-number').addEventListener('change', e => update(c, e.target.value));
+    $(c.key + '-number').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
+    row.addEventListener('focusin', () => select(c.part));
+    row.querySelector('.part-label').addEventListener('click', () => select(c.part));
+  }
+  const scaleNote = document.createElement('p');
+  scaleNote.className = 'group-note';
+  scaleNote.textContent = '头部、躯干保持各自比例，宽、高、深一起缩放。';
+  $('scale-controls').appendChild(scaleNote);
+  function applyPreset(name) {
+    params = { ...Model.PRESETS[name] };
+    render(); viewport?.fit();
+    status('已应用起始体型');
+  }
+  document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => applyPreset(button.dataset.preset)));
+  $('reset-button').addEventListener('click', () => { applyPreset('default'); selected = 'head'; select('head'); });
+  document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+    viewport?.setView(button.dataset.view);
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+  }));
+  $('fit-button').addEventListener('click', () => viewport?.fit());
+  $('viewport').addEventListener('pointermove', e => {
+    if (e.buttons) document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  });
+  function setMode(mode) {
+    painter?.finishStroke();
+    editMode = mode;
+    const isFace = mode === 'face';
+    document.querySelector('.app').classList.toggle('face-mode', isFace);
+    $('body-panel').hidden = isFace;
+    $('face-panel').hidden = !isFace;
+    $('body-metric').hidden = isFace;
+    $('face-metric').hidden = !isFace;
+    $('studio-badge').textContent = isFace ? '只绘制正面' : '6 个方块 · 实时预览';
+    $('module-state').textContent = isFace ? '正面画脸' : '体型编辑';
+    for (const name of ['body', 'face']) {
+      $(name + '-tab').setAttribute('aria-selected', String(name === mode));
+      $(name + '-tab').tabIndex = name === mode ? 0 : -1;
+    }
+    const view = isFace ? 'front' : 'perspective';
+    viewport?.setView(view);
+    viewport?.setFocusPart(isFace ? 'head' : null);
+    select('head');
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
+  }
+  $('body-tab').addEventListener('click', () => setMode('body'));
+  $('face-tab').addEventListener('click', () => setMode('face'));
+  $('start-face-button').addEventListener('click', () => setMode('face'));
+  $('face-tab').tabIndex = -1;
+  document.querySelector('.module-tabs').addEventListener('keydown', e => {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+    e.preventDefault();
+    const mode = e.key === 'Home' ? 'body' : e.key === 'End' ? 'face' : editMode === 'face' ? 'body' : 'face';
+    setMode(mode); $(mode + '-tab').focus();
+  });
+  $('export-button').addEventListener('click', () => {
+    painter?.finishStroke();
+    const content = JSON.stringify(Model.exportData(params, currentFace), null, 2) + '\n';
+    const url = URL.createObjectURL(new Blob([content], {type:'application/json'}));
+    const a = document.createElement('a'); a.href = url; a.download = 'block-character.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    status('已导出体型与画好的脸');
+  });
+  $('import-button').addEventListener('click', () => $('import-file').click());
+  $('import-file').addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    painter.finishStroke();
+    document.querySelector('.app').inert = true;
+    try {
+      if (file.size > 1024 * 1024) throw new Error('角色文件不能超过 1 MB');
+      const imported = Model.parseProject(await file.text());
+      const decoded = await painter.decodeFace(imported.face);
+      painter.replaceFace(decoded, {notify:false, resetHistory:true});
+      params = imported.parameters;
+      currentFace = imported.face;
+      viewport?.setFaceTexture($('face-canvas'));
+      $('undo-button').disabled = true; $('redo-button').disabled = true;
+      render(); viewport?.fit();
+      status(imported.migrationNotes.length ? imported.migrationNotes.join(' ') : '角色导入成功');
+    } catch (error) { status('导入失败：' + error.message); }
+    finally { e.target.value = ''; document.querySelector('.app').inert = false; }
+  });
+  try { viewport = new globalThis.BlockViewport($('viewport'), { onSelect: id => select(editMode === 'face' ? 'head' : id) }); }
+  catch (error) {
+    $('viewport-error').hidden = false;
+    $('viewport-error').textContent = '三维预览未能启动。请在支持 WebGL 的浏览器中打开，并启用硬件加速。尺寸调整与导出仍可使用。';
+    console.error(error);
+  }
+  painter = new globalThis.FacePainter($('face-canvas'), {
+    onChange: canvas => viewport?.setFaceTexture(canvas),
+    onCommit: () => { currentFace = painter.getFaceData(); save(); },
+    onHistoryChange: ({canUndo, canRedo}) => {
+      $('undo-button').disabled = !canUndo; $('redo-button').disabled = !canRedo;
+    }
+  });
+  function setTool(tool) {
+    painter.setTool(tool);
+    $('brush-button').setAttribute('aria-pressed', String(tool === 'brush'));
+    $('eraser-button').setAttribute('aria-pressed', String(tool === 'eraser'));
+    $('paint-tool-hint').textContent = tool === 'brush' ? '按住拖动绘制' : '擦除后恢复底色';
+  }
+  const colors = [
+    ['#20242b','黑色'],['#ffffff','白色'],['#868d96','灰色'],['#70452e','棕色'],
+    ['#e85a4f','红色'],['#ed9661','橙色'],['#f1cf60','黄色'],['#d9af8a','肤色'],
+    ['#4e9665','绿色'],['#66bfc3','青色'],['#3974c3','蓝色'],['#5752a1','靛色'],
+    ['#aa6aba','紫色'],['#e58aa7','粉色'],['#c7d4a6','浅绿'],['#b9d8ed','浅蓝']
+  ];
+  function setColor(color) {
+    painter.setColor(color); $('paint-color').value = color;
+    document.querySelectorAll('[data-paint-color]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.paintColor === color.toLowerCase())));
+    setTool('brush');
+  }
+  for (const [color,name] of colors) {
+    const button = document.createElement('button');
+    button.type = 'button'; button.dataset.paintColor = color;
+    button.setAttribute('aria-label', name); button.setAttribute('aria-pressed', String(color === '#20242b'));
+    button.style.setProperty('--swatch',color);
+    button.innerHTML = '<span aria-hidden="true"></span>';
+    button.addEventListener('click', () => setColor(color));
+    $('paint-palette').appendChild(button);
+  }
+  setColor('#20242b');
+  $('paint-color').addEventListener('input', e => setColor(e.target.value));
+  $('brush-button').addEventListener('click', () => setTool('brush'));
+  $('eraser-button').addEventListener('click', () => setTool('eraser'));
+  $('brush-size').addEventListener('input', e => {
+    painter.setSize(+e.target.value); $('brush-size-value').value = e.target.value;
+  });
+  $('undo-button').addEventListener('click', () => { painter.undo(); status('已撤销'); });
+  $('redo-button').addEventListener('click', () => { painter.redo(); status('已重做'); });
+  $('clear-face-button').addEventListener('click', () => { painter.clear(); status('画板已清空，可撤销'); });
+  document.addEventListener('keydown', e => {
+    if (editMode !== 'face' || !(e.ctrlKey || e.metaKey) || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    const key = e.key.toLowerCase();
+    if (key === 'z' || key === 'y') {
+      e.preventDefault();
+      if (key === 'y' || e.shiftKey) painter.redo(); else painter.undo();
+    }
+  });
+  if (currentFace) {
+    try { painter.replaceFace(await painter.decodeFace(currentFace), {notify:false,resetHistory:true}); }
+    catch (_) { currentFace = null; status('已恢复体型，无法读取的面部图片已跳过'); }
+  }
+  viewport?.setFaceTexture($('face-canvas'));
+  render(false);
+  if (!storageAvailable) $('save-state').textContent = '可导出角色文件保存';
+  globalThis.BlockCharacterApp = Object.freeze({ getParameters: () => ({...params}), getCharacter: () => Model.createCharacter(params), getFaceData: () => currentFace ? {...currentFace} : null });
+  document.querySelector('.app').inert = false;
+  document.querySelector('.app').setAttribute('aria-busy','false');
+  // The combat demo embeds this editor. Exchange only with its own parent/opener.
+  window.addEventListener('message', async event => {
+    const trusted = (window.parent !== window && event.source === window.parent) || (window.opener && event.source === window.opener);
+    if (!trusted || !event.data || typeof event.data !== 'object') return;
+    if (event.data.type === 'pixel-fps:request-character') {
+      event.source.postMessage({type:'pixel-fps:character',token:event.data.token,character:Model.exportData(params,currentFace)}, '*');
+    } else if (event.data.type === 'pixel-fps:set-character') {
+      try {
+        const parsed = Model.parseProject(event.data.character);
+        const decoded = parsed.face ? await painter.decodeFace(parsed.face) : null;
+        params = {...parsed.parameters}; currentFace = parsed.face;
+        painter.replaceFace(decoded, {notify:false,resetHistory:true});
+        viewport?.setFaceTexture($('face-canvas')); render();
+      } catch (error) { status('无法载入训练场角色：' + error.message); }
+    }
+  });
+  if (window.parent !== window) window.parent.postMessage({type:'pixel-fps:editor-ready'}, '*');
+})();
+</script>
+</body>
+</html>

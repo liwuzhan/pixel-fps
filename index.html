@@ -1,0 +1,1692 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pixel FPS · 玩法训练场</title><style>:root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;color:#e9eeef;background:#18242c;font-size:14px}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}button,input{font:inherit}button{border:1px solid #536573;background:#23323d;color:#e9eeef;border-radius:5px;padding:9px 13px;cursor:pointer}button:hover{background:#354959}button:focus-visible{outline:2px solid #a8eb9e;outline-offset:3px}button:disabled{opacity:.45;cursor:default}button.primary{color:#102114;background:#b7ed91;border-color:#b7ed91;font-weight:700}kbd{font-family:inherit;font-size:11px;border:1px solid #61737d;border-radius:3px;padding:2px 5px;white-space:nowrap}#arena{display:block;width:100%;height:100%;touch-action:none}#hud{position:fixed;inset:0;pointer-events:none}header{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;gap:15px;background:linear-gradient(#101b25dd,transparent)}header strong{letter-spacing:2px;margin-right:14px}header .muted{font-size:12px}.header-actions{display:flex;gap:8px;pointer-events:auto}.muted{color:#a7bbc4;line-height:1.65}.fine{font-size:12px;line-height:1.65;color:#92a6b2}.eyebrow{font-size:11px;letter-spacing:2px;color:#b7ed91}h1{font-size:clamp(30px,5vw,52px);margin:16px 0;line-height:1.08;letter-spacing:-1px}h1 span{font-size:.58em;font-weight:500;letter-spacing:2px;color:#b5c6cf}h2{margin:0 0 18px;font-size:24px}h3{font-size:13px;color:#bed0d9;margin-top:24px}p{line-height:1.7}#crosshair{position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%);filter:drop-shadow(0 1px 2px #000)}#crosshair i,#crosshair b{position:absolute;background:#ebfff2}#crosshair i{left:8px;top:0;width:2px;height:18px}#crosshair b{left:0;top:8px;width:18px;height:2px}#crosshair.locked i,#crosshair.locked b{background:#b7ed91}#hit-marker{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:42px;color:#ffe1a2;opacity:0}#target-label{position:absolute;top:calc(50% + 25px);left:50%;transform:translateX(-50%);color:#ffe1a2;font-size:12px;white-space:nowrap;text-shadow:0 1px 3px #000}.prompt{position:absolute;bottom:180px;left:50%;transform:translateX(-50%);border:1px solid #82928a;padding:11px 18px;background:#13202bef;text-align:center;min-width:180px;border-radius:6px}#toast{position:absolute;top:85px;left:50%;transform:translateX(-50%);background:#182933ed;border-radius:5px;padding:9px 16px;max-width:min(90%,600px);text-align:center;opacity:0;transition:opacity .15s}#toast.show{opacity:1}.bottom-hud{position:absolute;bottom:42px;left:22px;right:22px;display:flex;align-items:flex-end;justify-content:space-between;gap:18px}.resources{width:210px;flex-shrink:0;padding:12px 14px;background:#12212bdc;border-radius:5px}.resources>div{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:12px}.resources>div+div{margin-top:10px}progress{appearance:none;width:100%;height:5px;grid-column:1/-1;border:0;border-radius:2px;background:#435261}progress::-webkit-progress-bar{background:#435261}progress::-webkit-progress-value{background:#b7ed91}#mana-bar::-webkit-progress-value{background:#79c6ed}.weapon-hud{padding:12px 16px;background:#12212bdc;border-radius:5px;display:flex;flex-direction:column;text-align:center;gap:5px}.weapon-hud strong{font-size:23px}.weapon-hud small{color:#b4c5ce;font-size:11px}.skill-hud{display:flex;gap:8px}.skill-card{min-width:106px;position:relative;border:1px solid #566a75;background:#12212be6;padding:9px 11px;border-radius:5px}.skill-card.active{border-color:#b7ed91}.skill-card.unowned{opacity:.5}.skill-card .name{font-size:12px;margin:7px 0 5px}.skill-card .detail{font-size:11px;color:#a9bdc9}.skill-card .cooldown{font-size:13px;font-weight:700;color:#cfe3ed}#control-hint{position:absolute;bottom:12px;left:20px;right:20px;text-align:center;font-size:11px;color:#cee0e8;text-shadow:0 1px 4px #000}.overlay{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:20px;background:#071018b8;backdrop-filter:blur(3px)}[hidden]{display:none!important}.panel{width:min(100%,460px);max-height:95vh;overflow:auto;background:#13202bf5;border:1px solid #4e6473;border-radius:10px;padding:28px;box-shadow:0 20px 80px #0005}.start-panel{width:min(100%,630px)}.panel>button{margin:8px 5px 0 0}.instruction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.instruction-grid>div{border:1px solid #3f5462;padding:12px;border-radius:5px}.instruction-grid b{display:block;font-size:12px;margin:9px 0 5px}.instruction-grid small{font-size:11px;color:#a7bbc4;line-height:1.5}.instruction-grid kbd{display:inline-block}dialog{color:#e9eeef;background:#14232e;border:1px solid #5e7687;border-radius:8px;padding:24px;width:min(92vw,740px);max-height:90vh;overflow:auto}dialog::backdrop{background:#071018bd;backdrop-filter:blur(3px)}.dialog-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.dialog-title h2{margin:0}.inventory-resources{display:flex;gap:15px;flex-wrap:wrap;padding:12px;background:#203441;border-radius:5px}.inventory-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid #354a59}.inventory-row small{display:block;font-size:12px;color:#a9beca;line-height:1.7}.inventory-row .actions{display:flex;gap:6px;flex-shrink:0}.empty{color:#9fb1bc;padding:8px 0}.check-row,.range-row{display:flex;align-items:center;gap:12px;margin:18px 0}.range-row input{flex:1}.check-row input{width:18px;height:18px}.character-dialog{width:98vw;height:96vh;max-height:96vh;padding:12px;overflow:hidden}.character-dialog iframe{width:100%;height:calc(100% - 66px);border:0;background:#131b23}#boot-error{color:#ffbbaa;border:1px solid #a76558;padding:10px}body.damage:after{content:"";position:fixed;inset:0;box-shadow:inset 0 0 90px #c4484670;pointer-events:none}@media(max-width:850px){header{padding:10px}header .muted{display:none}.header-actions{gap:4px}header button{font-size:11px;padding:7px}.bottom-hud{left:10px;right:10px;bottom:56px;gap:8px;flex-wrap:wrap}.resources{width:160px}.skill-card{min-width:85px;padding:7px}.weapon-hud strong{font-size:17px}.weapon-hud{padding:10px}.skill-hud{gap:4px}#control-hint{font-size:10px;line-height:1.6;bottom:8px}#pickup-prompt{bottom:220px}.inventory-row{align-items:flex-start}.inventory-row .actions{flex-direction:column}.character-dialog .dialog-title h2{font-size:17px}.character-dialog .dialog-title button{font-size:11px;padding:7px}}@media(max-width:560px){.instruction-grid{grid-template-columns:1fr}.instruction-grid>div{padding:9px}.instruction-grid b{display:inline;margin-left:9px}.instruction-grid small{display:block;margin-top:5px}.panel{padding:22px}.skill-hud{width:100%;justify-content:flex-end}.resources{width:46%}.weapon-hud{width:49%}header strong{font-size:12px;letter-spacing:1px;margin:0}.dialog-title h2{font-size:19px}.character-dialog .dialog-title{align-items:flex-start}.character-dialog .dialog-title>div{display:flex;gap:4px}.prompt{bottom:244px}}
+</style></head>
+<body>
+<canvas id="arena" aria-label="第一人称方块人训练场"></canvas>
+<div id="hud">
+  <header><div><strong>PIXEL FPS</strong><span class="muted">玩法训练场 · 01</span></div><div class="header-actions"><button id="edit-character">捏人 / 画脸</button><button id="open-inventory">背包 <kbd>Tab</kbd></button><button id="open-settings">训练设置</button></div></header>
+  <div id="target-label"></div><div id="crosshair"><i></i><b></b></div><div id="hit-marker" aria-hidden="true">×</div>
+  <div id="pickup-prompt" class="prompt" hidden></div><div id="toast" role="status" aria-live="polite"></div>
+  <section class="bottom-hud"><div class="resources"><div><span>生命</span><strong id="health">100 / 100</strong><progress id="health-bar" max="100" value="100"></progress></div><div><span>蓝量</span><strong id="mana">100 / 100</strong><progress id="mana-bar" max="100" value="100"></progress></div></div><div class="weapon-hud"><span id="weapon-label">未持有武器</span><strong id="ammo">弹药 0</strong><small id="weapon-hint">靠近物资按 E 拾取</small></div><div id="skill-hud" class="skill-hud"></div></section>
+  <div id="control-hint">WASD 移动 · 鼠标瞄准 / 左键攻击 · 空格跳跃 · E 拾取 · 1–4 切枪 · Q / F / G 技能 · V 蓝瓶 · Tab 背包 · Esc 暂停</div>
+</div>
+<section id="start-screen" class="overlay">
+ <div class="panel start-panel"><p class="eyebrow">可玩的规则，简单的方块</p><h1>Pixel FPS<br><span>玩法训练场</span></h1><p>先拾取脚边的武器和弹药，再向前方的六方块训练靶开火。枪弹实际飞行，墙壁会阻挡命中。</p><div class="instruction-grid"><div><kbd>E</kbd><b>拾取物资</b><small>枪械、通用弹药、技能、蓝瓶</small></div><div><kbd>Q F G</kbd><b>三个技能脚本</b><small>弹射背包、自瞄、虚弱榴弹</small></div><div><kbd>Tab</kbd><b>背包与合成</b><small>同名同级技能三合一</small></div></div><p id="character-summary" class="muted"></p><button id="start-game" class="primary">进入训练场</button><button id="start-edit">调整体型 / 画脸</button><p class="fine">单机玩法验证。参数为测试值；点击进入后鼠标控制视角，Esc 释放鼠标。</p><p id="boot-error" role="alert" hidden></p></div>
+</section>
+<section id="pause-screen" class="overlay" hidden><div class="panel"><p class="eyebrow">训练已暂停</p><h2 id="pause-title">继续你的实验</h2><p id="pause-copy">鼠标已释放。点击继续回到第一人称。</p><button id="resume-game" class="primary">继续训练</button><button id="pause-inventory">背包与合成</button><button id="pause-character">调整体型 / 画脸</button><button id="pause-settings">训练设置</button><button id="reset-game">重新开始训练</button></div></section>
+<dialog id="inventory-dialog"><div class="dialog-title"><h2>背包与合成</h2><button id="close-inventory" aria-label="关闭背包">关闭</button></div><p class="muted">快捷键只是使用入口。这里显示实际持有的武器、资源和技能。</p><div id="inventory-resources" class="inventory-resources"></div><h3>武器</h3><div id="inventory-weapons"></div><h3>技能</h3><div id="inventory-skills"></div><p class="fine">同名同级的三份普通技能合成一份高一级技能。自瞄是消耗型终极，每次使用消耗一份。</p></dialog>
+<dialog id="settings-dialog"><div class="dialog-title"><h2>训练设置</h2><button id="close-settings">关闭</button></div><label class="check-row"><input id="moving-targets" type="checkbox" checked>训练靶横向移动</label><label class="check-row"><input id="enemy-fire" type="checkbox">靶机回击（可验证虚弱与受伤）</label><label class="range-row">鼠标灵敏度 <input id="sensitivity" type="range" min="0.0005" max="0.005" step="0.0001" value="0.002"><output id="sensitivity-value">1.0×</output></label><button id="reset-targets">恢复训练靶</button><button id="reset-all">重置场地与物资</button><h3>角色</h3><p id="settings-character" class="muted"></p><button id="import-character">导入角色 JSON</button><button id="default-character">使用默认角色</button><input id="character-file" type="file" accept=".json,application/json" hidden><p class="fine">可导入捏人模块导出的角色。应用体型会重新开始训练。</p></dialog>
+<dialog id="character-dialog" class="character-dialog"><div class="dialog-title"><h2>角色制作</h2><div><button id="cancel-character">取消</button><button id="apply-character" class="primary">应用角色并重新训练</button></div></div><iframe id="character-frame" title="方块人体型与画脸编辑器"></iframe></dialog>
+<script id="studio-document" type="application/json">"<!doctype html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"color-scheme\" content=\"dark\"><meta name=\"description\" content=\"六方块角色构建器：调整体型，自由画脸，只有头部正面使用绘制的贴图。离线运行。\">\n<title>方块人 · 角色构建器<\/title>\n<style>:root{color-scheme:dark;--bg:#10171e;--panel:#1b232b;--line:#303b45;--ink:#eef0ed;--muted:#a3afb7;--accent:#e2b080;--field:#111a22;--soft:#27323c;font-family:Inter,\"PingFang SC\",\"Microsoft YaHei\",system-ui,sans-serif;font-synthesis:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-size:14px}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:4px}button{color:inherit;border:1px solid var(--line);background:transparent;border-radius:7px;padding:8px 12px;line-height:1.4}button:hover{background:var(--soft)}button:active{transform:translateY(1px)}button[aria-pressed=true]{color:var(--accent);background:#3a3027;border-color:#80634a}.app{max-width:1800px;margin:auto;min-height:100vh;display:flex;flex-direction:column}.header{height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;gap:14px;align-items:center}.brand-mark{height:34px;width:32px;position:relative;background:var(--accent);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}.brand-mark:after{content:\"\";position:absolute;inset:8px;background:var(--bg);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}h1{margin:0;font-size:19px;font-weight:600;letter-spacing:.04em}.eyebrow{font-size:10px;letter-spacing:.16em;color:var(--muted);margin-top:5px}.actions{display:flex;align-items:center;gap:8px}.actions .primary{background:var(--accent);color:#23221e;border-color:var(--accent);font-weight:600}.primary:hover{background:#edbf95}.module-tag{margin-left:14px;padding-left:18px;border-left:1px solid var(--line);color:var(--muted);font-size:12px}.workspace{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 350px;min-height:700px}.studio{position:relative;display:flex;flex-direction:column;background:#151d25;min-width:0;overflow:hidden}.studio-head{padding:26px 28px 0;display:flex;justify-content:space-between;align-items:start;position:absolute;left:0;right:0;top:0;z-index:3;pointer-events:none}.metric-label{color:var(--muted);font-size:12px;letter-spacing:.08em}.height-number{font-size:38px;font-weight:450;letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin:4px 0 3px}.height-number span{font-size:15px;letter-spacing:0;color:var(--muted);margin-left:6px}.metric-formula{color:#84949f;font-size:11px}.studio-badge{border:1px solid #3b4852;padding:6px 10px;border-radius:5px;color:#b2c0c9;font-size:11px;letter-spacing:.08em}.viewport-wrap{position:absolute;inset:0;overflow:hidden}.viewport-wrap canvas{display:block;width:100%;height:100%}#viewport{touch-action:none;cursor:grab}#viewport:active{cursor:grabbing}.studio-footer{position:absolute;left:28px;right:28px;bottom:23px;display:flex;flex-direction:column;gap:16px;pointer-events:none;z-index:3}.view-bar{display:flex;gap:6px;pointer-events:auto;align-self:center;background:#111a22e6;padding:5px;border:1px solid #34414b;border-radius:9px;box-shadow:0 8px 24px #0002}.view-bar button{border:0;font-size:12px;padding:7px 12px}.view-bar button[aria-pressed=true]{background:#384550;color:#f2f3ef}.view-bar .fit{border-left:1px solid var(--line);border-radius:0;margin-left:2px}.stage-caption{display:flex;justify-content:space-between;align-items:center;gap:14px;color:#8697a2;font-size:11px}.selection-caption{color:#c4ccd0;max-width:60%}.viewport-error{position:absolute;inset:35% 12%;color:#f4c196;text-align:center;line-height:1.8;z-index:3}.inspector{background:var(--panel);border-left:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:21px}.inspector-title{display:flex;align-items:center;justify-content:space-between}.inspector h2{font-size:16px;font-weight:550;margin:0}.subtle{font-size:11px;color:var(--muted)}.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.preset{padding:10px 5px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;background:#171f27}.preset small{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}.group{border-top:1px solid var(--line);padding-top:17px}.group-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:8px}.group-title h3{font-size:12px;margin:0;color:#b2bfc7;font-weight:500}.link-toggle{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;cursor:pointer}.link-toggle input{accent-color:var(--accent);width:14px;height:14px;margin:0}.param-row{margin-top:15px;padding-left:10px;border-left:2px solid transparent;transition:border-color .15s}.param-row:first-child{margin-top:0}.param-row.selected{border-left-color:var(--accent)}.param-top{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:9px}.part-label{font-size:13px}.selected .part-label{color:var(--accent)}.number-wrap{display:flex;align-items:center;border:1px solid #3a4650;border-radius:5px;background:var(--field);height:29px;padding-right:9px;gap:5px}.number-wrap input{background:none;border:0;color:var(--ink);text-align:right;width:62px;min-width:0;padding:4px 0 4px 5px;font-size:12px;font-variant-numeric:tabular-nums;appearance:textfield;-moz-appearance:textfield}.number-wrap input::-webkit-inner-spin-button{appearance:none}.number-wrap span{font-size:10px;color:var(--muted);min-width:9px}.param-row input[type=range]{width:100%;height:4px;display:block;appearance:none;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--fill,17%),#3b4853 var(--fill,17%),#3b4853 100%);border-radius:3px;margin:13px 0 11px;cursor:ew-resize;accent-color:var(--accent)}input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:#eac098;border:2px solid #202730;box-shadow:0 0 0 1px #b0845e}input[type=range]::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:#eac098;border:2px solid #202730}.dimension{font-size:10px;color:#95a5af;min-height:14px;font-variant-numeric:tabular-nums}.group-note{font-size:10px;color:#83949f;margin:10px 0 0 12px;line-height:1.65}.inspector-bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}.reset{font-size:11px;padding:6px 9px;color:#bdc7cc}.save-state{font-size:10px;color:#8b9ea9}.save-state:before{content:\"\";display:inline-block;width:5px;height:5px;background:#9daf98;border-radius:100%;margin-right:6px}.notice{font-size:11px;line-height:1.65;color:#e6b47f;border:1px solid #725737;background:#342b22;padding:9px 12px;border-radius:5px;margin:0}.notice:empty{display:none}.app-footer{display:flex;align-items:center;justify-content:space-between;padding:11px 28px;color:#82939f;font-size:10px;border-top:1px solid var(--line);gap:12px;letter-spacing:.03em}.footer-left{display:flex;gap:18px}.status-message{color:#d7b390;min-height:14px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}\n@media(min-width:1250px){.workspace{grid-template-columns:minmax(0,1fr) 372px}.inspector{padding:26px 28px}}@media(min-height:980px) and (min-width:761px){.workspace{min-height:850px}.param-row{margin-top:22px}.inspector{gap:25px}}@media(max-width:900px){.header{padding:0 20px}.module-tag{display:none}.workspace{grid-template-columns:minmax(0,1fr) 310px}.inspector{padding:20px;gap:18px}.studio-head{padding:24px 20px}.studio-footer{left:20px;right:20px}.stage-caption{flex-direction:column;align-items:start;gap:4px}.selection-caption{max-width:100%}.height-number{font-size:32px}.studio-badge{display:none}}@media(max-width:760px){.header{height:72px;padding:0 16px}.brand{gap:10px}h1{font-size:17px}.brand-mark{width:25px;height:27px}.eyebrow{font-size:8px}.actions button{padding:7px 9px;font-size:12px}.workspace{display:flex;flex-direction:column;min-height:0}.studio{height:510px;flex:none}.inspector{border-left:0;border-top:1px solid var(--line);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px}.inspector-title,.presets,.notice,.inspector-bottom{grid-column:1/-1}.scale-group{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}.scale-group .param-row{margin-top:0}.scale-group .group-note{grid-column:1/-1;margin-top:0}.height-number{font-size:30px}.stage-caption{flex-direction:row}.app-footer{padding:12px 20px;flex-wrap:wrap}.footer-left{gap:12px}}@media(max-width:440px){.header{gap:8px}.brand-mark{display:none}.header .actions{gap:5px}.actions button{font-size:11px;padding:7px 8px}.studio{height:430px}.studio-head{padding:20px}.metric-formula{font-size:10px}.stage-caption{font-size:10px;flex-direction:column;gap:5px}.studio-footer{bottom:16px;gap:13px}.view-bar button{padding:7px 10px}.inspector{display:flex;gap:22px;padding:22px}.scale-group{display:block}.scale-group .param-row+.param-row{margin-top:20px}.group-note{margin-top:12px!important}.footer-left{flex-wrap:wrap;gap:8px}.preset{min-height:50px}.link-toggle{min-height:28px}.param-row input[type=range]{height:6px;margin-top:17px;margin-bottom:15px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}\n[hidden]{display:none!important}.body-panel{display:flex;flex-direction:column;gap:21px;flex:1}.module-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:#121b23;border:1px solid var(--line);border-radius:8px}.module-tabs button{border:0;font-size:12px;display:flex;gap:8px;justify-content:center;align-items:center}.module-tabs button span{font-size:10px;opacity:.65;font-variant-numeric:tabular-nums}.module-tabs button[aria-selected=true]{background:#3a3027;color:#edbd90}.body-actions{display:flex;align-items:center;justify-content:space-between;gap:8px}.next-step{font-size:11px;border-color:#766046;color:var(--accent);padding:6px 9px}.face-panel{display:flex;flex-direction:column;gap:18px}.face-stage-title{font-size:26px;margin:8px 0;letter-spacing:-.03em}.paint-tools{display:flex;align-items:center;gap:6px}.paint-tools button{font-size:12px;padding:7px 12px}.paint-tool-hint{font-size:10px;color:var(--muted);margin-left:auto}.paint-board{padding:8px;border:1px solid #45515b;background:#111a22;border-radius:5px}.paint-board canvas{display:block;width:100%;height:auto;aspect-ratio:1;background:#c8c5b9;image-rendering:pixelated;touch-action:none;cursor:crosshair;outline:1px solid #707570;user-select:none}.paint-history{display:flex;align-items:center;gap:6px}.paint-history button{font-size:11px;padding:6px 10px}.paint-history button:last-child{margin-left:auto}.paint-history button:disabled{opacity:.35;cursor:default;transform:none}.paint-history button:disabled:hover{background:transparent}.paint-section-heading{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:12px}.custom-color{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted);cursor:pointer}.custom-color input{width:30px;height:26px;padding:2px;border:1px solid #495761;border-radius:5px;background:var(--field);cursor:pointer}.paint-palette{display:grid;grid-template-columns:repeat(8,1fr);gap:7px}.paint-palette button{height:28px;min-width:0;padding:3px;border-radius:4px;border:1px solid transparent;background:transparent}.paint-palette button span{display:block;width:100%;height:100%;background:var(--swatch);border:1px solid #ffffff22;border-radius:2px}.paint-palette button[aria-pressed=true]{border-color:var(--accent);background:transparent}.brush-size{display:flex;flex-direction:column;gap:14px;font-size:12px}.brush-size>span{display:flex;align-items:center;gap:6px}.brush-size output{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--accent)}.brush-size small{font-size:10px;color:var(--muted)}.brush-size input{width:100%;accent-color:var(--accent);margin:0;height:16px}.paint-note{font-size:11px;color:#96a7b1;line-height:1.9;margin:0}.face-mode .workspace{grid-template-columns:minmax(0,1fr) 390px}.face-mode .inspector-bottom{margin-top:auto}.inspector .inspector-bottom{flex:none}.face-mode .paint-board{box-shadow:0 10px 30px #0002}\n@media(min-height:980px) and (min-width:761px){.body-panel{gap:25px}}@media(max-width:900px){.body-panel{gap:18px}.face-mode .workspace{grid-template-columns:minmax(0,1fr) 330px}.face-panel{gap:16px}.paint-tools button{padding:7px 10px}.paint-tool-hint{font-size:9px}}@media(max-width:760px){.inspector{display:flex}.body-panel{display:grid;grid-template-columns:1fr 1fr;gap:24px}.body-actions{grid-column:1/-1}.module-tabs{flex:none}.face-panel{max-width:480px;width:100%;align-self:center}.face-mode .studio{height:470px}.face-mode .studio-head{padding-top:20px}.face-stage-title{font-size:22px}.module-tabs button{min-height:40px}.paint-tools button,.paint-history button{min-height:38px}.paint-palette button{height:34px}.custom-color input{height:32px;width:38px}}@media(max-width:440px){.body-panel{display:flex;gap:22px}.paint-tool-hint{font-size:10px}.face-mode .studio{height:390px}.face-stage-title{font-size:20px}.face-mode .metric-formula{max-width:90px;line-height:1.7}.paint-palette{gap:6px}.paint-palette button{height:32px}.face-panel{gap:17px}}\n<\/style>\n<\/head>\n<body>\n<main class=\"app\" aria-busy=\"true\" inert>\n  <header class=\"header\">\n    <div class=\"brand\"><div class=\"brand-mark\" aria-hidden=\"true\"><\/div><div><h1>方块人<\/h1><div class=\"eyebrow\">CHARACTER BUILDER<\/div><\/div><span class=\"module-tag\">FPS · 体型与画脸<\/span><\/div>\n    <div class=\"actions\"><button id=\"import-button\" type=\"button\">导入<\/button><button id=\"export-button\" type=\"button\" class=\"primary\">导出角色 ↗<\/button><\/div>\n    <input type=\"file\" id=\"import-file\" accept=\".json,application/json\" hidden>\n  <\/header>\n  <div class=\"workspace\">\n    <section class=\"studio\" aria-label=\"角色三维预览\">\n      <div class=\"studio-head\">\n        <div id=\"body-metric\"><div class=\"metric-label\">自然身高<\/div><div class=\"height-number\"><output id=\"height-value\">1.80<\/output><span>m<\/span><\/div><div class=\"metric-formula\">头高 + 躯干高 + 腿长<\/div><\/div>\n        <div id=\"face-metric\" hidden><div class=\"metric-label\">画脸<\/div><div class=\"face-stage-title\">头部预览<\/div><div class=\"metric-formula\">正面贴图 · 实时同步<\/div><\/div>\n        <div class=\"studio-badge\" id=\"studio-badge\">6 个方块 · 实时预览<\/div>\n      <\/div>\n      <div class=\"viewport-wrap\" id=\"viewport-wrap\"><canvas id=\"viewport\" aria-label=\"六方块角色三维预览；拖动旋转，滚轮缩放，点击选择部件。也可使用下方视角按钮。\">浏览器需要支持 Canvas 和 WebGL 才能显示三维角色。<\/canvas><\/div>\n      <div class=\"viewport-error\" id=\"viewport-error\" role=\"alert\" hidden><\/div>\n      <div class=\"studio-footer\">\n        <div class=\"view-bar\" role=\"group\" aria-label=\"视角\"><button data-view=\"perspective\" aria-pressed=\"true\" type=\"button\">三维<\/button><button data-view=\"front\" aria-pressed=\"false\" type=\"button\">正面<\/button><button data-view=\"side\" aria-pressed=\"false\" type=\"button\">侧面<\/button><button class=\"fit\" id=\"fit-button\" type=\"button\">适配画面<\/button><\/div>\n        <div class=\"stage-caption\"><span id=\"selection-caption\" class=\"selection-caption\">头部 · 40 × 40 × 40 cm<\/span><span>拖动旋转 · 滚轮缩放 · 点击选择<\/span><\/div>\n      <\/div>\n    <\/section>\n    <aside class=\"inspector\" aria-label=\"角色编辑器\">\n      <div class=\"module-tabs\" role=\"tablist\" aria-label=\"角色编辑步骤\"><button id=\"body-tab\" role=\"tab\" aria-controls=\"body-panel\" aria-selected=\"true\" type=\"button\"><span>01<\/span>调整体型<\/button><button id=\"face-tab\" role=\"tab\" aria-controls=\"face-panel\" aria-selected=\"false\" type=\"button\"><span>02<\/span>画脸<\/button><\/div>\n      <div id=\"body-panel\" class=\"body-panel\" role=\"tabpanel\" aria-labelledby=\"body-tab\">\n      <div class=\"inspector-title\"><h2>尺寸参数<\/h2><span class=\"subtle\">拖动滑杆 · 输入后回车<\/span><\/div>\n      <div class=\"presets\" role=\"group\" aria-label=\"起始体型\">\n        <button type=\"button\" class=\"preset\" data-preset=\"small\" aria-pressed=\"false\">迷你<small>组合示例 · 0.50 m<\/small><\/button>\n        <button type=\"button\" class=\"preset\" data-preset=\"default\" aria-pressed=\"true\">标准<small>组合示例 · 1.80 m<\/small><\/button>\n        <button type=\"button\" class=\"preset\" data-preset=\"tall\" aria-pressed=\"false\">高大<small>组合示例 · 5.00 m<\/small><\/button>\n      <\/div>\n      <div class=\"group scale-group\" id=\"scale-controls\"><\/div>\n      <section class=\"group\"><div class=\"group-title\"><h3>手臂 · 两侧等长<\/h3><\/div><div id=\"arm-controls\"><\/div><p class=\"group-note\">宽 16 cm、深 22 cm 保持不变<\/p><\/section>\n      <section class=\"group\"><div class=\"group-title\"><h3>腿部 · 两侧等长<\/h3><\/div><div id=\"leg-controls\"><\/div><p class=\"group-note\">宽 20 cm、深 24 cm 保持不变<\/p><\/section>\n      <p id=\"geometry-notice\" class=\"notice\"><\/p>\n      <div class=\"body-actions\"><button id=\"reset-button\" class=\"reset\" type=\"button\">恢复初始体型<\/button><button id=\"start-face-button\" class=\"next-step\" type=\"button\">下一步：画脸 →<\/button><\/div>\n      <\/div>\n      <section id=\"face-panel\" class=\"face-panel\" role=\"tabpanel\" aria-labelledby=\"face-tab\" hidden>\n        <div class=\"inspector-title\"><h2>正面画板<\/h2><span class=\"subtle\">空白处保留头部底色<\/span><\/div>\n        <div class=\"paint-tools\" role=\"group\" aria-label=\"绘画工具\"><button id=\"brush-button\" type=\"button\" aria-pressed=\"true\">画笔<\/button><button id=\"eraser-button\" type=\"button\" aria-pressed=\"false\">橡皮<\/button><span class=\"paint-tool-hint\" id=\"paint-tool-hint\">按住拖动绘制<\/span><\/div>\n        <div class=\"paint-board\"><canvas id=\"face-canvas\" width=\"128\" height=\"128\" tabindex=\"0\" aria-label=\"头部正面画板，使用鼠标或手指绘制；内容实时贴到角色头部正面。Ctrl 或 Command 加 Z 撤销。\">请使用支持 Canvas 的浏览器进行绘制。<\/canvas><\/div>\n        <div class=\"paint-history\"><button id=\"undo-button\" type=\"button\" disabled>撤销<\/button><button id=\"redo-button\" type=\"button\" disabled>重做<\/button><button id=\"clear-face-button\" type=\"button\">清空画板<\/button><\/div>\n        <div class=\"paint-colors\"><div class=\"paint-section-heading\"><span>颜色<\/span><label class=\"custom-color\">自选<input id=\"paint-color\" type=\"color\" value=\"#20242b\" aria-label=\"自选画笔颜色\"><\/label><\/div><div id=\"paint-palette\" class=\"paint-palette\" role=\"group\" aria-label=\"常用画笔颜色\"><\/div><\/div>\n        <label class=\"brush-size\" for=\"brush-size\"><span>画笔粗细 <output id=\"brush-size-value\">4<\/output><small>像素<\/small><\/span><input id=\"brush-size\" type=\"range\" min=\"1\" max=\"24\" value=\"4\" step=\"1\"><\/label>\n        <p class=\"paint-note\">只绘制头部正面。橡皮恢复底色，清空后也可以撤销；返回调整体型不会丢失画好的脸。<\/p>\n      <\/section>\n      <div class=\"inspector-bottom\"><span class=\"subtle\" id=\"module-state\">体型编辑<\/span><span class=\"save-state\" id=\"save-state\">自动保存于此浏览器<\/span><\/div>\n    <\/aside>\n  <\/div>\n  <footer class=\"app-footer\"><div class=\"footer-left\"><span>六个独立方块<\/span><span>仅正面贴图<\/span><span>体型与绘画一起保存<\/span><\/div><span class=\"status-message\" id=\"status\" role=\"status\" aria-live=\"polite\">就绪<\/span><\/footer>\n  <span class=\"sr-only\" id=\"announcer\" aria-live=\"polite\"><\/span>\n<\/main>\n<script>(function attachBlockCharacter(root) {\n  \"use strict\";\n\n  const DEFAULTS = Object.freeze({\n    headScale: 1,\n    torsoScale: 1,\n    armLength: 0.65,\n    legLength: 0.8,\n  });\n  const KEYS = Object.freeze(Object.keys(DEFAULTS));\n  const LEGACY_KEYS = Object.freeze([\n    \"headScale\", \"torsoScale\", \"leftArmLength\", \"rightArmLength\", \"leftLegLength\", \"rightLegLength\",\n  ]);\n  const LIMITS = Object.freeze(Object.fromEntries(KEYS.map((key) => [\n    key,\n    Object.freeze(key.endsWith(\"Scale\")\n      ? { min: 0.15, max: 5, step: 0.01 }\n      : { min: 0.04, max: 4, step: 0.01 }),\n  ])));\n  const PRESETS = Object.freeze({\n    default: DEFAULTS,\n    small: Object.freeze({\n      headScale: 0.25,\n      torsoScale: 0.25,\n      armLength: 0.18,\n      legLength: 0.25,\n    }),\n    tall: Object.freeze({\n      headScale: 2.5,\n      torsoScale: 2.5,\n      armLength: 1.8,\n      legLength: 2.5,\n    }),\n    longArms: Object.freeze({ ...DEFAULTS, armLength: 2.4 }),\n  });\n\n  function assertRecord(value, label) {\n    if (value === null || typeof value !== \"object\" || Array.isArray(value)) {\n      throw new TypeError(`${label}必须是对象。`);\n    }\n  }\n\n  /** Fill omitted values and clamp valid numeric edits. Imports use strict validation below. */\n  function normalizeParams(params = {}) {\n    assertRecord(params, \"角色参数\");\n    for (const key of Object.keys(params)) {\n      if (!KEYS.includes(key)) throw new TypeError(`未知角色参数：${key}`);\n    }\n    return Object.fromEntries(KEYS.map((key) => {\n      const value = Object.hasOwn(params, key) ? params[key] : DEFAULTS[key];\n      if (typeof value !== \"number\" || !Number.isFinite(value)) {\n        throw new TypeError(`参数 ${key} 必须是有限数字。`);\n      }\n      return [key, Math.min(LIMITS[key].max, Math.max(LIMITS[key].min, value))];\n    }));\n  }\n\n  /** Meter units; character left is +X, up is +Y, and front is +Z. */\n  function createCharacter(input = {}) {\n    const params = normalizeParams(input);\n    const head = [0.4, 0.4, 0.4].map((length) => length * params.headScale);\n    const torso = [0.48, 0.6, 0.28].map((length) => length * params.torsoScale);\n    const hipY = params.legLength;\n    const shoulderY = hipY + torso[1];\n    // When arms extend below the feet, the lowest arm endpoint defines the floor.\n    const floorOffset = Math.max(0, params.armLength - shoulderY);\n    const legX = Math.max(0.1, torso[0] / 4);\n    const armX = torso[0] / 2 + 0.08;\n    const part = (id, name, size, center) => ({\n      id, name, size, center: [center[0], center[1] + floorOffset, center[2]],\n    });\n    const parts = [\n      part(\"head\", \"头部\", head, [0, shoulderY + head[1] / 2, 0]),\n      part(\"torso\", \"躯干\", torso, [0, hipY + torso[1] / 2, 0]),\n      part(\"leftArm\", \"左臂\", [0.16, params.armLength, 0.22], [armX, shoulderY - params.armLength / 2, 0]),\n      part(\"rightArm\", \"右臂\", [0.16, params.armLength, 0.22], [-armX, shoulderY - params.armLength / 2, 0]),\n      part(\"leftLeg\", \"左腿\", [0.2, params.legLength, 0.24], [legX, hipY - params.legLength / 2, 0]),\n      part(\"rightLeg\", \"右腿\", [0.2, params.legLength, 0.24], [-legX, hipY - params.legLength / 2, 0]),\n    ];\n    const min = [0, 1, 2].map((axis) => Math.min(...parts.map((box) => box.center[axis] - box.size[axis] / 2)));\n    const max = [0, 1, 2].map((axis) => Math.max(...parts.map((box) => box.center[axis] + box.size[axis] / 2)));\n    // Avoid displaying negative zero or roundoff below the floor.\n    if (Math.abs(min[1]) < 1e-12) min[1] = 0;\n    const bounds = { min, max, size: max.map((value, axis) => value - min[axis]) };\n    const notes = [\n      \"头部和躯干保持各自比例，缩放参数作用于三条边；体积随缩放倍数的三次方变化。\",\n      \"手臂截面固定为 0.16 × 0.22 米，腿部截面固定为 0.20 × 0.24 米。\",\n      \"左右手臂共用臂长，左右腿共用腿长。\",\n      \"总高度按全部六个方块的最高点和最低点计算；身高由头部高度、躯干高度及腿长自然得出。\",\n    ];\n    if (floorOffset > 0) {\n      notes.push(\"手臂低于脚底，模型以最低手臂端点落地；显示总高度包含这段长度。\");\n    }\n    return {\n      params,\n      parts,\n      bounds,\n      height: bounds.size[1],\n      standingHeight: hipY + torso[1] + head[1],\n      totalVolume: parts.reduce((sum, box) => sum + box.size[0] * box.size[1] * box.size[2], 0),\n      metadata: {\n        unit: \"m\",\n        axes: { x: \"角色左侧\", y: \"上方\", z: \"正面\" },\n        floorOffset,\n        notes,\n      },\n    };\n  }\n\n  /** Check the bounded PNG envelope; pixel decoding remains the browser's responsibility. */\n  function validateFace(face) {\n    if (face === null) return null;\n    assertRecord(face, \"面部贴图\");\n    const keys = Object.keys(face);\n    if (keys.length !== 3 || ![\"width\", \"height\", \"png\"].every((key) => Object.hasOwn(face, key))) {\n      throw new TypeError(\"面部贴图必须只包含 width、height 和 png。\");\n    }\n    if (face.width !== 128 || face.height !== 128) throw new RangeError(\"面部贴图必须为 128 × 128 像素。\");\n    const prefix = \"data:image/png;base64,\";\n    if (typeof face.png !== \"string\" || !face.png.startsWith(prefix)) {\n      throw new TypeError(\"面部贴图必须是 PNG 的 Base64 数据地址。\");\n    }\n    if (face.png.length >= 200 * 1024) throw new RangeError(\"面部贴图数据地址必须小于 200 KiB。\");\n    const encoded = face.png.slice(prefix.length);\n    if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(encoded)) {\n      throw new TypeError(\"面部贴图包含无效的 Base64 数据。\");\n    }\n    let bytes;\n    try {\n      if (typeof root.atob === \"function\") {\n        bytes = Uint8Array.from(root.atob(encoded), (character) => character.charCodeAt(0));\n      } else if (typeof Buffer !== \"undefined\") {\n        bytes = Uint8Array.from(Buffer.from(encoded, \"base64\"));\n      } else {\n        throw new Error(\"Base64 decoding unavailable\");\n      }\n    } catch {\n      throw new TypeError(\"无法解码面部贴图的 Base64 数据。\");\n    }\n    const signature = [137, 80, 78, 71, 13, 10, 26, 10];\n    if (bytes.length < 33 || !signature.every((byte, index) => bytes[index] === byte)) {\n      throw new TypeError(\"面部贴图不是有效的 PNG 文件。\");\n    }\n    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);\n    const chunkType = (offset) => String.fromCharCode(...bytes.subarray(offset + 4, offset + 8));\n    if (view.getUint32(8) !== 13 || chunkType(8) !== \"IHDR\") {\n      throw new TypeError(\"面部贴图缺少有效的 PNG 图像头。\");\n    }\n    if (view.getUint32(16) !== 128 || view.getUint32(20) !== 128) {\n      throw new RangeError(\"面部 PNG 的实际尺寸必须为 128 × 128 像素。\");\n    }\n    const bitDepths = { 0: [1, 2, 4, 8, 16], 2: [8, 16], 3: [1, 2, 4, 8], 4: [8, 16], 6: [8, 16] };\n    if (!bitDepths[bytes[25]]?.includes(bytes[24]) || bytes[26] !== 0 || bytes[27] !== 0 || bytes[28] > 1) {\n      throw new TypeError(\"面部贴图的 PNG 图像头无效。\");\n    }\n    let offset = 8, hasPixels = false, hasEnd = false;\n    while (offset < bytes.length) {\n      if (offset + 12 > bytes.length) throw new TypeError(\"面部 PNG 数据不完整。\");\n      const length = view.getUint32(offset), type = chunkType(offset);\n      if (offset + length + 12 > bytes.length) throw new TypeError(\"面部 PNG 数据块不完整。\");\n      if (type === \"IHDR\" && offset !== 8) throw new TypeError(\"面部 PNG 包含重复的图像头。\");\n      if (type === \"IDAT\" && length > 0) hasPixels = true;\n      offset += length + 12;\n      if (type === \"IEND\") {\n        if (length !== 0 || offset !== bytes.length) throw new TypeError(\"面部 PNG 的结束数据块无效。\");\n        hasEnd = true;\n        break;\n      }\n    }\n    if (!hasPixels || !hasEnd) throw new TypeError(\"面部 PNG 缺少像素数据或结束数据块。\");\n    return { width: 128, height: 128, png: face.png };\n  }\n\n  function exportData(params = {}, face = null) {\n    const character = createCharacter(params);\n    return {\n      format: \"fps-block-character\",\n      version: 3,\n      parameters: character.params,\n      face: validateFace(face),\n      computed: {\n        unit: \"m\",\n        height: character.height,\n        standingHeight: character.standingHeight,\n        totalVolume: character.totalVolume,\n      },\n    };\n  }\n\n  /** Validate old schemas before migration. Computed fields are never trusted as input. */\n  function parseProject(data) {\n    let parsed = data;\n    if (typeof data === \"string\") {\n      try { parsed = JSON.parse(data); }\n      catch { throw new TypeError(\"文件不是有效的 JSON。\"); }\n    }\n    assertRecord(parsed, \"导入文件\");\n    if (parsed.format !== \"fps-block-character\") throw new TypeError(\"文件不是方块角色格式（fps-block-character）。\");\n    if (![1, 2, 3].includes(parsed.version)) throw new TypeError(\"不支持此角色文件版本；当前支持版本 1、2 和 3。\");\n    const allowed = [\"format\", \"version\", \"parameters\", \"computed\", ...(parsed.version >= 2 ? [\"face\"] : [])];\n    for (const key of Object.keys(parsed)) {\n      if (!allowed.includes(key)) throw new TypeError(`导入文件包含未知字段：${key}`);\n    }\n    assertRecord(parsed.parameters, \"文件中的 parameters\");\n    if (Object.hasOwn(parsed, \"computed\")) assertRecord(parsed.computed, \"文件中的 computed\");\n    const sourceKeys = parsed.version === 3 ? KEYS : LEGACY_KEYS;\n    for (const key of Object.keys(parsed.parameters)) {\n      if (!sourceKeys.includes(key)) throw new TypeError(`未知角色参数：${key}`);\n    }\n    for (const key of sourceKeys) {\n      if (!Object.hasOwn(parsed.parameters, key)) throw new TypeError(`导入文件缺少参数：${key}`);\n      const value = parsed.parameters[key];\n      if (typeof value !== \"number\" || !Number.isFinite(value)) throw new TypeError(`参数 ${key} 必须是有限数字。`);\n      const limit = LIMITS[key] || (key.includes(\"Arm\") ? LIMITS.armLength : LIMITS.legLength);\n      if (value < limit.min || value > limit.max) {\n        throw new RangeError(`参数 ${key} 超出范围 ${limit.min}–${limit.max}；文件未导入。`);\n      }\n    }\n    const migrationNotes = [];\n    let parameters = parsed.parameters;\n    if (parsed.version < 3) {\n      // Averaging each pair preserves the combined limb volume with fixed cross sections.\n      parameters = {\n        headScale: parsed.parameters.headScale,\n        torsoScale: parsed.parameters.torsoScale,\n        armLength: (parsed.parameters.leftArmLength + parsed.parameters.rightArmLength) / 2,\n        legLength: (parsed.parameters.leftLegLength + parsed.parameters.rightLegLength) / 2,\n      };\n      if (parsed.parameters.leftArmLength !== parsed.parameters.rightArmLength) {\n        migrationNotes.push(\"旧版左右手臂长度不同，已取两者平均值作为统一臂长。\");\n      }\n      if (parsed.parameters.leftLegLength !== parsed.parameters.rightLegLength) {\n        migrationNotes.push(\"旧版左右腿长度不同，已取两者平均值作为统一腿长。\");\n      }\n    }\n    return {\n      parameters: normalizeParams(parameters),\n      face: parsed.version >= 2 && Object.hasOwn(parsed, \"face\") ? validateFace(parsed.face) : null,\n      migrationNotes,\n    };\n  }\n\n  /** Preserve the original parameters-only API for existing geometry consumers. */\n  function parseData(data) {\n    return parseProject(data).parameters;\n  }\n\n  const api = Object.freeze({ DEFAULTS, LIMITS, PRESETS, createCharacter, normalizeParams, exportData, parseData, parseProject });\n  root.BlockCharacter = api;\n  if (typeof module !== \"undefined\" && module.exports) module.exports = api;\n})(globalThis);\n<\/script>\n<script>(function (global) {\n  'use strict';\n\n  const VERTEX = `\n    attribute vec3 a_position;\n    attribute vec3 a_normal;\n    attribute vec2 a_uv;\n    uniform mat4 u_matrix;\n    uniform vec3 u_center;\n    uniform vec3 u_size;\n    varying vec3 v_normal;\n    varying vec3 v_world;\n    varying vec2 v_uv;\n    void main() {\n      v_world = a_position * u_size + u_center;\n      v_normal = a_normal;\n      v_uv = a_uv;\n      gl_Position = u_matrix * vec4(v_world, 1.0);\n    }\n  `;\n  const FRAGMENT = `\n    precision mediump float;\n    uniform vec4 u_color;\n    uniform float u_unlit;\n    uniform float u_gridFade;\n    uniform vec3 u_target;\n    uniform sampler2D u_faceTexture;\n    uniform float u_faceEnabled;\n    varying vec3 v_normal;\n    varying vec3 v_world;\n    varying vec2 v_uv;\n    void main() {\n      float key = max(dot(v_normal, normalize(vec3(-0.65, 0.9, 0.8))), 0.0);\n      float fill = max(dot(v_normal, normalize(vec3(0.8, 0.2, -0.6))), 0.0);\n      float lighting = mix(0.61 + key * 0.39 + fill * 0.13, 1.0, u_unlit);\n      float fade = 1.0;\n      if (u_gridFade > 0.0) {\n        float distance = length(v_world.xz - u_target.xz);\n        fade = 1.0 - smoothstep(u_gridFade * 0.35, u_gridFade, distance);\n      }\n      vec3 color = u_color.rgb * lighting;\n      if (u_faceEnabled > 0.5 && v_normal.z > 0.5) {\n        vec4 paint = texture2D(u_faceTexture, v_uv);\n        // Paint retains its chosen color; transparent pixels reveal the material.\n        color = mix(color, paint.rgb, paint.a);\n      }\n      gl_FragColor = vec4(color, u_color.a * fade);\n    }\n  `;\n\n  const clamp = (value, low, high) => Math.max(low, Math.min(high, value));\n  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];\n  const addScaled = (a, b, scale) => a.map((v, i) => v + b[i] * scale);\n  const subtract = (a, b) => a.map((v, i) => v - b[i]);\n\n  function multiply(a, b) {\n    const result = new Float32Array(16);\n    for (let column = 0; column < 4; column++) {\n      for (let row = 0; row < 4; row++) {\n        let sum = 0;\n        for (let k = 0; k < 4; k++) sum += a[k * 4 + row] * b[column * 4 + k];\n        result[column * 4 + row] = sum;\n      }\n    }\n    return result;\n  }\n\n  function boxGeometry() {\n    const positions = [], normals = [], indices = [], uvs = [];\n    const faces = [\n      [[0, 0, 1], [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]]],\n      [[0, 0, -1], [[1, -1, -1], [-1, -1, -1], [-1, 1, -1], [1, 1, -1]]],\n      [[1, 0, 0], [[1, -1, 1], [1, -1, -1], [1, 1, -1], [1, 1, 1]]],\n      [[-1, 0, 0], [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]]],\n      [[0, 1, 0], [[-1, 1, 1], [1, 1, 1], [1, 1, -1], [-1, 1, -1]]],\n      [[0, -1, 0], [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]]],\n    ];\n    faces.forEach(([normal, vertices], index) => {\n      vertices.forEach((vertex, vertexIndex) => {\n        positions.push(...vertex.map(v => v * 0.5));\n        normals.push(...normal);\n        // With UNPACK_FLIP_Y=false, image row zero maps to UV v=0.\n        // +Z vertices run bottom-left, bottom-right, top-right, top-left.\n        uvs.push(...(index === 0 ? [[0,1], [1,1], [1,0], [0,0]][vertexIndex] : [0,0]));\n      });\n      const first = index * 4;\n      indices.push(first, first + 1, first + 2, first, first + 2, first + 3);\n    });\n    const corners = [\n      [-0.5, -0.5, -0.5], [0.5, -0.5, -0.5], [0.5, 0.5, -0.5], [-0.5, 0.5, -0.5],\n      [-0.5, -0.5, 0.5], [0.5, -0.5, 0.5], [0.5, 0.5, 0.5], [-0.5, 0.5, 0.5],\n    ];\n    const edges = [[0,1], [1,2], [2,3], [3,0], [4,5], [5,6], [6,7], [7,4], [0,4], [1,5], [2,6], [3,7]];\n    return { positions, normals, indices, uvs, edges: edges.flatMap(edge => edge.flatMap(i => corners[i])) };\n  }\n\n  class BlockViewport {\n    constructor(canvas, options = {}) {\n      if (!canvas || !canvas.parentElement) throw new Error('三维画布需要放在容器中。');\n      this.canvas = canvas;\n      this.parent = canvas.parentElement;\n      this.onSelect = typeof options.onSelect === 'function' ? options.onSelect : () => {};\n      this.gl = canvas.getContext('webgl', { antialias: true, alpha: true, depth: true, premultipliedAlpha: true });\n      if (!this.gl) throw new Error('当前浏览器未能开启 WebGL。请开启硬件加速后重新打开。');\n      this.character = null;\n      this.selected = null;\n      this.focusPartId = null;\n      this._faceSource = null;\n      this._faceTexture = null;\n      this._faceReady = false;\n      this.yaw = 0.58;\n      this.pitch = 0.19;\n      this.view = 'perspective';\n      this.zoom = 1;\n      this.width = 1;\n      this.height = 1;\n      this._frame = null;\n      this._disposed = false;\n      this._pointers = new Map();\n      this._dragged = false;\n      this._buffers = [];\n      this._gridKey = '';\n      if (getComputedStyle(this.parent).position === 'static') this.parent.style.position = 'relative';\n      Object.assign(canvas.style, { width: '100%', height: '100%', display: 'block', touchAction: 'none', cursor: 'grab' });\n      this.overlay = document.createElement('canvas');\n      this.overlay.setAttribute('aria-hidden', 'true');\n      Object.assign(this.overlay.style, { position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none' });\n      this.parent.appendChild(this.overlay);\n      this.ctx = this.overlay.getContext('2d');\n      this._initGL();\n      this._bindEvents();\n      this.resizeObserver = new ResizeObserver(() => this._resize());\n      this.resizeObserver.observe(this.parent);\n      this._resize();\n    }\n\n    _initGL() {\n      const gl = this.gl;\n      const shaders = [];\n      const compile = (type, source) => {\n        const shader = gl.createShader(type);\n        gl.shaderSource(shader, source);\n        gl.compileShader(shader);\n        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {\n          const message = gl.getShaderInfoLog(shader);\n          gl.deleteShader(shader);\n          throw new Error('三维着色器初始化失败：' + message);\n        }\n        shaders.push(shader);\n        return shader;\n      };\n      const program = gl.createProgram();\n      gl.attachShader(program, compile(gl.VERTEX_SHADER, VERTEX));\n      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAGMENT));\n      gl.linkProgram(program);\n      shaders.forEach(shader => gl.deleteShader(shader));\n      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('三维渲染程序初始化失败。');\n      this.program = program;\n      this.loc = {};\n      ['matrix', 'center', 'size', 'color', 'unlit', 'gridFade', 'target', 'faceTexture', 'faceEnabled'].forEach(name => {\n        this.loc[name] = gl.getUniformLocation(program, 'u_' + name);\n      });\n      this.loc.position = gl.getAttribLocation(program, 'a_position');\n      this.loc.normal = gl.getAttribLocation(program, 'a_normal');\n      this.loc.uv = gl.getAttribLocation(program, 'a_uv');\n      const mesh = boxGeometry();\n      this.box = this._makeGeometry(mesh.positions, mesh.normals, mesh.indices, mesh.uvs);\n      this.edges = this._makeGeometry(mesh.edges);\n      this.gridMinor = this._makeGeometry([]);\n      this.gridMajor = this._makeGeometry([]);\n      this._faceTexture = gl.createTexture();\n      gl.activeTexture(gl.TEXTURE0);\n      gl.bindTexture(gl.TEXTURE_2D, this._faceTexture);\n      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);\n      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);\n      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);\n      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);\n      this._uploadFaceTexture();\n      gl.enable(gl.DEPTH_TEST);\n      gl.depthFunc(gl.LEQUAL);\n      gl.enable(gl.BLEND);\n      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);\n      gl.enable(gl.CULL_FACE);\n      gl.cullFace(gl.BACK);\n      gl.clearColor(0, 0, 0, 0);\n    }\n\n    _makeGeometry(positions, normals, indices, uvs) {\n      const gl = this.gl;\n      const make = (type, data) => {\n        const buffer = gl.createBuffer();\n        this._buffers.push(buffer);\n        gl.bindBuffer(type, buffer);\n        gl.bufferData(type, data, gl.STATIC_DRAW);\n        return buffer;\n      };\n      return {\n        position: make(gl.ARRAY_BUFFER, new Float32Array(positions)),\n        normal: normals ? make(gl.ARRAY_BUFFER, new Float32Array(normals)) : null,\n        uv: uvs ? make(gl.ARRAY_BUFFER, new Float32Array(uvs)) : null,\n        indices: indices ? make(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices)) : null,\n        count: indices ? indices.length : positions.length / 3,\n      };\n    }\n\n    _bindEvents() {\n      this._handlers = {\n        pointerdown: event => {\n          if (event.button !== 0 && event.pointerType !== 'touch') return;\n          this.canvas.setPointerCapture(event.pointerId);\n          this._pointers.set(event.pointerId, [event.clientX, event.clientY]);\n          if (this._pointers.size === 1) {\n            this._start = [event.clientX, event.clientY];\n            this._dragged = false;\n          } else {\n            this._dragged = true;\n            this._pinch = this._pinchDistance();\n          }\n          this.canvas.style.cursor = 'grabbing';\n        },\n        pointermove: event => {\n          const previous = this._pointers.get(event.pointerId);\n          if (!previous) return;\n          const dx = event.clientX - previous[0], dy = event.clientY - previous[1];\n          this._pointers.set(event.pointerId, [event.clientX, event.clientY]);\n          if (this._pointers.size > 1) {\n            const distance = this._pinchDistance();\n            if (this._pinch > 0 && distance > 0) this.zoomBy(distance / this._pinch);\n            this._pinch = distance;\n          } else {\n            if (Math.hypot(event.clientX - this._start[0], event.clientY - this._start[1]) > 4) this._dragged = true;\n            if (this._dragged) {\n              this.yaw -= dx * 0.008;\n              this.pitch = clamp(this.pitch + dy * 0.006, -0.2, 1.25);\n              this.view = 'perspective';\n              this._invalidate();\n            }\n          }\n        },\n        pointerup: event => {\n          if (!this._pointers.has(event.pointerId)) return;\n          if (!this._dragged && this._pointers.size === 1) {\n            const rect = this.canvas.getBoundingClientRect();\n            this.onSelect(this._pick(event.clientX - rect.left, event.clientY - rect.top));\n          }\n          this._pointers.delete(event.pointerId);\n          if (this.canvas.hasPointerCapture(event.pointerId)) this.canvas.releasePointerCapture(event.pointerId);\n          this.canvas.style.cursor = this._pointers.size ? 'grabbing' : 'grab';\n        },\n        pointercancel: event => {\n          this._pointers.delete(event.pointerId);\n          this._dragged = true;\n          this.canvas.style.cursor = this._pointers.size ? 'grabbing' : 'grab';\n        },\n        wheel: event => {\n          event.preventDefault();\n          const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? this.height : 1);\n          this.zoomBy(Math.exp(-clamp(delta, -200, 200) * 0.0015));\n        },\n        webglcontextlost: event => { event.preventDefault(); this._contextLost = true; },\n        webglcontextrestored: () => {\n          this._contextLost = false;\n          this._buffers = [];\n          this._gridKey = '';\n          this._initGL();\n          this._invalidate();\n        },\n      };\n      Object.entries(this._handlers).forEach(([name, handler]) => this.canvas.addEventListener(name, handler, name === 'wheel' ? { passive: false } : undefined));\n    }\n\n    _pinchDistance() {\n      const points = [...this._pointers.values()];\n      return points.length > 1 ? Math.hypot(points[1][0] - points[0][0], points[1][1] - points[0][1]) : 0;\n    }\n\n    _resize() {\n      if (this._disposed) return;\n      const rect = this.parent.getBoundingClientRect();\n      this.width = Math.max(1, rect.width);\n      this.height = Math.max(1, rect.height);\n      const dpr = Math.min(2, global.devicePixelRatio || 1);\n      this.dpr = dpr;\n      [this.canvas, this.overlay].forEach(canvas => {\n        canvas.width = Math.round(this.width * dpr);\n        canvas.height = Math.round(this.height * dpr);\n      });\n      this._invalidate();\n    }\n\n    setCharacter(character) {\n      this.character = character;\n      this.zoom = 1;\n      this._invalidate();\n    }\n\n    setSelected(partId) {\n      this.selected = partId || null;\n      this._invalidate();\n    }\n\n    /** Upload the current pixels; call again after drawing on the same canvas. */\n    setFaceTexture(source) {\n      if (this._disposed) return;\n      if (source != null) {\n        const width = source.naturalWidth === undefined ? source.width : source.naturalWidth;\n        const height = source.naturalHeight === undefined ? source.height : source.naturalHeight;\n        if (!(width > 0 && height > 0)) throw new Error('面部画布不能为空，图片需要先完成加载。');\n      }\n      this._faceSource = source || null;\n      if (!this._contextLost) this._uploadFaceTexture();\n      this._invalidate();\n    }\n\n    _uploadFaceTexture() {\n      const gl = this.gl;\n      gl.activeTexture(gl.TEXTURE0);\n      gl.bindTexture(gl.TEXTURE_2D, this._faceTexture);\n      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);\n      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);\n      gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);\n      this._faceReady = false;\n      if (this._faceSource) {\n        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._faceSource);\n        this._faceReady = true;\n      } else {\n        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));\n      }\n    }\n\n    /** Isolate a part in this preview; the six-box character data stays intact. */\n    setFocusPart(partId) {\n      this.focusPartId = typeof partId === 'string' && partId ? partId : null;\n      this.zoom = 1;\n      this._invalidate();\n    }\n\n    setView(view) {\n      if (view === 'front') { this.yaw = 0; this.pitch = 0; }\n      else if (view === 'side') { this.yaw = Math.PI / 2; this.pitch = 0; }\n      else { view = 'perspective'; this.yaw = 0.58; this.pitch = 0.19; }\n      this.view = view;\n      this.zoom = 1;\n      this._invalidate();\n    }\n\n    fit() { this.zoom = 1; this._invalidate(); }\n\n    zoomBy(factor) {\n      if (Number.isFinite(factor) && factor > 0) this.zoom = clamp(this.zoom / factor, 0.35, 3.5);\n      this._invalidate();\n    }\n\n    _invalidate() {\n      if (this._disposed || this._frame !== null) return;\n      this._frame = requestAnimationFrame(() => { this._frame = null; this._render(); });\n    }\n\n    _camera() {\n      const focusPart = this.character.parts.find(part => part.id === this.focusPartId) || null;\n      const bounds = focusPart ? {\n        min: focusPart.center.map((value, axis) => value - focusPart.size[axis] / 2),\n        max: focusPart.center.map((value, axis) => value + focusPart.size[axis] / 2),\n        size: focusPart.size,\n      } : this.character.bounds;\n      const target = bounds.min.map((v, i) => (v + bounds.max[i]) / 2);\n      const sy = Math.sin(this.yaw), cy = Math.cos(this.yaw), sp = Math.sin(this.pitch), cp = Math.cos(this.pitch);\n      const right = [cy, 0, -sy], up = [-sy * sp, cp, -cy * sp], forward = [sy * cp, sp, cy * cp];\n      let extentX = 0, extentY = 0;\n      for (let x = 0; x < 2; x++) for (let y = 0; y < 2; y++) for (let z = 0; z < 2; z++) {\n        const corner = [x ? bounds.max[0] : bounds.min[0], y ? bounds.max[1] : bounds.min[1], z ? bounds.max[2] : bounds.min[2]];\n        const offset = subtract(corner, target);\n        extentX = Math.max(extentX, Math.abs(dot(right, offset)));\n        extentY = Math.max(extentY, Math.abs(dot(up, offset)));\n      }\n      const aspect = this.width / this.height;\n      const compact = this.height < 600;\n      const topReserve = focusPart ? 96 : 64;\n      const centerY = compact ? (topReserve + this.height - 120) / 2 : this.height / 2;\n      const availableX = this.width > 500 ? 0.73 : 0.67;\n      const availableY = compact ? Math.max(0.15, (this.height - topReserve - 120) / this.height) : focusPart ? 0.68 : 0.76;\n      const halfHeight = Math.max(0.08, extentY / availableY, extentX / aspect / availableX) * this.zoom;\n      const halfWidth = halfHeight * aspect;\n      const span = Math.max(...bounds.size, 0.2);\n      const sceneSpan = Math.max(...this.character.bounds.size, span);\n      const distance = Math.max(20, sceneSpan * 5);\n      const eye = addScaled(target, forward, distance);\n      const near = 0.01, far = distance * 2 + sceneSpan * 10;\n      const view = new Float32Array([\n        right[0], up[0], forward[0], 0,\n        right[1], up[1], forward[1], 0,\n        right[2], up[2], forward[2], 0,\n        -dot(right, eye), -dot(up, eye), -dot(forward, eye), 1,\n      ]);\n      const projection = new Float32Array([\n        1 / halfWidth, 0, 0, 0, 0, 1 / halfHeight, 0, 0, 0, 0, -2 / (far - near), 0,\n        0, 2 * (this.height / 2 - centerY) / this.height, -(far + near) / (far - near), 1,\n      ]);\n      return { target, right, up, forward, halfHeight, halfWidth, centerY, compact, distance, span, bounds, focusPart, matrix: multiply(projection, view) };\n    }\n\n    _updateGrid(camera) {\n      const gl = this.gl;\n      const step = camera.span < 1.5 ? 0.1 : camera.span < 3 ? 0.25 : camera.span < 6 ? 0.5 : 1;\n      const radius = Math.max(camera.span * 2.8, camera.halfWidth * 1.8, camera.halfHeight * 2.4);\n      const count = Math.min(180, Math.ceil(radius / step));\n      const extent = count * step;\n      const originX = Math.round(camera.target[0] / step) * step;\n      const originZ = Math.round(camera.target[2] / step) * step;\n      const key = [step, count, originX, originZ].join(':');\n      this.gridStep = step;\n      this.gridExtent = extent;\n      if (key === this._gridKey) return;\n      this._gridKey = key;\n      const minor = [], major = [];\n      for (let i = -count; i <= count; i++) {\n        const array = i % 4 === 0 ? major : minor;\n        const offset = i * step;\n        array.push(originX + offset, 0, originZ - extent, originX + offset, 0, originZ + extent);\n        array.push(originX - extent, 0, originZ + offset, originX + extent, 0, originZ + offset);\n      }\n      [[this.gridMinor, minor], [this.gridMajor, major]].forEach(([geometry, data]) => {\n        gl.bindBuffer(gl.ARRAY_BUFFER, geometry.position);\n        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.DYNAMIC_DRAW);\n        geometry.count = data.length / 3;\n      });\n    }\n\n    _draw(geometry, mode, center, size, color, unlit, gridFade = 0, faceEnabled = false) {\n      const gl = this.gl, loc = this.loc;\n      gl.bindBuffer(gl.ARRAY_BUFFER, geometry.position);\n      gl.enableVertexAttribArray(loc.position);\n      gl.vertexAttribPointer(loc.position, 3, gl.FLOAT, false, 0, 0);\n      if (geometry.normal) {\n        gl.bindBuffer(gl.ARRAY_BUFFER, geometry.normal);\n        gl.enableVertexAttribArray(loc.normal);\n        gl.vertexAttribPointer(loc.normal, 3, gl.FLOAT, false, 0, 0);\n      } else {\n        gl.disableVertexAttribArray(loc.normal);\n        gl.vertexAttrib3f(loc.normal, 0, 1, 0);\n      }\n      if (geometry.uv) {\n        gl.bindBuffer(gl.ARRAY_BUFFER, geometry.uv);\n        gl.enableVertexAttribArray(loc.uv);\n        gl.vertexAttribPointer(loc.uv, 2, gl.FLOAT, false, 0, 0);\n      } else {\n        gl.disableVertexAttribArray(loc.uv);\n        gl.vertexAttrib2f(loc.uv, 0, 0);\n      }\n      gl.uniform3fv(loc.center, center);\n      gl.uniform3fv(loc.size, size);\n      gl.uniform4fv(loc.color, color);\n      gl.uniform1f(loc.unlit, unlit);\n      gl.uniform1f(loc.gridFade, gridFade);\n      gl.uniform1f(loc.faceEnabled, faceEnabled ? 1 : 0);\n      if (geometry.indices) {\n        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, geometry.indices);\n        gl.drawElements(mode, geometry.count, gl.UNSIGNED_SHORT, 0);\n      } else gl.drawArrays(mode, 0, geometry.count);\n    }\n\n    _render() {\n      if (this._disposed || this._contextLost) return;\n      const gl = this.gl;\n      gl.viewport(0, 0, this.canvas.width, this.canvas.height);\n      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);\n      this.ctx.clearRect(0, 0, this.overlay.width, this.overlay.height);\n      if (!this.character || !this.character.parts.length) return;\n      const camera = this._camera();\n      const visibleParts = camera.focusPart ? [camera.focusPart] : this.character.parts;\n      this._currentCamera = camera;\n      this._updateGrid(camera);\n      gl.useProgram(this.program);\n      gl.uniformMatrix4fv(this.loc.matrix, false, camera.matrix);\n      gl.uniform3fv(this.loc.target, camera.target);\n      gl.activeTexture(gl.TEXTURE0);\n      gl.bindTexture(gl.TEXTURE_2D, this._faceTexture);\n      gl.uniform1i(this.loc.faceTexture, 0);\n      if (!camera.focusPart) {\n        gl.depthMask(false);\n        this._draw(this.gridMinor, gl.LINES, [0,0,0], [1,1,1], [0.48, 0.59, 0.63, 0.11], 1, this.gridExtent);\n        this._draw(this.gridMajor, gl.LINES, [0,0,0], [1,1,1], [0.56, 0.65, 0.69, 0.17], 1, this.gridExtent);\n        gl.depthMask(true);\n      }\n      gl.enable(gl.POLYGON_OFFSET_FILL);\n      gl.polygonOffset(1, 1);\n      const isSelected = part => part.id === this.selected ||\n        (this.selected?.endsWith('Arm') && part.id.endsWith('Arm')) ||\n        (this.selected?.endsWith('Leg') && part.id.endsWith('Leg'));\n      visibleParts.forEach(part => {\n        const color = isSelected(part) ? [0.863, 0.647, 0.424, 1] : [0.784, 0.773, 0.725, 1];\n        this._draw(this.box, gl.TRIANGLES, part.center, part.size, color, 0, 0, part.id === 'head' && this._faceReady);\n      });\n      gl.disable(gl.POLYGON_OFFSET_FILL);\n      visibleParts.forEach(part => {\n        const color = isSelected(part) ? [0.98, 0.77, 0.54, 0.70] : [0.88, 0.88, 0.81, 0.21];\n        this._draw(this.edges, gl.LINES, part.center, part.size, color, 1);\n      });\n      this._drawOverlay(camera);\n    }\n\n    _project(point, camera) {\n      const offset = subtract(point, camera.target);\n      return [\n        this.width * 0.5 + dot(offset, camera.right) / camera.halfWidth * this.width * 0.5,\n        camera.centerY - dot(offset, camera.up) / camera.halfHeight * this.height * 0.5,\n      ];\n    }\n\n    _drawOverlay(camera) {\n      const ctx = this.ctx, width = this.width, height = this.height;\n      ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);\n      ctx.clearRect(0, 0, width, height);\n      ctx.font = '11px system-ui, -apple-system, sans-serif';\n      ctx.textBaseline = 'middle';\n      const bounds = camera.bounds;\n      const top = this._project([camera.target[0], bounds.max[1], camera.target[2]], camera)[1];\n      const bottom = this._project([camera.target[0], bounds.min[1], camera.target[2]], camera)[1];\n      const rulerX = width - (width < 500 ? 27 : 38);\n      if (bottom - top > 45 && bottom > 50 && top < height - 50) {\n        const safeTop = Math.max(44, top), safeBottom = Math.min(height - (camera.compact ? 115 : 56), bottom);\n        ctx.strokeStyle = 'rgba(157, 175, 183, 0.36)';\n        ctx.lineWidth = 1;\n        ctx.beginPath();\n        ctx.moveTo(rulerX + 0.5, safeTop); ctx.lineTo(rulerX + 0.5, safeBottom);\n        ctx.stroke();\n        const total = bounds.max[1] - bounds.min[1];\n        const tickStep = total < 0.9 ? 0.1 : total < 2 ? 0.25 : total < 4 ? 0.5 : total < 8 ? 1 : 2;\n        ctx.textAlign = 'right';\n        ctx.fillStyle = 'rgba(176, 189, 195, 0.70)';\n        for (let value = 0; value < total - tickStep * 0.18; value += tickStep) {\n          const y = bottom - value / total * (bottom - top);\n          if (y < safeTop + 5 || y > safeBottom + 1) continue;\n          ctx.beginPath(); ctx.moveTo(rulerX - 5, y + 0.5); ctx.lineTo(rulerX + 5, y + 0.5); ctx.stroke();\n          ctx.fillText(Number(value.toFixed(2)).toString(), rulerX - 10, y);\n        }\n        if (top >= 44 && top <= height - 70) {\n          ctx.strokeStyle = 'rgba(220, 165, 108, 0.72)';\n          ctx.beginPath(); ctx.moveTo(rulerX - 6, top + 0.5); ctx.lineTo(rulerX + 6, top + 0.5); ctx.stroke();\n          ctx.fillStyle = 'rgba(175, 187, 193, 0.85)';\n          ctx.font = '10px system-ui, -apple-system, sans-serif';\n          ctx.fillText(camera.focusPart ? camera.focusPart.name + '高' : '总高', rulerX + 6, top - 37);\n          ctx.fillStyle = '#e0c6a4';\n          ctx.font = '500 13px system-ui, -apple-system, sans-serif';\n          ctx.fillText(total.toFixed(2) + ' m', rulerX + 6, top - 19);\n        }\n      }\n      const scale = this.gridStep;\n      const scaleWidth = scale / camera.halfHeight * height * 0.5;\n      // Reserve the stage footer (view toolbar and two-line mobile caption).\n      const sx = width < 500 ? 20 : 28, sy = height - 126;\n      if (scaleWidth >= 12 && scaleWidth < width * 0.45) {\n        ctx.strokeStyle = 'rgba(164, 182, 190, 0.50)';\n        ctx.lineWidth = 1;\n        ctx.beginPath();\n        ctx.moveTo(sx, sy - 4); ctx.lineTo(sx, sy + 1); ctx.lineTo(sx + scaleWidth, sy + 1); ctx.lineTo(sx + scaleWidth, sy - 4);\n        ctx.stroke();\n        ctx.fillStyle = 'rgba(167, 181, 189, 0.72)';\n        ctx.font = '10px system-ui, -apple-system, sans-serif';\n        ctx.textAlign = 'left';\n        ctx.fillText((camera.focusPart ? '刻度 ' : '网格 ') + scale + ' m', sx, sy - 13);\n      }\n      this._drawAxes(camera);\n    }\n\n    _drawAxes(camera) {\n      const ctx = this.ctx;\n      const origin = [this.width - 76, this.height - 126];\n      const axes = [\n        { vector: [1,0,0], color: '#a57670', label: 'X' },\n        { vector: [0,1,0], color: '#8ba18c', label: 'Y' },\n        { vector: [0,0,1], color: '#7292a8', label: 'Z' },\n      ].sort((a, b) => dot(a.vector, camera.forward) - dot(b.vector, camera.forward));\n      ctx.font = '9px system-ui, sans-serif';\n      ctx.textAlign = 'center';\n      axes.forEach(axis => {\n        const dx = dot(axis.vector, camera.right) * 18;\n        const dy = -dot(axis.vector, camera.up) * 18;\n        if (Math.hypot(dx, dy) < 3) return;\n        ctx.strokeStyle = axis.color; ctx.fillStyle = axis.color; ctx.lineWidth = 1.1;\n        ctx.beginPath(); ctx.moveTo(...origin); ctx.lineTo(origin[0] + dx, origin[1] + dy); ctx.stroke();\n        ctx.fillText(axis.label, origin[0] + dx * 1.32, origin[1] + dy * 1.32);\n      });\n    }\n\n    _pick(x, y) {\n      if (!this.character) return null;\n      const camera = this._camera();\n      const visibleParts = camera.focusPart ? [camera.focusPart] : this.character.parts;\n      let origin = addScaled(camera.target, camera.right, (x / this.width * 2 - 1) * camera.halfWidth);\n      origin = addScaled(origin, camera.up, (camera.centerY - y) / this.height * 2 * camera.halfHeight);\n      origin = addScaled(origin, camera.forward, camera.distance);\n      const direction = camera.forward.map(v => -v);\n      let nearest = Infinity, selected = null;\n      visibleParts.forEach(part => {\n        let near = 0, far = Infinity;\n        for (let axis = 0; axis < 3; axis++) {\n          const low = part.center[axis] - part.size[axis] / 2;\n          const high = part.center[axis] + part.size[axis] / 2;\n          if (Math.abs(direction[axis]) < 1e-9) {\n            if (origin[axis] < low || origin[axis] > high) return;\n          } else {\n            const first = (low - origin[axis]) / direction[axis], second = (high - origin[axis]) / direction[axis];\n            near = Math.max(near, Math.min(first, second));\n            far = Math.min(far, Math.max(first, second));\n            if (near > far) return;\n          }\n        }\n        if (near < nearest) { nearest = near; selected = part.id; }\n      });\n      return selected;\n    }\n\n    dispose() {\n      this._disposed = true;\n      if (this._frame !== null) cancelAnimationFrame(this._frame);\n      this.resizeObserver.disconnect();\n      Object.entries(this._handlers).forEach(([name, handler]) => this.canvas.removeEventListener(name, handler));\n      this._buffers.forEach(buffer => this.gl.deleteBuffer(buffer));\n      this.gl.deleteTexture(this._faceTexture);\n      this._faceTexture = null;\n      this._faceSource = null;\n      this.gl.deleteProgram(this.program);\n      this.overlay.remove();\n      this._pointers.clear();\n    }\n  }\n\n  global.BlockViewport = BlockViewport;\n})(globalThis);\n<\/script>\n<script>(function attachFacePainter(root) {\n  'use strict';\n\n  const SIZE = 128;\n  const HISTORY_LIMIT = 31;\n  const PNG_PREFIX = 'data:image/png;base64,';\n  const noop = () => {};\n  const copyImage = image => new ImageData(new Uint8ClampedArray(image.data), SIZE, SIZE);\n  const sameImage = (a, b) => {\n    for (let i = 0; i < a.data.length; i++) if (a.data[i] !== b.data[i]) return false;\n    return true;\n  };\n\n  // Clip a stroke segment, rather than clamping pointer coordinates to an edge.\n  // This preserves natural lines when a captured pointer leaves the canvas.\n  function clipSegment(a, b, margin) {\n    const dx = b.x - a.x, dy = b.y - a.y;\n    let start = 0, end = 1;\n    const p = [-dx, dx, -dy, dy];\n    const q = [a.x + margin, SIZE + margin - a.x, a.y + margin, SIZE + margin - a.y];\n    for (let i = 0; i < 4; i++) {\n      if (!p[i]) { if (q[i] < 0) return null; continue; }\n      const ratio = q[i] / p[i];\n      if (p[i] < 0) start = Math.max(start, ratio);\n      else end = Math.min(end, ratio);\n      if (start > end) return null;\n    }\n    return [a.x + start * dx, a.y + start * dy, a.x + end * dx, a.y + end * dy];\n  }\n\n  class FacePainter {\n    constructor(canvas, { onChange = noop, onCommit = noop, onHistoryChange = noop } = {}) {\n      if (!canvas || typeof canvas.getContext !== 'function') throw new TypeError('需要一个画布。');\n      this.canvas = canvas;\n      canvas.width = canvas.height = SIZE;\n      this.context = canvas.getContext('2d', { willReadFrequently: true });\n      if (!this.context) throw new Error('浏览器无法创建面部画布。');\n      canvas.style.touchAction = 'none';\n      canvas.style.imageRendering = 'pixelated';\n      this.context.imageSmoothingEnabled = false;\n      this.imageData = this.context.createImageData(SIZE, SIZE);\n      this.tool = 'brush';\n      this.color = '#161616';\n      this.size = 4;\n      this._rgba = [22, 22, 22, 255];\n      this._onChange = onChange;\n      this._onCommit = onCommit;\n      this._onHistoryChange = onHistoryChange;\n      this._history = [copyImage(this.imageData)];\n      this._historyIndex = 0;\n      this._stroke = null;\n      this._handlers = {\n        down: event => this._pointerDown(event),\n        move: event => this._pointerMove(event),\n        up: event => this._pointerUp(event),\n        cancel: event => { if (this._stroke?.pointerId === event.pointerId) this._cancelStroke(); },\n        lost: event => { if (this._stroke?.pointerId === event.pointerId) this.finishStroke(); },\n        blur: () => this.finishStroke(),\n      };\n      canvas.addEventListener('pointerdown', this._handlers.down);\n      canvas.addEventListener('lostpointercapture', this._handlers.lost);\n      // Window listeners also cover browsers where pointer capture is unavailable.\n      root.addEventListener('pointermove', this._handlers.move, { passive: false });\n      root.addEventListener('pointerup', this._handlers.up);\n      root.addEventListener('pointercancel', this._handlers.cancel);\n      root.addEventListener('blur', this._handlers.blur);\n      root.addEventListener('pagehide', this._handlers.blur);\n      this._emitHistory();\n    }\n\n    setTool(tool) {\n      if (!['brush', 'eraser'].includes(tool)) throw new TypeError('未知画笔工具。');\n      this.tool = tool;\n    }\n\n    setColor(color) {\n      if (typeof color !== 'string' || !/^#[\\da-f]{6}$/i.test(color)) throw new TypeError('颜色应为六位十六进制值。');\n      this.color = color.toLowerCase();\n      this._rgba = [1, 3, 5].map(offset => parseInt(color.slice(offset, offset + 2), 16)).concat(255);\n    }\n\n    setSize(size) {\n      if (!Number.isInteger(size) || size < 1 || size > 24) throw new RangeError('笔宽应为 1–24 像素的整数。');\n      this.size = size;\n    }\n\n    _point(event) {\n      const rect = this.canvas.getBoundingClientRect();\n      const scaleX = rect.width / (this.canvas.offsetWidth || rect.width || 1);\n      const scaleY = rect.height / (this.canvas.offsetHeight || rect.height || 1);\n      const width = (this.canvas.clientWidth || rect.width) * scaleX;\n      const height = (this.canvas.clientHeight || rect.height) * scaleY;\n      if (!width || !height) return null;\n      return {\n        x: (event.clientX - rect.left - this.canvas.clientLeft * scaleX) * SIZE / width,\n        y: (event.clientY - rect.top - this.canvas.clientTop * scaleY) * SIZE / height,\n      };\n    }\n\n    _pointerDown(event) {\n      if (this._stroke || event.button !== 0 || event.isPrimary === false) return;\n      const point = this._point(event);\n      if (!point) return;\n      event.preventDefault();\n      this.canvas.focus({ preventScroll: true });\n      this._stroke = {\n        pointerId: event.pointerId, last: point,\n        size: this.size, rgba: this.tool === 'eraser' ? [0, 0, 0, 0] : this._rgba.slice(),\n      };\n      try { this.canvas.setPointerCapture(event.pointerId); } catch (_) { /* Window listeners remain active. */ }\n      if (this._line(point, point)) this._publish();\n    }\n\n    _pointerMove(event) {\n      if (!this._stroke || this._stroke.pointerId !== event.pointerId) return;\n      event.preventDefault();\n      let events = [];\n      try { events = event.getCoalescedEvents?.() || []; } catch (_) { /* A normal event is sufficient. */ }\n      if (!events.length) events = [event];\n      let changed = false;\n      for (const sample of events) {\n        const point = this._point(sample);\n        if (!point) continue;\n        changed = this._line(this._stroke.last, point) || changed;\n        this._stroke.last = point;\n      }\n      if (changed) this._publish();\n    }\n\n    _pointerUp(event) {\n      if (!this._stroke || this._stroke.pointerId !== event.pointerId) return;\n      this._pointerMove(event);\n      this.finishStroke();\n    }\n\n    _line(a, b) {\n      if (![a.x, a.y, b.x, b.y].every(Number.isFinite)) return false;\n      const clipped = clipSegment(a, b, this._stroke.size);\n      if (!clipped) return false;\n      let [x, y, endX, endY] = clipped.map(Math.floor);\n      const dx = Math.abs(endX - x), dy = -Math.abs(endY - y);\n      const sx = x < endX ? 1 : -1, sy = y < endY ? 1 : -1;\n      let error = dx + dy, changed = false;\n      while (true) {\n        changed = this._stamp(x, y) || changed;\n        if (x === endX && y === endY) break;\n        const twice = error * 2;\n        if (twice >= dy) { error += dy; x += sx; }\n        if (twice <= dx) { error += dx; y += sy; }\n      }\n      return changed;\n    }\n\n    _stamp(x, y) {\n      const { size, rgba } = this._stroke;\n      const originX = x - Math.floor(size / 2), originY = y - Math.floor(size / 2);\n      const center = (size - 1) / 2, radiusSquared = size * size / 4;\n      const pixels = this.imageData.data;\n      let changed = false;\n      for (let row = 0; row < size; row++) {\n        const py = originY + row;\n        if (py < 0 || py >= SIZE) continue;\n        for (let column = 0; column < size; column++) {\n          const px = originX + column;\n          if (px < 0 || px >= SIZE || (column - center) ** 2 + (row - center) ** 2 > radiusSquared) continue;\n          const offset = (py * SIZE + px) * 4;\n          for (let channel = 0; channel < 4; channel++) {\n            if (pixels[offset + channel] !== rgba[channel]) {\n              pixels[offset + channel] = rgba[channel];\n              changed = true;\n            }\n          }\n        }\n      }\n      return changed;\n    }\n\n    _publish() {\n      this.context.putImageData(this.imageData, 0, 0);\n      this._onChange(this.canvas);\n    }\n\n    _emitHistory() {\n      this._onHistoryChange({ canUndo: this._historyIndex > 0, canRedo: this._historyIndex < this._history.length - 1 });\n    }\n\n    _record() {\n      if (sameImage(this.imageData, this._history[this._historyIndex])) return false;\n      this._history.splice(this._historyIndex + 1);\n      this._history.push(copyImage(this.imageData));\n      if (this._history.length > HISTORY_LIMIT) this._history.shift();\n      this._historyIndex = this._history.length - 1;\n      this._emitHistory();\n      this._onCommit();\n      return true;\n    }\n\n    _releasePointer() {\n      const pointerId = this._stroke?.pointerId;\n      this._stroke = null;\n      if (pointerId !== undefined) {\n        try { this.canvas.releasePointerCapture(pointerId); } catch (_) { /* Capture can already be released. */ }\n      }\n    }\n\n    finishStroke() {\n      if (!this._stroke) return false;\n      this._releasePointer();\n      return this._record();\n    }\n\n    _cancelStroke(notify = true) {\n      if (!this._stroke) return;\n      this._releasePointer();\n      const original = this._history[this._historyIndex];\n      const changed = !sameImage(this.imageData, original);\n      this.imageData = copyImage(original);\n      if (changed && notify) this._publish();\n    }\n\n    undo() {\n      this.finishStroke();\n      if (this._historyIndex === 0) return false;\n      this.imageData = copyImage(this._history[--this._historyIndex]);\n      this._publish(); this._emitHistory(); this._onCommit();\n      return true;\n    }\n\n    redo() {\n      this.finishStroke();\n      if (this._historyIndex === this._history.length - 1) return false;\n      this.imageData = copyImage(this._history[++this._historyIndex]);\n      this._publish(); this._emitHistory(); this._onCommit();\n      return true;\n    }\n\n    clear() {\n      this.finishStroke();\n      const empty = this.context.createImageData(SIZE, SIZE);\n      if (sameImage(this.imageData, empty)) return false;\n      this.imageData = empty;\n      this._publish();\n      return this._record();\n    }\n\n    getFaceData() {\n      this.finishStroke();\n      for (let i = 3; i < this.imageData.data.length; i += 4) {\n        if (this.imageData.data[i]) return { width: SIZE, height: SIZE, png: this.canvas.toDataURL('image/png') };\n      }\n      return null;\n    }\n\n    /** Decode before applying the rest of an imported character: failure changes nothing. */\n    async decodeFace(face) {\n      if (face == null) return null;\n      if (typeof face !== 'object' || Array.isArray(face) || face.width !== SIZE || face.height !== SIZE ||\n          typeof face.png !== 'string' || face.png.length > 512 * 1024 ||\n          !/^data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(face.png)) {\n        throw new TypeError('面部贴图必须是 128 × 128 的 PNG。');\n      }\n      let header;\n      try { header = atob(face.png.slice(PNG_PREFIX.length, PNG_PREFIX.length + 44)); }\n      catch (_) { throw new TypeError('面部 PNG 编码无效。'); }\n      const signature = [137, 80, 78, 71, 13, 10, 26, 10];\n      if (header.length < 24 || signature.some((value, index) => header.charCodeAt(index) !== value) ||\n          header.slice(12, 16) !== 'IHDR') throw new TypeError('面部 PNG 文件头无效。');\n      const dimension = offset => [0, 1, 2, 3].reduce((value, index) => value * 256 + header.charCodeAt(offset + index), 0);\n      if (dimension(16) !== SIZE || dimension(20) !== SIZE) throw new TypeError('面部 PNG 尺寸必须是 128 × 128。');\n      const image = await new Promise((resolve, reject) => {\n        const candidate = new Image();\n        candidate.onload = () => resolve(candidate);\n        candidate.onerror = () => reject(new TypeError('面部 PNG 无法读取。'));\n        candidate.src = face.png;\n      });\n      return this._stageImage(image);\n    }\n\n    _stageImage(image) {\n      if (image == null) return this.context.createImageData(SIZE, SIZE);\n      const width = image.naturalWidth ?? image.width, height = image.naturalHeight ?? image.height;\n      if (width !== SIZE || height !== SIZE) throw new TypeError('面部贴图尺寸必须是 128 × 128。');\n      if (image instanceof ImageData) return copyImage(image);\n      const stage = document.createElement('canvas');\n      stage.width = stage.height = SIZE;\n      const context = stage.getContext('2d', { willReadFrequently: true });\n      context.drawImage(image, 0, 0);\n      return context.getImageData(0, 0, SIZE, SIZE);\n    }\n\n    /** Replace only after staging succeeds; silent imports still update the visible canvas. */\n    replaceFace(decodedOrNull, { notify = true, resetHistory = true } = {}) {\n      const image = this._stageImage(decodedOrNull);\n      this._cancelStroke(false);\n      const changed = !sameImage(this.imageData, image);\n      this.imageData = image;\n      this.context.putImageData(this.imageData, 0, 0);\n      if (resetHistory) {\n        this._history = [copyImage(image)];\n        this._historyIndex = 0;\n      } else if (changed) {\n        this._history.splice(this._historyIndex + 1);\n        this._history.push(copyImage(image));\n        if (this._history.length > HISTORY_LIMIT) this._history.shift();\n        this._historyIndex = this._history.length - 1;\n      }\n      this._emitHistory();\n      if (notify) { this._onChange(this.canvas); this._onCommit(); }\n      return changed;\n    }\n\n    async loadFace(face, options) {\n      const decoded = await this.decodeFace(face);\n      return this.replaceFace(decoded, options);\n    }\n\n    destroy() {\n      this.finishStroke();\n      this.canvas.removeEventListener('pointerdown', this._handlers.down);\n      this.canvas.removeEventListener('lostpointercapture', this._handlers.lost);\n      root.removeEventListener('pointermove', this._handlers.move);\n      root.removeEventListener('pointerup', this._handlers.up);\n      root.removeEventListener('pointercancel', this._handlers.cancel);\n      root.removeEventListener('blur', this._handlers.blur);\n      root.removeEventListener('pagehide', this._handlers.blur);\n    }\n  }\n\n  FacePainter.SIZE = SIZE;\n  root.FacePainter = FacePainter;\n})(globalThis);\n<\/script>\n<script>(async function () {\n  'use strict';\n  const Model = globalThis.BlockCharacter;\n  const STORAGE_KEY = 'fps.block-character.v1';\n  const $ = id => document.getElementById(id);\n  const controls = [\n    { key:'headScale', part:'head', parts:['head'], label:'头部大小', group:'scale-controls', unit:'×' },\n    { key:'torsoScale', part:'torso', parts:['torso'], label:'躯干大小', group:'scale-controls', unit:'×' },\n    { key:'armLength', part:'leftArm', parts:['leftArm','rightArm'], label:'手臂长度', group:'arm-controls', unit:'m' },\n    { key:'legLength', part:'leftLeg', parts:['leftLeg','rightLeg'], label:'腿部长度', group:'leg-controls', unit:'m' }\n  ];\n  let params = { ...Model.DEFAULTS };\n  let character, selected = 'head', viewport = null, painter = null, announceTimer, statusTimer;\n  let currentFace = null, editMode = 'body';\n  let storageAvailable = true;\n  try {\n    const saved = localStorage.getItem(STORAGE_KEY);\n    if (saved) {\n      const state = JSON.parse(saved);\n      const project = Model.parseProject(state.character);\n      params = project.parameters;\n      currentFace = project.face;\n      if (project.migrationNotes.length) $('status').textContent = project.migrationNotes.join(' ');\n    }\n  } catch (error) {\n    if (error.name === 'SecurityError') storageAvailable = false;\n    else $('status').textContent = '已跳过无效的本机存档';\n  }\n  const cm = n => +(n * 100).toFixed(1);\n  const dimensions = part => part.size.map(cm).join(' × ') + ' cm';\n  const volume = part => +(part.size.reduce((v,n) => v*n, 1000)).toFixed(2);\n  function status(message) {\n    clearTimeout(statusTimer);\n    $('status').textContent = message;\n    statusTimer = setTimeout(() => { $('status').textContent = '就绪'; }, 4500);\n  }\n  function save() {\n    if (window.parent !== window) {\n      $('save-state').textContent = '点击「应用角色」保存到训练场';\n      return;\n    }\n    try {\n      localStorage.setItem(STORAGE_KEY, JSON.stringify({ character: Model.exportData(params, currentFace) }));\n      storageAvailable = true;\n    } catch (_) { storageAvailable = false; }\n    $('save-state').textContent = storageAvailable ? '已保存于此浏览器' : '可导出角色文件保存';\n  }\n  function select(partId, focus = false) {\n    if (!character.parts.some(p => p.id === partId)) return;\n    selected = partId;\n    viewport?.setSelected(editMode === 'face' ? null : partId);\n    for (const c of controls) $(c.key + '-row').classList.toggle('selected', c.parts.includes(partId));\n    const part = character.parts.find(p => p.id === partId);\n    const label = part.id.endsWith('Arm') ? '双臂（每侧）' : part.id.endsWith('Leg') ? '双腿（每侧）' : part.name;\n    $('selection-caption').textContent = `${label} · ${dimensions(part)}`;\n    if (focus) controls.find(c => c.parts.includes(partId)) && $(controls.find(c => c.parts.includes(partId)).key + '-number').focus({preventScroll:true});\n  }\n  function render(persist = true) {\n    character = Model.createCharacter(params);\n    params = character.params;\n    for (const c of controls) {\n      const range = $(c.key + '-range'), number = $(c.key + '-number');\n      range.value = params[c.key];\n      number.value = params[c.key] === +params[c.key].toFixed(2) ? params[c.key].toFixed(2) : String(params[c.key]);\n      range.style.setProperty('--fill', ((params[c.key] - Model.LIMITS[c.key].min) / (Model.LIMITS[c.key].max - Model.LIMITS[c.key].min) * 100) + '%');\n      const part = character.parts.find(p => p.id === c.part);\n      $(c.key + '-dimension').textContent = dimensions(part) + (c.unit === '×' ? ` · ${volume(part)} L` : '');\n    }\n    $('height-value').value = character.standingHeight.toFixed(2);\n    for (const button of document.querySelectorAll('[data-preset]')) {\n      const preset = Model.PRESETS[button.dataset.preset];\n      button.setAttribute('aria-pressed', String(Object.keys(Model.DEFAULTS).every(k => Math.abs(params[k] - preset[k]) < 1e-8)));\n    }\n    const notes = [];\n    if (character.height - character.standingHeight > 1e-8) notes.push(`手臂低于脚底，模型总高 ${character.height.toFixed(2)} m；预览以最低点落地。`);\n    $('geometry-notice').textContent = notes.join(' ');\n    viewport?.setCharacter(character);\n    select(selected);\n    if (persist) save();\n    clearTimeout(announceTimer);\n    announceTimer = setTimeout(() => { $('announcer').textContent = `身高 ${character.standingHeight.toFixed(2)} 米，六个部件已更新。`; }, 250);\n  }\n  function update(c, raw) {\n    const value = Number(raw), bounds = Model.LIMITS[c.key];\n    if (!Number.isFinite(value) || raw === '') { render(false); status('请输入有效数字'); return; }\n    const clamped = Math.min(bounds.max, Math.max(bounds.min, value));\n    params[c.key] = +clamped.toFixed(2);\n    selected = c.part;\n    render();\n    if (clamped !== value) status(`已限制到 ${bounds.min}–${bounds.max} ${c.unit}`);\n  }\n  for (const c of controls) {\n    const limit = Model.LIMITS[c.key];\n    const row = document.createElement('div');\n    row.className = 'param-row'; row.id = c.key + '-row';\n    row.innerHTML = `<div class=\"param-top\"><label class=\"part-label\" for=\"${c.key}-range\">${c.label}<\/label><label class=\"number-wrap\"><span class=\"sr-only\">${c.label}数值<\/span><input id=\"${c.key}-number\" type=\"number\" min=\"${limit.min}\" max=\"${limit.max}\" step=\"0.01\" inputmode=\"decimal\" aria-describedby=\"${c.key}-dimension\"><span>${c.unit}<\/span><\/label><\/div><input id=\"${c.key}-range\" type=\"range\" min=\"${limit.min}\" max=\"${limit.max}\" step=\"0.01\" aria-describedby=\"${c.key}-dimension\"><div class=\"dimension\" id=\"${c.key}-dimension\"><\/div>`;\n    $(c.group).appendChild(row);\n    $(c.key + '-range').addEventListener('input', e => update(c, e.target.value));\n    $(c.key + '-number').addEventListener('change', e => update(c, e.target.value));\n    $(c.key + '-number').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });\n    row.addEventListener('focusin', () => select(c.part));\n    row.querySelector('.part-label').addEventListener('click', () => select(c.part));\n  }\n  const scaleNote = document.createElement('p');\n  scaleNote.className = 'group-note';\n  scaleNote.textContent = '头部、躯干保持各自比例，宽、高、深一起缩放。';\n  $('scale-controls').appendChild(scaleNote);\n  function applyPreset(name) {\n    params = { ...Model.PRESETS[name] };\n    render(); viewport?.fit();\n    status('已应用起始体型');\n  }\n  document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => applyPreset(button.dataset.preset)));\n  $('reset-button').addEventListener('click', () => { applyPreset('default'); selected = 'head'; select('head'); });\n  document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {\n    viewport?.setView(button.dataset.view);\n    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));\n  }));\n  $('fit-button').addEventListener('click', () => viewport?.fit());\n  $('viewport').addEventListener('pointermove', e => {\n    if (e.buttons) document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', 'false'));\n  });\n  function setMode(mode) {\n    painter?.finishStroke();\n    editMode = mode;\n    const isFace = mode === 'face';\n    document.querySelector('.app').classList.toggle('face-mode', isFace);\n    $('body-panel').hidden = isFace;\n    $('face-panel').hidden = !isFace;\n    $('body-metric').hidden = isFace;\n    $('face-metric').hidden = !isFace;\n    $('studio-badge').textContent = isFace ? '只绘制正面' : '6 个方块 · 实时预览';\n    $('module-state').textContent = isFace ? '正面画脸' : '体型编辑';\n    for (const name of ['body', 'face']) {\n      $(name + '-tab').setAttribute('aria-selected', String(name === mode));\n      $(name + '-tab').tabIndex = name === mode ? 0 : -1;\n    }\n    const view = isFace ? 'front' : 'perspective';\n    viewport?.setView(view);\n    viewport?.setFocusPart(isFace ? 'head' : null);\n    select('head');\n    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === view)));\n  }\n  $('body-tab').addEventListener('click', () => setMode('body'));\n  $('face-tab').addEventListener('click', () => setMode('face'));\n  $('start-face-button').addEventListener('click', () => setMode('face'));\n  $('face-tab').tabIndex = -1;\n  document.querySelector('.module-tabs').addEventListener('keydown', e => {\n    if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;\n    e.preventDefault();\n    const mode = e.key === 'Home' ? 'body' : e.key === 'End' ? 'face' : editMode === 'face' ? 'body' : 'face';\n    setMode(mode); $(mode + '-tab').focus();\n  });\n  $('export-button').addEventListener('click', () => {\n    painter?.finishStroke();\n    const content = JSON.stringify(Model.exportData(params, currentFace), null, 2) + '\\n';\n    const url = URL.createObjectURL(new Blob([content], {type:'application/json'}));\n    const a = document.createElement('a'); a.href = url; a.download = 'block-character.json';\n    document.body.appendChild(a); a.click(); a.remove();\n    setTimeout(() => URL.revokeObjectURL(url), 2000);\n    status('已导出体型与画好的脸');\n  });\n  $('import-button').addEventListener('click', () => $('import-file').click());\n  $('import-file').addEventListener('change', async e => {\n    const file = e.target.files[0];\n    if (!file) return;\n    painter.finishStroke();\n    document.querySelector('.app').inert = true;\n    try {\n      if (file.size > 1024 * 1024) throw new Error('角色文件不能超过 1 MB');\n      const imported = Model.parseProject(await file.text());\n      const decoded = await painter.decodeFace(imported.face);\n      painter.replaceFace(decoded, {notify:false, resetHistory:true});\n      params = imported.parameters;\n      currentFace = imported.face;\n      viewport?.setFaceTexture($('face-canvas'));\n      $('undo-button').disabled = true; $('redo-button').disabled = true;\n      render(); viewport?.fit();\n      status(imported.migrationNotes.length ? imported.migrationNotes.join(' ') : '角色导入成功');\n    } catch (error) { status('导入失败：' + error.message); }\n    finally { e.target.value = ''; document.querySelector('.app').inert = false; }\n  });\n  try { viewport = new globalThis.BlockViewport($('viewport'), { onSelect: id => select(editMode === 'face' ? 'head' : id) }); }\n  catch (error) {\n    $('viewport-error').hidden = false;\n    $('viewport-error').textContent = '三维预览未能启动。请在支持 WebGL 的浏览器中打开，并启用硬件加速。尺寸调整与导出仍可使用。';\n    console.error(error);\n  }\n  painter = new globalThis.FacePainter($('face-canvas'), {\n    onChange: canvas => viewport?.setFaceTexture(canvas),\n    onCommit: () => { currentFace = painter.getFaceData(); save(); },\n    onHistoryChange: ({canUndo, canRedo}) => {\n      $('undo-button').disabled = !canUndo; $('redo-button').disabled = !canRedo;\n    }\n  });\n  function setTool(tool) {\n    painter.setTool(tool);\n    $('brush-button').setAttribute('aria-pressed', String(tool === 'brush'));\n    $('eraser-button').setAttribute('aria-pressed', String(tool === 'eraser'));\n    $('paint-tool-hint').textContent = tool === 'brush' ? '按住拖动绘制' : '擦除后恢复底色';\n  }\n  const colors = [\n    ['#20242b','黑色'],['#ffffff','白色'],['#868d96','灰色'],['#70452e','棕色'],\n    ['#e85a4f','红色'],['#ed9661','橙色'],['#f1cf60','黄色'],['#d9af8a','肤色'],\n    ['#4e9665','绿色'],['#66bfc3','青色'],['#3974c3','蓝色'],['#5752a1','靛色'],\n    ['#aa6aba','紫色'],['#e58aa7','粉色'],['#c7d4a6','浅绿'],['#b9d8ed','浅蓝']\n  ];\n  function setColor(color) {\n    painter.setColor(color); $('paint-color').value = color;\n    document.querySelectorAll('[data-paint-color]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.paintColor === color.toLowerCase())));\n    setTool('brush');\n  }\n  for (const [color,name] of colors) {\n    const button = document.createElement('button');\n    button.type = 'button'; button.dataset.paintColor = color;\n    button.setAttribute('aria-label', name); button.setAttribute('aria-pressed', String(color === '#20242b'));\n    button.style.setProperty('--swatch',color);\n    button.innerHTML = '<span aria-hidden=\"true\"><\/span>';\n    button.addEventListener('click', () => setColor(color));\n    $('paint-palette').appendChild(button);\n  }\n  setColor('#20242b');\n  $('paint-color').addEventListener('input', e => setColor(e.target.value));\n  $('brush-button').addEventListener('click', () => setTool('brush'));\n  $('eraser-button').addEventListener('click', () => setTool('eraser'));\n  $('brush-size').addEventListener('input', e => {\n    painter.setSize(+e.target.value); $('brush-size-value').value = e.target.value;\n  });\n  $('undo-button').addEventListener('click', () => { painter.undo(); status('已撤销'); });\n  $('redo-button').addEventListener('click', () => { painter.redo(); status('已重做'); });\n  $('clear-face-button').addEventListener('click', () => { painter.clear(); status('画板已清空，可撤销'); });\n  document.addEventListener('keydown', e => {\n    if (editMode !== 'face' || !(e.ctrlKey || e.metaKey) || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;\n    const key = e.key.toLowerCase();\n    if (key === 'z' || key === 'y') {\n      e.preventDefault();\n      if (key === 'y' || e.shiftKey) painter.redo(); else painter.undo();\n    }\n  });\n  if (currentFace) {\n    try { painter.replaceFace(await painter.decodeFace(currentFace), {notify:false,resetHistory:true}); }\n    catch (_) { currentFace = null; status('已恢复体型，无法读取的面部图片已跳过'); }\n  }\n  viewport?.setFaceTexture($('face-canvas'));\n  render(false);\n  if (!storageAvailable) $('save-state').textContent = '可导出角色文件保存';\n  globalThis.BlockCharacterApp = Object.freeze({ getParameters: () => ({...params}), getCharacter: () => Model.createCharacter(params), getFaceData: () => currentFace ? {...currentFace} : null });\n  document.querySelector('.app').inert = false;\n  document.querySelector('.app').setAttribute('aria-busy','false');\n  // The combat demo embeds this editor. Exchange only with its own parent/opener.\n  window.addEventListener('message', async event => {\n    const trusted = (window.parent !== window && event.source === window.parent) || (window.opener && event.source === window.opener);\n    if (!trusted || !event.data || typeof event.data !== 'object') return;\n    if (event.data.type === 'pixel-fps:request-character') {\n      event.source.postMessage({type:'pixel-fps:character',token:event.data.token,character:Model.exportData(params,currentFace)}, '*');\n    } else if (event.data.type === 'pixel-fps:set-character') {\n      try {\n        const parsed = Model.parseProject(event.data.character);\n        const decoded = parsed.face ? await painter.decodeFace(parsed.face) : null;\n        params = {...parsed.parameters}; currentFace = parsed.face;\n        painter.replaceFace(decoded, {notify:false,resetHistory:true});\n        viewport?.setFaceTexture($('face-canvas')); render();\n      } catch (error) { status('无法载入训练场角色：' + error.message); }\n    }\n  });\n  if (window.parent !== window) window.parent.postMessage({type:'pixel-fps:editor-ready'}, '*');\n})();\n<\/script>\n<\/body>\n<\/html>\n"</script>
+<script>(function attachBlockCharacter(root) {
+  "use strict";
+
+  const DEFAULTS = Object.freeze({
+    headScale: 1,
+    torsoScale: 1,
+    armLength: 0.65,
+    legLength: 0.8,
+  });
+  const KEYS = Object.freeze(Object.keys(DEFAULTS));
+  const LEGACY_KEYS = Object.freeze([
+    "headScale", "torsoScale", "leftArmLength", "rightArmLength", "leftLegLength", "rightLegLength",
+  ]);
+  const LIMITS = Object.freeze(Object.fromEntries(KEYS.map((key) => [
+    key,
+    Object.freeze(key.endsWith("Scale")
+      ? { min: 0.15, max: 5, step: 0.01 }
+      : { min: 0.04, max: 4, step: 0.01 }),
+  ])));
+  const PRESETS = Object.freeze({
+    default: DEFAULTS,
+    small: Object.freeze({
+      headScale: 0.25,
+      torsoScale: 0.25,
+      armLength: 0.18,
+      legLength: 0.25,
+    }),
+    tall: Object.freeze({
+      headScale: 2.5,
+      torsoScale: 2.5,
+      armLength: 1.8,
+      legLength: 2.5,
+    }),
+    longArms: Object.freeze({ ...DEFAULTS, armLength: 2.4 }),
+  });
+
+  function assertRecord(value, label) {
+    if (value === null || typeof value !== "object" || Array.isArray(value)) {
+      throw new TypeError(`${label}必须是对象。`);
+    }
+  }
+
+  /** Fill omitted values and clamp valid numeric edits. Imports use strict validation below. */
+  function normalizeParams(params = {}) {
+    assertRecord(params, "角色参数");
+    for (const key of Object.keys(params)) {
+      if (!KEYS.includes(key)) throw new TypeError(`未知角色参数：${key}`);
+    }
+    return Object.fromEntries(KEYS.map((key) => {
+      const value = Object.hasOwn(params, key) ? params[key] : DEFAULTS[key];
+      if (typeof value !== "number" || !Number.isFinite(value)) {
+        throw new TypeError(`参数 ${key} 必须是有限数字。`);
+      }
+      return [key, Math.min(LIMITS[key].max, Math.max(LIMITS[key].min, value))];
+    }));
+  }
+
+  /** Meter units; character left is +X, up is +Y, and front is +Z. */
+  function createCharacter(input = {}) {
+    const params = normalizeParams(input);
+    const head = [0.4, 0.4, 0.4].map((length) => length * params.headScale);
+    const torso = [0.48, 0.6, 0.28].map((length) => length * params.torsoScale);
+    const hipY = params.legLength;
+    const shoulderY = hipY + torso[1];
+    // When arms extend below the feet, the lowest arm endpoint defines the floor.
+    const floorOffset = Math.max(0, params.armLength - shoulderY);
+    const legX = Math.max(0.1, torso[0] / 4);
+    const armX = torso[0] / 2 + 0.08;
+    const part = (id, name, size, center) => ({
+      id, name, size, center: [center[0], center[1] + floorOffset, center[2]],
+    });
+    const parts = [
+      part("head", "头部", head, [0, shoulderY + head[1] / 2, 0]),
+      part("torso", "躯干", torso, [0, hipY + torso[1] / 2, 0]),
+      part("leftArm", "左臂", [0.16, params.armLength, 0.22], [armX, shoulderY - params.armLength / 2, 0]),
+      part("rightArm", "右臂", [0.16, params.armLength, 0.22], [-armX, shoulderY - params.armLength / 2, 0]),
+      part("leftLeg", "左腿", [0.2, params.legLength, 0.24], [legX, hipY - params.legLength / 2, 0]),
+      part("rightLeg", "右腿", [0.2, params.legLength, 0.24], [-legX, hipY - params.legLength / 2, 0]),
+    ];
+    const min = [0, 1, 2].map((axis) => Math.min(...parts.map((box) => box.center[axis] - box.size[axis] / 2)));
+    const max = [0, 1, 2].map((axis) => Math.max(...parts.map((box) => box.center[axis] + box.size[axis] / 2)));
+    // Avoid displaying negative zero or roundoff below the floor.
+    if (Math.abs(min[1]) < 1e-12) min[1] = 0;
+    const bounds = { min, max, size: max.map((value, axis) => value - min[axis]) };
+    const notes = [
+      "头部和躯干保持各自比例，缩放参数作用于三条边；体积随缩放倍数的三次方变化。",
+      "手臂截面固定为 0.16 × 0.22 米，腿部截面固定为 0.20 × 0.24 米。",
+      "左右手臂共用臂长，左右腿共用腿长。",
+      "总高度按全部六个方块的最高点和最低点计算；身高由头部高度、躯干高度及腿长自然得出。",
+    ];
+    if (floorOffset > 0) {
+      notes.push("手臂低于脚底，模型以最低手臂端点落地；显示总高度包含这段长度。");
+    }
+    return {
+      params,
+      parts,
+      bounds,
+      height: bounds.size[1],
+      standingHeight: hipY + torso[1] + head[1],
+      totalVolume: parts.reduce((sum, box) => sum + box.size[0] * box.size[1] * box.size[2], 0),
+      metadata: {
+        unit: "m",
+        axes: { x: "角色左侧", y: "上方", z: "正面" },
+        floorOffset,
+        notes,
+      },
+    };
+  }
+
+  /** Check the bounded PNG envelope; pixel decoding remains the browser's responsibility. */
+  function validateFace(face) {
+    if (face === null) return null;
+    assertRecord(face, "面部贴图");
+    const keys = Object.keys(face);
+    if (keys.length !== 3 || !["width", "height", "png"].every((key) => Object.hasOwn(face, key))) {
+      throw new TypeError("面部贴图必须只包含 width、height 和 png。");
+    }
+    if (face.width !== 128 || face.height !== 128) throw new RangeError("面部贴图必须为 128 × 128 像素。");
+    const prefix = "data:image/png;base64,";
+    if (typeof face.png !== "string" || !face.png.startsWith(prefix)) {
+      throw new TypeError("面部贴图必须是 PNG 的 Base64 数据地址。");
+    }
+    if (face.png.length >= 200 * 1024) throw new RangeError("面部贴图数据地址必须小于 200 KiB。");
+    const encoded = face.png.slice(prefix.length);
+    if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(encoded)) {
+      throw new TypeError("面部贴图包含无效的 Base64 数据。");
+    }
+    let bytes;
+    try {
+      if (typeof root.atob === "function") {
+        bytes = Uint8Array.from(root.atob(encoded), (character) => character.charCodeAt(0));
+      } else if (typeof Buffer !== "undefined") {
+        bytes = Uint8Array.from(Buffer.from(encoded, "base64"));
+      } else {
+        throw new Error("Base64 decoding unavailable");
+      }
+    } catch {
+      throw new TypeError("无法解码面部贴图的 Base64 数据。");
+    }
+    const signature = [137, 80, 78, 71, 13, 10, 26, 10];
+    if (bytes.length < 33 || !signature.every((byte, index) => bytes[index] === byte)) {
+      throw new TypeError("面部贴图不是有效的 PNG 文件。");
+    }
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const chunkType = (offset) => String.fromCharCode(...bytes.subarray(offset + 4, offset + 8));
+    if (view.getUint32(8) !== 13 || chunkType(8) !== "IHDR") {
+      throw new TypeError("面部贴图缺少有效的 PNG 图像头。");
+    }
+    if (view.getUint32(16) !== 128 || view.getUint32(20) !== 128) {
+      throw new RangeError("面部 PNG 的实际尺寸必须为 128 × 128 像素。");
+    }
+    const bitDepths = { 0: [1, 2, 4, 8, 16], 2: [8, 16], 3: [1, 2, 4, 8], 4: [8, 16], 6: [8, 16] };
+    if (!bitDepths[bytes[25]]?.includes(bytes[24]) || bytes[26] !== 0 || bytes[27] !== 0 || bytes[28] > 1) {
+      throw new TypeError("面部贴图的 PNG 图像头无效。");
+    }
+    let offset = 8, hasPixels = false, hasEnd = false;
+    while (offset < bytes.length) {
+      if (offset + 12 > bytes.length) throw new TypeError("面部 PNG 数据不完整。");
+      const length = view.getUint32(offset), type = chunkType(offset);
+      if (offset + length + 12 > bytes.length) throw new TypeError("面部 PNG 数据块不完整。");
+      if (type === "IHDR" && offset !== 8) throw new TypeError("面部 PNG 包含重复的图像头。");
+      if (type === "IDAT" && length > 0) hasPixels = true;
+      offset += length + 12;
+      if (type === "IEND") {
+        if (length !== 0 || offset !== bytes.length) throw new TypeError("面部 PNG 的结束数据块无效。");
+        hasEnd = true;
+        break;
+      }
+    }
+    if (!hasPixels || !hasEnd) throw new TypeError("面部 PNG 缺少像素数据或结束数据块。");
+    return { width: 128, height: 128, png: face.png };
+  }
+
+  function exportData(params = {}, face = null) {
+    const character = createCharacter(params);
+    return {
+      format: "fps-block-character",
+      version: 3,
+      parameters: character.params,
+      face: validateFace(face),
+      computed: {
+        unit: "m",
+        height: character.height,
+        standingHeight: character.standingHeight,
+        totalVolume: character.totalVolume,
+      },
+    };
+  }
+
+  /** Validate old schemas before migration. Computed fields are never trusted as input. */
+  function parseProject(data) {
+    let parsed = data;
+    if (typeof data === "string") {
+      try { parsed = JSON.parse(data); }
+      catch { throw new TypeError("文件不是有效的 JSON。"); }
+    }
+    assertRecord(parsed, "导入文件");
+    if (parsed.format !== "fps-block-character") throw new TypeError("文件不是方块角色格式（fps-block-character）。");
+    if (![1, 2, 3].includes(parsed.version)) throw new TypeError("不支持此角色文件版本；当前支持版本 1、2 和 3。");
+    const allowed = ["format", "version", "parameters", "computed", ...(parsed.version >= 2 ? ["face"] : [])];
+    for (const key of Object.keys(parsed)) {
+      if (!allowed.includes(key)) throw new TypeError(`导入文件包含未知字段：${key}`);
+    }
+    assertRecord(parsed.parameters, "文件中的 parameters");
+    if (Object.hasOwn(parsed, "computed")) assertRecord(parsed.computed, "文件中的 computed");
+    const sourceKeys = parsed.version === 3 ? KEYS : LEGACY_KEYS;
+    for (const key of Object.keys(parsed.parameters)) {
+      if (!sourceKeys.includes(key)) throw new TypeError(`未知角色参数：${key}`);
+    }
+    for (const key of sourceKeys) {
+      if (!Object.hasOwn(parsed.parameters, key)) throw new TypeError(`导入文件缺少参数：${key}`);
+      const value = parsed.parameters[key];
+      if (typeof value !== "number" || !Number.isFinite(value)) throw new TypeError(`参数 ${key} 必须是有限数字。`);
+      const limit = LIMITS[key] || (key.includes("Arm") ? LIMITS.armLength : LIMITS.legLength);
+      if (value < limit.min || value > limit.max) {
+        throw new RangeError(`参数 ${key} 超出范围 ${limit.min}–${limit.max}；文件未导入。`);
+      }
+    }
+    const migrationNotes = [];
+    let parameters = parsed.parameters;
+    if (parsed.version < 3) {
+      // Averaging each pair preserves the combined limb volume with fixed cross sections.
+      parameters = {
+        headScale: parsed.parameters.headScale,
+        torsoScale: parsed.parameters.torsoScale,
+        armLength: (parsed.parameters.leftArmLength + parsed.parameters.rightArmLength) / 2,
+        legLength: (parsed.parameters.leftLegLength + parsed.parameters.rightLegLength) / 2,
+      };
+      if (parsed.parameters.leftArmLength !== parsed.parameters.rightArmLength) {
+        migrationNotes.push("旧版左右手臂长度不同，已取两者平均值作为统一臂长。");
+      }
+      if (parsed.parameters.leftLegLength !== parsed.parameters.rightLegLength) {
+        migrationNotes.push("旧版左右腿长度不同，已取两者平均值作为统一腿长。");
+      }
+    }
+    return {
+      parameters: normalizeParams(parameters),
+      face: parsed.version >= 2 && Object.hasOwn(parsed, "face") ? validateFace(parsed.face) : null,
+      migrationNotes,
+    };
+  }
+
+  /** Preserve the original parameters-only API for existing geometry consumers. */
+  function parseData(data) {
+    return parseProject(data).parameters;
+  }
+
+  const api = Object.freeze({ DEFAULTS, LIMITS, PRESETS, createCharacter, normalizeParams, exportData, parseData, parseProject });
+  root.BlockCharacter = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(globalThis);
+</script>
+<script>(function attachPixelFPS(root) {
+  "use strict";
+  const Character = root.BlockCharacter || (typeof require === "function" ? require("../character.js") : null);
+  if (!Character) throw new Error("PixelFPS needs BlockCharacter.");
+
+  // These values make the rules visible in the prototype; they are not balance decisions.
+  const CONFIG = Object.freeze({ gravity: 18, jumpSpeed: 6.5, baseHP: 100, baseMana: 100,
+    baseSpeed: 4.5, pickupRange: 2.2, arena: { minX: -20, maxX: 20, minZ: -24, maxZ: 12 } });
+  const WEAPONS = Object.freeze({
+    pistol: Object.freeze({ label: "手枪", damage: 26, speed: 95, interval: 0.28, ammoCost: 1, color: [1, 0.83, 0.3] }),
+    rifle: Object.freeze({ label: "步枪", damage: 16, speed: 140, interval: 0.11, ammoCost: 1, color: [0.4, 0.95, 1] }),
+    knife: Object.freeze({ label: "小刀", damage: 42, interval: 0.45, ammoCost: 0, melee: true, color: [0.95, 0.95, 1] }),
+  });
+  const add = (a, b) => a.map((v, i) => v + b[i]);
+  const mul = (a, n) => a.map((v) => v * n);
+  const length = (a) => Math.hypot(...a);
+  const sub = (a, b) => a.map((v, i) => v - b[i]);
+  const normalized = (a) => mul(a, 1 / (length(a) || 1));
+  const bounds = (box, pad = 0) => ({ min: box.center.map((v, i) => v - box.size[i] / 2 - pad), max: box.center.map((v, i) => v + box.size[i] / 2 + pad) });
+
+  /** Earliest segment contact with an AABB, including radius; returns t in [0,1] or null. */
+  function segmentBox(from, to, box, radius = 0) {
+    const { min, max } = bounds(box, radius);
+    let enter = 0, leave = 1;
+    for (let axis = 0; axis < 3; axis++) {
+      const delta = to[axis] - from[axis];
+      if (Math.abs(delta) < 1e-12) {
+        if (from[axis] < min[axis] || from[axis] > max[axis]) return null;
+      } else {
+        let first = (min[axis] - from[axis]) / delta, last = (max[axis] - from[axis]) / delta;
+        if (first > last) [first, last] = [last, first];
+        enter = Math.max(enter, first); leave = Math.min(leave, last);
+        if (enter > leave) return null;
+      }
+    }
+    return enter;
+  }
+
+  function actorBoxes(actor) {
+    return actor.character.parts.map((part) => ({ id: part.id, center: add(part.center, actor.pos), size: [...part.size] }));
+  }
+  function eye(actor) { return [actor.pos[0], actor.pos[1] + actor.eyeHeight, actor.pos[2]]; }
+  function aimDirection(actor) {
+    return [Math.sin(actor.yaw) * Math.cos(actor.pitch), Math.sin(actor.pitch), -Math.cos(actor.yaw) * Math.cos(actor.pitch)];
+  }
+
+  class World {
+    constructor(options = {}) {
+      this.options = { parameters: Character.normalizeParams(options.parameters || {}), face: options.face || null };
+      this._nextId = 1;
+      this.time = 0;
+      this.kills = 0;
+      this.targetsMoving = false;
+      this.enemyFire = false;
+      this.bounds = { min: [-20, 0, -24], max: [20, 12, 12] };
+      this.projectiles = [];
+      this.effects = [];
+      this.events = [];
+      this.skills = null;
+      this.player = this._actor("player", 0, "玩家", [0, 0, 7], this.options.parameters, this.options.face);
+      this.actors = [this.player,
+        this._actor("target-1", 1, "标准靶", [-5, 0, -9], Character.DEFAULTS),
+        this._actor("target-2", 1, "长腿靶", [0, 0, -15], { ...Character.DEFAULTS, legLength: 1.4 }),
+        this._actor("target-3", 1, "大头靶", [5, 0, -10], { ...Character.DEFAULTS, headScale: 1.5 }),
+      ];
+      this.obstacles = [
+        { id: "cover-left", center: [-7.5, 0.75, -3], size: [3, 1.5, 1], color: [0.27, 0.32, 0.36] },
+        { id: "cover-right", center: [7.5, 1.4, -3], size: [3, 2.8, 1], color: [0.3, 0.34, 0.39] },
+        { id: "pillar", center: [-2.5, 1.7, -11], size: [1.2, 3.4, 1.2], color: [0.37, 0.37, 0.42] },
+        { id: "wall-west", center: [-20.25, 3, -6], size: [0.5, 6, 36], color: [0.2, 0.25, 0.28] },
+        { id: "wall-east", center: [20.25, 3, -6], size: [0.5, 6, 36], color: [0.2, 0.25, 0.28] },
+        { id: "wall-north", center: [0, 3, -24.25], size: [40.5, 6, 0.5], color: [0.2, 0.25, 0.28] },
+        { id: "wall-south", center: [0, 3, 12.25], size: [40.5, 6, 0.5], color: [0.2, 0.25, 0.28] },
+      ];
+      this.pickups = [];
+      this._spawnSupplies();
+      this.message("靠近物资按 E 拾取；先拿枪和通用弹药。", "info");
+    }
+
+    _actor(id, team, label, pos, parameters, face = null) {
+      const character = Character.createCharacter(parameters);
+      const head = character.parts.find((part) => part.id === "head");
+      const maxHp = CONFIG.baseHP * character.params.torsoScale ** 3;
+      const maxMana = CONFIG.baseMana * character.params.headScale ** 3;
+      const skills = Object.fromEntries(["jetpack", "autoaim", "weaken"].map((name) => [name, { level: 1, count: 0, levels: {} }]));
+      return { id, team, label, pos: [...pos], spawnPos: [...pos], vel: [0, 0, 0], yaw: 0, pitch: 0,
+        character, face, maxHp, hp: maxHp, maxMana, mana: maxMana,
+        eyeHeight: head.center[1] + head.size[1] * 0.2,
+        speed: CONFIG.baseSpeed * character.params.legLength / Character.DEFAULTS.legLength,
+        alive: true, grounded: true, statuses: [], nextFireAt: 0, nextEnemyFireAt: 1.5,
+        inventory: { weapons: [], selected: 0, ammo: 0, manaPotions: 0, skills } };
+    }
+
+    _spawnSupplies() {
+      const supply = (type, label, pos, extra = {}) => this.pickups.push({ id: `pickup-${this._nextId++}`, type, label, pos, ...extra });
+      supply("weapon", "手枪", [-0.6, 0.35, 5.6], { weaponType: "pistol" });
+      supply("ammo", "通用弹药 × 120", [0.6, 0.35, 5.6], { amount: 120 });
+      supply("weapon", "小刀", [-3, 0.35, 5.2], { weaponType: "knife" });
+      supply("weapon", "步枪", [3, 0.35, 5.2], { weaponType: "rifle" });
+      supply("mana", "蓝瓶 × 3", [4.6, 0.35, 5.2], { amount: 3 });
+      supply("ammo", "通用弹药 × 240", [-4.6, 0.35, 5.2], { amount: 240 });
+      for (const [index, skillId] of ["jetpack", "autoaim", "weaken"].entries()) {
+        const label = { jetpack: "弹射背包", autoaim: "自瞄（消耗品）", weaken: "虚弱榴弹" }[skillId];
+        supply("skill", `${label} × 3`, [(index - 1) * 2.5, 0.35, 2.7], { skillId, amount: 3, level: 1 });
+      }
+    }
+
+    actorBoxes(actor) { return actorBoxes(actor); }
+    eye(actor = this.player) { return eye(actor); }
+    aimDirection(actor = this.player) { return aimDirection(actor); }
+    findActor(id) { return this.actors.find((actor) => actor.id === id) || null; }
+    enemiesOf(actor = this.player) { return this.actors.filter((other) => other.alive && other.team !== actor.team); }
+    message(text, type = "info") {
+      this.events.push({ time: this.time, text, type });
+      if (this.events.length > 30) this.events.shift();
+      return text;
+    }
+    addEffect(effect) {
+      const value = { id: `effect-${this._nextId++}`, expiresAt: this.time + 0.25, ...effect };
+      if (effect.duration !== undefined) value.expiresAt = this.time + effect.duration;
+      this.effects.push(value);
+      return value;
+    }
+    lineOfSight(from, to) { return !this.obstacles.some((box) => segmentBox(from, to, box) !== null); }
+
+    nearestPickup() {
+      let nearest = null, distance = CONFIG.pickupRange;
+      for (const item of this.pickups) {
+        const current = Math.hypot(item.pos[0] - this.player.pos[0], item.pos[2] - this.player.pos[2]);
+        // Pickups are reached from the feet so very tall bodies can still collect ground supplies.
+        if (current < distance && Math.abs(item.pos[1] - this.player.pos[1]) < 2) {
+          nearest = item; distance = current;
+        }
+      }
+      return nearest;
+    }
+    interact() {
+      if (!this.player.alive) return { ok: false, message: "倒下后需要先复位。" };
+      const item = this.nearestPickup(), inventory = this.player.inventory;
+      if (!item) return { ok: false, message: this.message("附近没有可拾取的物资。", "info") };
+      if (item.type === "weapon") {
+        inventory.weapons.push({ id: `weapon-${this._nextId++}`, type: item.weaponType });
+        inventory.selected = inventory.weapons.length - 1;
+      } else if (item.type === "ammo") inventory.ammo += item.amount;
+      else if (item.type === "mana") inventory.manaPotions += item.amount;
+      else if (item.type === "skill") {
+        const skill = inventory.skills[item.skillId];
+        if (!skill) return { ok: false, message: "未知技能。" };
+        const level = item.level || 1, amount = item.amount || 1;
+        skill.levels[level] = (skill.levels[level] || 0) + amount;
+        skill.count += amount;
+        skill.level = Math.max(skill.level, level);
+      } else return { ok: false, message: "未知物资。" };
+      this.pickups.splice(this.pickups.indexOf(item), 1);
+      return { ok: true, message: this.message(`拾取：${item.label}`, "pickup"), item };
+    }
+    selectWeapon(index) {
+      if (!Number.isInteger(index) || !this.player.inventory.weapons[index]) return false;
+      this.player.inventory.selected = index;
+      return true;
+    }
+    useManaPotion() {
+      const player = this.player;
+      if (!player.alive || player.inventory.manaPotions <= 0 || player.mana >= player.maxMana) return false;
+      player.inventory.manaPotions--;
+      // Each bottle restores 60 units rather than enlarging the character's mana capacity.
+      player.mana = Math.min(player.maxMana, player.mana + 60);
+      this.message("使用蓝瓶：恢复 60 蓝量。", "heal");
+      return true;
+    }
+    upgradeSkill(id) {
+      const skill = this.player.inventory.skills[id];
+      if (!skill || id === "autoaim") { this.message("本轮验证只合成普通技能。", "info"); return false; }
+      const tiers = Object.entries(skill.levels).filter(([, amount]) => amount >= 3).map(([level]) => Number(level)).sort((a, b) => a - b);
+      if (!tiers.length) { this.message("合成需要三份同名、同级普通技能。", "info"); return false; }
+      const tier = tiers[0];
+      skill.levels[tier] -= 3;
+      if (!skill.levels[tier]) delete skill.levels[tier];
+      skill.levels[tier + 1] = (skill.levels[tier + 1] || 0) + 1;
+      skill.count -= 2;
+      skill.level = Math.max(...Object.keys(skill.levels).map(Number));
+      this.message(`技能合成：${id === "jetpack" ? "弹射背包" : "虚弱榴弹"} → ${tier + 1} 级`, "upgrade");
+      return true;
+    }
+    consumeSkill(id, amount = 1) {
+      const skill = this.player.inventory.skills[id];
+      if (!skill || !Number.isInteger(amount) || amount <= 0 || skill.count < amount) return false;
+      let remaining = amount;
+      const tiers = Object.keys(skill.levels).map(Number).sort((a, b) => b - a);
+      if (tiers.reduce((sum, tier) => sum + skill.levels[tier], 0) < amount) return false;
+      for (const tier of tiers) {
+        const used = Math.min(remaining, skill.levels[tier]);
+        skill.levels[tier] -= used;
+        remaining -= used;
+        if (!skill.levels[tier]) delete skill.levels[tier];
+        if (!remaining) break;
+      }
+      skill.count -= amount;
+      skill.level = Math.max(1, ...Object.keys(skill.levels).map(Number));
+      return true;
+    }
+
+    applyStatus(actor, type, duration, sourceId = null, data = {}) {
+      if (!actor || !actor.alive || !Number.isFinite(duration) || duration <= 0) return null;
+      const status = { id: `status-${this._nextId++}`, type, expiresAt: this.time + duration, sourceId, data: { ...data } };
+      actor.statuses.push(status);
+      return status;
+    }
+    hasStatus(actor, type) { return actor.statuses.some((status) => status.type === type && status.expiresAt > this.time); }
+    damage(actor, amount, source = null) {
+      if (!actor || !actor.alive || !(amount > 0) || this.hasStatus(actor, "invulnerable")) return 0;
+      const sourceId = typeof source === "string" ? source : source?.ownerId || source?.id;
+      const attacker = this.findActor(sourceId);
+      let multiplier = 1;
+      if (attacker) for (const status of attacker.statuses) {
+        if (status.type === "weaken" && status.expiresAt > this.time) multiplier = Math.min(multiplier, status.data.damageMultiplier ?? 0.45);
+      }
+      const actual = Math.min(actor.hp, amount * multiplier);
+      actor.hp = Math.max(0, actor.hp - actual);
+      if (actor.hp <= 0) {
+        actor.alive = false;
+        actor.vel = [0, 0, 0];
+        if (actor !== this.player && attacker?.team === this.player.team) this.kills++;
+        this.message(actor === this.player ? "你已倒下。点击「重新开始」复位训练场。" : `${actor.label}已击倒。`, "death");
+      }
+      return actual;
+    }
+
+    spawnProjectile(options) {
+      const projectile = { id: `projectile-${this._nextId++}`, pos: [...options.pos], previousPos: [...options.pos],
+        vel: [...options.vel], ownerId: options.ownerId, team: options.team ?? this.findActor(options.ownerId)?.team,
+        damage: options.damage || 0, radius: options.radius ?? 0.045, gravity: options.gravity ?? 0,
+        expiresAt: this.time + (options.lifetime ?? 4), color: options.color || [1, 0.8, 0.3], onHit: options.onHit || null };
+      this.projectiles.push(projectile);
+      return projectile;
+    }
+    fire() {
+      const player = this.player;
+      if (!player.alive || this.time < player.nextFireAt || this.hasStatus(player, "disarmed") || this.hasStatus(player, "stun")) return false;
+      const item = player.inventory.weapons[player.inventory.selected], weapon = item && WEAPONS[item.type];
+      if (!weapon) return false;
+      if (player.inventory.ammo < weapon.ammoCost) return false;
+      player.nextFireAt = this.time + weapon.interval;
+      player.inventory.ammo -= weapon.ammoCost;
+      const from = eye(player), direction = aimDirection(player);
+      if (weapon.melee) {
+        const to = add(from, mul(direction, player.character.params.armLength + 0.45));
+        const hit = this._firstHit(from, to, 0.11, player.id, player.team);
+        if (hit) {
+          if (hit.actor) this.damage(hit.actor, weapon.damage, player.id);
+          this.addEffect({ type: "hit", pos: hit.pos, color: hit.actor ? [1, 0.25, 0.15] : [0.8, 0.8, 0.8] });
+        }
+        this.addEffect({ type: "melee", pos: add(from, mul(direction, 0.6)), duration: 0.12, color: weapon.color });
+      } else {
+        this.spawnProjectile({ pos: from, vel: mul(direction, weapon.speed), ownerId: player.id, team: player.team,
+          damage: weapon.damage, color: weapon.color });
+      }
+      this.addEffect({ type: "shot", pos: add(from, mul(direction, 0.35)), duration: 0.06, color: weapon.color });
+      return true;
+    }
+
+    _firstHit(from, to, radius, ownerId, team) {
+      let best = null;
+      const check = (box, actor = null, obstacle = null) => {
+        const fraction = segmentBox(from, to, box, radius);
+        if (fraction !== null && (!best || fraction < best.fraction)) {
+          best = { fraction, actor, obstacle, partId: actor ? box.id : null, pos: add(from, mul(sub(to, from), fraction)) };
+        }
+      };
+      // Obstacle wins ties so an actor touching a wall cannot be hit through it.
+      for (const obstacle of this.obstacles) check(obstacle, null, obstacle);
+      if (to[1] <= radius) {
+        const fraction = from[1] <= radius ? 0 : (from[1] - radius) / (from[1] - to[1]);
+        if (!best || fraction < best.fraction) best = { fraction, actor: null, obstacle: { id: "floor" }, partId: null,
+          pos: add(from, mul(sub(to, from), fraction)) };
+      }
+      for (const actor of this.actors) {
+        if (!actor.alive || actor.id === ownerId || actor.team === team) continue;
+        for (const box of actorBoxes(actor)) check(box, actor, null);
+      }
+      return best;
+    }
+    _updateProjectiles(dt) {
+      const active = this.projectiles;
+      this.projectiles = [];
+      for (const projectile of active) {
+        if (projectile.expiresAt <= this.time) continue;
+        projectile.previousPos = [...projectile.pos];
+        projectile.vel[1] -= projectile.gravity * dt;
+        const to = add(projectile.pos, mul(projectile.vel, dt));
+        const hit = this._firstHit(projectile.pos, to, projectile.radius, projectile.ownerId, projectile.team);
+        if (hit) {
+          projectile.pos = hit.pos;
+          if (hit.actor && projectile.damage > 0) this.damage(hit.actor, projectile.damage, projectile.ownerId);
+          this.addEffect({ type: "hit", pos: [...hit.pos], color: hit.actor ? [1, 0.3, 0.12] : [0.85, 0.85, 0.7], duration: 0.17 });
+          if (projectile.onHit) projectile.onHit({ world: this, projectile, ...hit });
+        } else {
+          projectile.pos = to;
+          this.projectiles.push(projectile);
+        }
+      }
+    }
+
+    _moveAxis(actor, axis, displacement) {
+      if (!displacement) return;
+      let permitted = displacement;
+      const boxes = actorBoxes(actor), epsilon = 0.00001;
+      for (const body of boxes) {
+        const a = bounds(body);
+        for (const obstacle of this.obstacles) {
+          const b = bounds(obstacle);
+          const otherAxes = [0, 1, 2].filter((value) => value !== axis);
+          if (!otherAxes.every((other) => a.max[other] > b.min[other] + epsilon && a.min[other] < b.max[other] - epsilon)) continue;
+          if (displacement > 0 && a.max[axis] <= b.min[axis] + epsilon) permitted = Math.min(permitted, Math.max(0, b.min[axis] - a.max[axis] - epsilon));
+          if (displacement < 0 && a.min[axis] >= b.max[axis] - epsilon) permitted = Math.max(permitted, Math.min(0, b.max[axis] - a.min[axis] + epsilon));
+        }
+      }
+      actor.pos[axis] += permitted;
+      if (Math.abs(permitted - displacement) > 0.000001) {
+        actor.vel[axis] = 0;
+        if (axis === 1 && displacement < 0) actor.grounded = true;
+      }
+      if (axis === 1 && actor.pos[1] < 0) { actor.pos[1] = 0; actor.vel[1] = 0; actor.grounded = true; }
+    }
+    _movePlayer(dt, input) {
+      const actor = this.player;
+      if (!actor.alive) return;
+      const immobile = this.hasStatus(actor, "stun") || this.hasStatus(actor, "root");
+      let forward = immobile ? 0 : Number(input.forward || 0), right = immobile ? 0 : Number(input.right || 0);
+      const inputSize = Math.hypot(forward, right);
+      if (inputSize > 1) { forward /= inputSize; right /= inputSize; }
+      let speed = actor.speed * (input.sprint ? 1.5 : 1);
+      for (const status of actor.statuses) if (status.type === "slow") speed *= status.data.multiplier ?? 0.5;
+      const targetX = (Math.sin(actor.yaw) * forward + Math.cos(actor.yaw) * right) * speed;
+      const targetZ = (-Math.cos(actor.yaw) * forward + Math.sin(actor.yaw) * right) * speed;
+      // Acceleration leaves script-applied horizontal impulses visible instead of replacing them.
+      const blend = 1 - Math.exp(-(actor.grounded ? 12 : 3) * dt);
+      actor.vel[0] += (targetX - actor.vel[0]) * blend;
+      actor.vel[2] += (targetZ - actor.vel[2]) * blend;
+      if (input.jump && actor.grounded && !immobile) { actor.vel[1] = CONFIG.jumpSpeed; actor.grounded = false; }
+      actor.vel[1] -= CONFIG.gravity * dt;
+      actor.grounded = false;
+      // Substeps prevent diagonal corner clipping at large movement speeds.
+      const steps = Math.max(1, Math.ceil(Math.hypot(...actor.vel) * dt / 0.2));
+      for (let step = 0; step < steps; step++) {
+        this._moveAxis(actor, 0, actor.vel[0] * dt / steps);
+        this._moveAxis(actor, 2, actor.vel[2] * dt / steps);
+        // Constrain the complete body even above the walls. Do this before gravity
+        // so a temporarily out-of-bounds body cannot land on the wall's top.
+        for (const axis of [0, 2]) {
+          const minimum = this.bounds.min[axis] - actor.character.bounds.min[axis];
+          const maximum = this.bounds.max[axis] - actor.character.bounds.max[axis];
+          const clamped = Math.max(minimum, Math.min(maximum, actor.pos[axis]));
+          if (clamped !== actor.pos[axis]) { actor.pos[axis] = clamped; actor.vel[axis] = 0; }
+        }
+        this._moveAxis(actor, 1, actor.vel[1] * dt / steps);
+      }
+    }
+    _updateTargets(dt) {
+      for (const [index, actor] of this.actors.slice(1).entries()) {
+        if (!actor.alive) continue;
+        if (this.targetsMoving && !this.hasStatus(actor, "root") && !this.hasStatus(actor, "stun")) {
+          this._moveAxis(actor, 0, actor.spawnPos[0] + Math.sin(this.time * 0.8 + index) * 1.7 - actor.pos[0]);
+        }
+        if (!this.enemyFire || !this.player.alive || this.time < actor.nextEnemyFireAt || this.hasStatus(actor, "stun") || this.hasStatus(actor, "disarmed")) continue;
+        actor.nextEnemyFireAt = this.time + 1.4;
+        const from = eye(actor), to = eye(this.player);
+        if (!this.lineOfSight(from, to)) continue;
+        const direction = normalized(sub(to, from));
+        this.spawnProjectile({ pos: from, vel: mul(direction, 22), ownerId: actor.id, team: actor.team, damage: 9,
+          color: [1, 0.28, 0.2], radius: 0.065, lifetime: 4 });
+      }
+    }
+    update(dt, input = {}) {
+      if (!Number.isFinite(dt) || dt <= 0) return;
+      dt = Math.min(dt, 0.25);
+      this.time += dt;
+      for (const actor of this.actors) actor.statuses = actor.statuses.filter((status) => status.expiresAt > this.time);
+      if (this.skills?.update) this.skills.update(dt);
+      this._movePlayer(dt, input);
+      if (input.fire) this.fire();
+      this._updateTargets(dt);
+      this._updateProjectiles(dt);
+      this.effects = this.effects.filter((effect) => effect.expiresAt > this.time);
+    }
+    resetTargets() {
+      this.kills = 0;
+      this.projectiles = [];
+      for (const actor of this.actors.slice(1)) {
+        actor.pos = [...actor.spawnPos]; actor.vel = [0, 0, 0]; actor.alive = true; actor.hp = actor.maxHp;
+        actor.statuses = []; actor.nextEnemyFireAt = this.time + 1.5;
+      }
+      this.message("训练靶已复位。", "info");
+    }
+    resetPlayer() {
+      const player = this.player;
+      player.pos = [...player.spawnPos]; player.vel = [0, 0, 0]; player.hp = player.maxHp; player.mana = player.maxMana;
+      player.alive = true; player.grounded = true; player.statuses = []; player.nextFireAt = this.time;
+    }
+    reset() {
+      this.resetPlayer(); this.resetTargets();
+      this.effects = [];
+      this.message("训练场已复位，保留已拾取的物品。", "info");
+    }
+  }
+  World.WEAPONS = WEAPONS;
+  World.CONFIG = CONFIG;
+  const api = Object.assign(root.PixelFPS || {}, { World, CONFIG, WEAPONS, actorBoxes, eye, aimDirection, segmentBox });
+  root.PixelFPS = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(globalThis);
+</script>
+<script>(function attachPixelSkillRuntime(root) {
+  "use strict";
+
+  root.PixelFPSSkills = root.PixelFPSSkills || Object.create(null);
+
+  const valueAt = (value, level) => Number(typeof value === "function" ? value(level) : value || 0);
+  const copy = (value) => JSON.parse(JSON.stringify(value));
+
+  /** Skill numbers are prototype values. Definitions own behavior; this runner owns activation. */
+  class PixelSkillRuntime {
+    constructor(world, definitions = root.PixelFPSSkills) {
+      this.world = world;
+      this.definitions = Array.isArray(definitions)
+        ? Object.fromEntries(definitions.map((definition) => [definition.id, definition]))
+        : { ...definitions };
+      this.cooldowns = Object.create(null);
+      this.instances = [];
+      this.nextInstanceId = 1;
+    }
+
+    getState(id) {
+      const definition = this.definitions[id];
+      const owned = this.world.player?.inventory?.skills?.[id];
+      const level = Math.max(1, Number(owned?.level) || 1);
+      return {
+        id,
+        name: definition?.name || id,
+        kind: definition?.kind || "normal",
+        level,
+        count: Math.max(0, Number(owned?.count) || 0),
+        cooldown: definition ? valueAt(definition.cooldown, level) : 0,
+        remaining: Math.max(0, this.cooldowns[id] || 0),
+        active: this.instances.filter((instance) => instance.skillId === id).length,
+        manaCost: definition ? valueAt(definition.manaCost, level) : 0,
+        duration: definition ? valueAt(definition.duration, level) : 0,
+      };
+    }
+
+    cast(id) {
+      const definition = this.definitions[id];
+      const world = this.world;
+      const caster = world.player;
+      const fail = (message) => ({ ok: false, message });
+      if (!definition) return fail("技能脚本尚未载入。");
+      if (!caster || caster.alive === false || caster.hp <= 0) return fail("当前无法使用技能。");
+      const owned = caster.inventory?.skills?.[id];
+      if (!owned || !Number.isFinite(owned.count) || owned.count < 1) return fail("还没有拾取这个技能。");
+      const blocked = (caster.statuses || []).some((status) =>
+        (status.type === "silence" || status.type === "stun") &&
+        (status.expiresAt === undefined || status.expiresAt > world.time));
+      if (blocked) return fail("当前状态不允许释放技能。");
+      const state = this.getState(id);
+      if (state.remaining > 0) return fail(`技能冷却中，还需 ${state.remaining.toFixed(1)} 秒。`);
+      if (!Number.isFinite(state.manaCost) || state.manaCost < 0 ||
+          !Number.isFinite(state.duration) || state.duration < 0 ||
+          !Number.isFinite(state.cooldown) || state.cooldown < 0) return fail("技能参数无效。");
+      if (!Number.isFinite(caster.mana) || caster.mana < state.manaCost) return fail("蓝量不足。");
+
+      const instance = {
+        id: `${caster.id || "player"}:${id}:${this.nextInstanceId++}`,
+        skillId: id,
+        world,
+        caster,
+        definition,
+        level: state.level,
+        age: 0,
+        duration: state.duration,
+        remaining: state.duration,
+        record: Object.create(null),
+      };
+      if (definition.canCast) {
+        const checked = definition.canCast(instance);
+        if (checked === false) return fail("当前无法发动这个技能。");
+        if (typeof checked === "string") return fail(checked);
+        if (checked?.ok === false) return fail(checked.message || "当前无法发动这个技能。");
+      }
+
+      // Preflight above is side-effect free. Roll back resource payment if a script cannot start.
+      const previousMana = caster.mana;
+      const previousSkill = copy(owned);
+      const previousCooldown = this.cooldowns[id] || 0;
+      if (definition.kind === "ultimate") {
+        if (typeof world.consumeSkill === "function") {
+          if (world.consumeSkill(id, 1) === false) return fail("技能份数不足。");
+        } else {
+          // Small isolated worlds (including tests) can omit the inventory facade.
+          const levels = owned.levels;
+          if (levels) {
+            const highest = Object.keys(levels).map(Number).filter((level) => levels[level] > 0).sort((a, b) => b - a)[0];
+            if (highest === undefined) return fail("技能份数不足。");
+            if (--levels[highest] <= 0) delete levels[highest];
+            owned.level = Math.max(1, ...Object.keys(levels).map(Number));
+          }
+          owned.count -= 1;
+        }
+      }
+      caster.mana -= state.manaCost;
+      this.cooldowns[id] = state.cooldown;
+      try {
+        if (definition.start && definition.start(instance) === false) throw new Error("技能未能启动。");
+      } catch (error) {
+        caster.mana = previousMana;
+        caster.inventory.skills[id] = previousSkill;
+        this.cooldowns[id] = previousCooldown;
+        if (definition.end) definition.end(instance, "failed");
+        return fail(error.message || "技能未能启动。");
+      }
+
+      if (state.duration > 0) this.instances.push(instance);
+      else if (definition.end) definition.end(instance, "complete");
+      const message = `${definition.name || id} · ${state.level} 级`;
+      if (world.message) world.message(message, "skill");
+      return { ok: true, message };
+    }
+
+    update(dt) {
+      if (!Number.isFinite(dt) || dt <= 0) return;
+      for (const id of Object.keys(this.cooldowns)) {
+        this.cooldowns[id] = Math.max(0, this.cooldowns[id] - dt);
+      }
+      for (const instance of [...this.instances]) {
+        if (instance.caster.alive === false || instance.caster.hp <= 0) {
+          this.finish(instance, "death");
+          continue;
+        }
+        const elapsed = Math.min(dt, instance.remaining);
+        const keep = instance.definition.update?.(instance, elapsed);
+        instance.age += elapsed;
+        instance.remaining = Math.max(0, instance.remaining - elapsed);
+        if (keep === false || instance.remaining <= 0) this.finish(instance, "complete");
+      }
+    }
+
+    finish(instance, reason) {
+      const index = this.instances.indexOf(instance);
+      if (index === -1) return;
+      this.instances.splice(index, 1);
+      instance.definition.end?.(instance, reason);
+    }
+
+    dispose() {
+      for (const instance of [...this.instances]) this.finish(instance, "dispose");
+      this.cooldowns = Object.create(null);
+    }
+  }
+
+  root.PixelSkillRuntime = PixelSkillRuntime;
+  if (typeof module !== "undefined" && module.exports) module.exports = PixelSkillRuntime;
+})(globalThis);
+</script>
+<script>(function registerJetpack(root) {
+  "use strict";
+
+  // Prototype values: one impulse, scaled by collected skill level.
+  const definition = {
+    id: "jetpack",
+    name: "弹射背包",
+    kind: "normal",
+    description: "向上弹射，并沿瞄准方向获得少量水平推力。",
+    manaCost: 10,
+    cooldown: 5,
+    duration: 0,
+    start({ world, caster, level }) {
+      const direction = world.aimDirection(caster);
+      const horizontal = Math.hypot(direction[0], direction[2]);
+      const thrust = 2.5 + (level - 1) * 0.5;
+      if (horizontal > 0.001) {
+        caster.vel[0] += direction[0] / horizontal * thrust;
+        caster.vel[2] += direction[2] / horizontal * thrust;
+      }
+      caster.vel[1] += 8 + (level - 1) * 1.8;
+      caster.grounded = false;
+      world.addEffect?.({ type: "burst", pos: [...caster.pos], radius: 0.55, color: [1, 0.73, 0.33], duration: 0.35 });
+    },
+  };
+
+  (root.PixelFPSSkills ||= Object.create(null))[definition.id] = definition;
+  if (typeof module !== "undefined" && module.exports) module.exports = definition;
+})(globalThis);
+</script>
+<script>(function registerAutoaim(root) {
+  "use strict";
+
+  function findVisibleTarget(instance) {
+    const { world, caster } = instance;
+    const origin = world.eye(caster);
+    const direction = world.aimDirection(caster);
+    const threshold = Math.cos(Math.PI / 6);
+    let best = null;
+    let bestDot = threshold;
+    let bestDistance = Infinity;
+    for (const actor of world.enemiesOf(caster)) {
+      if (actor.alive === false || actor.hp <= 0) continue;
+      const target = world.eye(actor);
+      const offset = target.map((value, axis) => value - origin[axis]);
+      const distance = Math.hypot(...offset);
+      if (distance < 0.001) continue;
+      const dot = offset.reduce((sum, value, axis) => sum + value * direction[axis], 0) / distance;
+      if (dot < threshold || !world.lineOfSight(origin, target)) continue;
+      if (dot > bestDot || (dot === bestDot && distance < bestDistance)) {
+        best = { actor, offset };
+        bestDot = dot;
+        bestDistance = distance;
+      }
+    }
+    return best;
+  }
+
+  // Prototype: consumes a collected ultimate copy; it aims, but never pulls the trigger.
+  const definition = {
+    id: "autoaim",
+    name: "自动瞄准",
+    kind: "ultimate",
+    description: "持续锁定准心周围 30° 内、没有遮挡的敌人；仍需自己开火。",
+    manaCost: 18,
+    cooldown: 0,
+    duration: (level) => 7 + (level - 1) * 2,
+    start(instance) {
+      instance.record.targetId = null;
+    },
+    update(instance) {
+      const target = findVisibleTarget(instance);
+      instance.record.targetId = target?.actor.id || null;
+      if (!target) return;
+      const [x, y, z] = target.offset;
+      instance.caster.yaw = Math.atan2(x, -z);
+      instance.caster.pitch = Math.atan2(y, Math.hypot(x, z));
+    },
+    end(instance) {
+      // Only this cast's lock is cleared; concurrent autoaim casts keep their own records.
+      instance.record.targetId = null;
+    },
+  };
+
+  (root.PixelFPSSkills ||= Object.create(null))[definition.id] = definition;
+  if (typeof module !== "undefined" && module.exports) module.exports = definition;
+})(globalThis);
+</script>
+<script>(function registerWeaken(root) {
+  "use strict";
+
+  // Prototype: a physical grenade carrying a debuff, with no direct damage of its own.
+  const definition = {
+    id: "weaken",
+    name: "虚弱榴弹",
+    kind: "normal",
+    description: "发射实体榴弹，撞击后让附近敌人的伤害输出降低。",
+    manaCost: 16,
+    cooldown: 9,
+    duration: 0,
+    start(instance) {
+      const { world, caster, level } = instance;
+      const direction = world.aimDirection(caster);
+      const origin = world.eye(caster);
+      const radius = 3.5 + (level - 1) * 0.5;
+      instance.record.exploded = false;
+      const projectile = world.spawnProjectile({
+        pos: [...origin],
+        vel: direction.map((value, axis) => value * 17 + (axis === 1 ? 2 : 0)),
+        ownerId: caster.id,
+        team: caster.team,
+        damage: 0,
+        radius: 0.14,
+        gravity: 9.8,
+        lifetime: 5,
+        color: [0.81, 0.51, 1],
+        onHit({ pos, actor: directHit }) {
+          if (instance.record.exploded) return;
+          instance.record.exploded = true;
+          for (const enemy of world.enemiesOf(caster)) {
+            if (enemy.alive === false || enemy.hp <= 0) continue;
+            const torso = world.actorBoxes?.(enemy).find((part) => part.id === "torso");
+            const eye = world.eye(enemy);
+            const center = torso?.center || [enemy.pos[0], (enemy.pos[1] + eye[1]) / 2, enemy.pos[2]];
+            const inRange = Math.hypot(...center.map((value, axis) => value - pos[axis])) <= radius;
+            // A direct collision already proves contact. Splash needs an unobstructed route.
+            if (enemy.id === directHit?.id || (inRange && world.lineOfSight(pos, center))) {
+              world.applyStatus(enemy, "weaken", 6 + (level - 1) * 2, instance.id, { damageMultiplier: 0.45 });
+            }
+          }
+          world.addEffect?.({ type: "burst", pos: [...pos], radius, color: [0.81, 0.51, 1], duration: 0.7 });
+          world.message?.("虚弱榴弹爆开", "skill");
+        },
+      });
+      if (!projectile) return false;
+      instance.record.projectileId = projectile.id;
+    },
+  };
+
+  (root.PixelFPSSkills ||= Object.create(null))[definition.id] = definition;
+  if (typeof module !== "undefined" && module.exports) module.exports = definition;
+})(globalThis);
+</script>
+<script>(function attachPixelFPSRenderer(root) {
+  'use strict';
+
+  // A deliberately small WebGL renderer: the simulation owns every position,
+  // collision box and gameplay rule. Visual projectile size is independent of
+  // the collision radius and is enlarged slightly so flight is easy to inspect.
+  const VERTEX = `
+    attribute vec3 a_position;
+    attribute vec3 a_normal;
+    attribute vec2 a_uv;
+    uniform mat4 u_matrix;
+    uniform vec3 u_center;
+    uniform vec3 u_size;
+    varying vec3 v_normal;
+    varying vec3 v_world;
+    varying vec2 v_uv;
+    void main() {
+      v_world = a_position * u_size + u_center;
+      v_normal = a_normal;
+      v_uv = a_uv;
+      gl_Position = u_matrix * vec4(v_world, 1.0);
+    }
+  `;
+  const FRAGMENT = `
+    precision mediump float;
+    uniform vec4 u_color;
+    uniform vec3 u_eye;
+    uniform float u_unlit;
+    uniform sampler2D u_face;
+    uniform float u_faceEnabled;
+    varying vec3 v_normal;
+    varying vec3 v_world;
+    varying vec2 v_uv;
+    void main() {
+      float light = 0.63 + max(dot(v_normal, normalize(vec3(-0.5, 1.0, 0.7))), 0.0) * 0.37;
+      vec3 color = u_color.rgb * mix(light, 1.0, u_unlit);
+      if (u_faceEnabled > 0.5 && v_normal.z > 0.5) {
+        vec4 paint = texture2D(u_face, v_uv);
+        color = mix(color, paint.rgb, paint.a);
+      }
+      float fog = smoothstep(35.0, 95.0, length(v_world - u_eye)) * 0.55;
+      gl_FragColor = vec4(mix(color, vec3(0.10, 0.15, 0.19), fog), u_color.a);
+    }
+  `;
+  const SKY = [0.10, 0.15, 0.19, 1];
+  const ITEM_COLORS = {
+    weapon: [0.97, 0.74, 0.29, 1], pistol: [0.97, 0.74, 0.29, 1],
+    ammo: [0.25, 0.79, 0.92, 1], battery: [0.25, 0.79, 0.92, 1], energy: [0.25, 0.79, 0.92, 1],
+    health: [0.35, 0.90, 0.59, 1], medkit: [0.35, 0.90, 0.59, 1],
+    mana: [0.40, 0.58, 1.0, 1], skill: [0.78, 0.49, 1.0, 1],
+  };
+  const asVec = value => Array.isArray(value) || ArrayBuffer.isView(value)
+    ? value : [value?.x || 0, value?.y || 0, value?.z || 0];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+  function colorValue(value, fallback) {
+    if (Array.isArray(value) && value.length >= 3) return [value[0], value[1], value[2], value[3] ?? 1];
+    if (typeof value === 'string' && /^#[\da-f]{6}$/i.test(value)) {
+      return [1, 3, 5].map(index => parseInt(value.slice(index, index + 2), 16) / 255).concat(1);
+    }
+    return fallback;
+  }
+
+  function multiply(a, b) {
+    const out = new Float32Array(16);
+    for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) {
+      for (let k = 0; k < 4; k++) out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+    }
+    return out;
+  }
+
+  function meshData() {
+    const positions = [], normals = [], uvs = [], indices = [];
+    const faces = [
+      [[0, 0, 1], [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]]],
+      [[0, 0, -1], [[1, -1, -1], [-1, -1, -1], [-1, 1, -1], [1, 1, -1]]],
+      [[1, 0, 0], [[1, -1, 1], [1, -1, -1], [1, 1, -1], [1, 1, 1]]],
+      [[-1, 0, 0], [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]]],
+      [[0, 1, 0], [[-1, 1, 1], [1, 1, 1], [1, 1, -1], [-1, 1, -1]]],
+      [[0, -1, 0], [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]]],
+    ];
+    faces.forEach(([normal, vertices], faceIndex) => {
+      vertices.forEach((vertex, index) => {
+        positions.push(...vertex.map(value => value * 0.5));
+        normals.push(...normal);
+        // Imported canvas PNGs use top-left image coordinates, as in the editor.
+        uvs.push(...(faceIndex === 0 ? [[0, 1], [1, 1], [1, 0], [0, 0]][index] : [0, 0]));
+      });
+      const offset = faceIndex * 4;
+      indices.push(offset, offset + 1, offset + 2, offset, offset + 2, offset + 3);
+    });
+    const corners = [
+      [-0.5, -0.5, -0.5], [0.5, -0.5, -0.5], [0.5, 0.5, -0.5], [-0.5, 0.5, -0.5],
+      [-0.5, -0.5, 0.5], [0.5, -0.5, 0.5], [0.5, 0.5, 0.5], [-0.5, 0.5, 0.5],
+    ];
+    const edges = [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]];
+    return { positions, normals, uvs, indices, edges: edges.flatMap(edge => edge.flatMap(index => corners[index])) };
+  }
+
+  class PixelFPSRenderer {
+    constructor(canvas) {
+      if (!canvas?.getContext) throw new Error('训练场需要一个有效的 canvas。');
+      this.canvas = canvas;
+      this.gl = canvas.getContext('webgl', { alpha: false, antialias: true, depth: true });
+      if (!this.gl) throw new Error('无法开启 WebGL，请检查浏览器硬件加速设置。');
+      this.width = 1;
+      this.height = 1;
+      this.fov = 75 * Math.PI / 180;
+      this._faces = new Map();
+      this._buffers = [];
+      this._lost = false;
+      this._disposed = false;
+      this._gridKey = '';
+      this._onLost = event => { event.preventDefault(); this._lost = true; };
+      this._onRestored = () => {
+        if (this._disposed) return;
+        this._lost = false;
+        this._buffers = [];
+        this._gridKey = '';
+        this._faces.forEach(record => { record.texture = null; });
+        this._initGL();
+        if (this._world) this.render(this._world);
+      };
+      canvas.addEventListener('webglcontextlost', this._onLost);
+      canvas.addEventListener('webglcontextrestored', this._onRestored);
+      this._initGL();
+      this._resizeObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(() => this.resize()) : null;
+      this._resizeObserver?.observe(canvas);
+      this.resize();
+    }
+
+    _initGL() {
+      const gl = this.gl;
+      const compile = (type, source) => {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          const detail = gl.getShaderInfoLog(shader);
+          gl.deleteShader(shader);
+          throw new Error('训练场着色器初始化失败：' + detail);
+        }
+        return shader;
+      };
+      const vertex = compile(gl.VERTEX_SHADER, VERTEX), fragment = compile(gl.FRAGMENT_SHADER, FRAGMENT);
+      this.program = gl.createProgram();
+      gl.attachShader(this.program, vertex);
+      gl.attachShader(this.program, fragment);
+      gl.linkProgram(this.program);
+      gl.deleteShader(vertex);
+      gl.deleteShader(fragment);
+      if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) throw new Error('训练场渲染程序链接失败。');
+      this.loc = {};
+      ['matrix', 'center', 'size', 'color', 'eye', 'unlit', 'face', 'faceEnabled'].forEach(name => {
+        this.loc[name] = gl.getUniformLocation(this.program, 'u_' + name);
+      });
+      ['position', 'normal', 'uv'].forEach(name => { this.loc[name] = gl.getAttribLocation(this.program, 'a_' + name); });
+      const mesh = meshData();
+      this.box = this._geometry(mesh.positions, mesh.normals, mesh.uvs, mesh.indices);
+      this.edges = this._geometry(mesh.edges);
+      this.grid = this._geometry([]);
+      this.lines = this._geometry([]);
+      this._emptyTexture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, this._emptyTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 0]));
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LEQUAL);
+      gl.enable(gl.CULL_FACE);
+      gl.cullFace(gl.BACK);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      gl.clearColor(...SKY);
+    }
+
+    _geometry(positions, normals, uvs, indices) {
+      const gl = this.gl;
+      const buffer = (target, data) => {
+        const result = gl.createBuffer();
+        this._buffers.push(result);
+        gl.bindBuffer(target, result);
+        gl.bufferData(target, data, gl.STATIC_DRAW);
+        return result;
+      };
+      return {
+        position: buffer(gl.ARRAY_BUFFER, new Float32Array(positions)),
+        normal: normals ? buffer(gl.ARRAY_BUFFER, new Float32Array(normals)) : null,
+        uv: uvs ? buffer(gl.ARRAY_BUFFER, new Float32Array(uvs)) : null,
+        indices: indices ? buffer(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices)) : null,
+        count: indices ? indices.length : positions.length / 3,
+      };
+    }
+
+    resize() {
+      if (this._disposed) return;
+      const rect = this.canvas.getBoundingClientRect();
+      this.width = Math.max(1, rect.width || this.canvas.clientWidth || 1);
+      this.height = Math.max(1, rect.height || this.canvas.clientHeight || 1);
+      const ratio = Math.min(root.devicePixelRatio || 1, 2);
+      const width = Math.max(1, Math.round(this.width * ratio)), height = Math.max(1, Math.round(this.height * ratio));
+      if (this.canvas.width !== width || this.canvas.height !== height) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+      }
+      if (!this._lost) this.gl.viewport(0, 0, width, height);
+    }
+
+    _camera(player, world = this._world) {
+      const eye = asVec(world?.eye ? world.eye(player) : root.PixelFPS?.eye ? root.PixelFPS.eye(player)
+        : [asVec(player.pos)[0], asVec(player.pos)[1] + (player.eyeHeight || 1.6), asVec(player.pos)[2]]);
+      const yaw = player.yaw || 0, pitch = player.pitch || 0;
+      const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      const right = [cy, 0, sy], up = [-sy * sp, cp, cy * sp], backward = [-sy * cp, -sp, cy * cp];
+      const view = new Float32Array([
+        right[0], up[0], backward[0], 0,
+        right[1], up[1], backward[1], 0,
+        right[2], up[2], backward[2], 0,
+        -dot(right, eye), -dot(up, eye), -dot(backward, eye), 1,
+      ]);
+      const f = 1 / Math.tan(this.fov / 2), near = 0.025, far = 160;
+      const projection = new Float32Array([
+        f / (this.width / this.height), 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, (far + near) / (near - far), -1,
+        0, 0, (2 * far * near) / (near - far), 0,
+      ]);
+      return { eye, right, up, backward, matrix: multiply(projection, view) };
+    }
+
+    // CSS pixels relative to the canvas; visible also rejects points behind the eye.
+    project(worldPoint, player = this._world?.player) {
+      if (!player) return null;
+      const camera = this._camera(player), point = asVec(worldPoint), m = camera.matrix;
+      const x = m[0] * point[0] + m[4] * point[1] + m[8] * point[2] + m[12];
+      const y = m[1] * point[0] + m[5] * point[1] + m[9] * point[2] + m[13];
+      const z = m[2] * point[0] + m[6] * point[1] + m[10] * point[2] + m[14];
+      const w = m[3] * point[0] + m[7] * point[1] + m[11] * point[2] + m[15];
+      if (w <= 0.025) return { x: -1, y: -1, depth: w, visible: false };
+      return { x: (x / w + 1) * this.width / 2, y: (1 - y / w) * this.height / 2, depth: w,
+        visible: Math.abs(x) <= w && Math.abs(y) <= w && z >= -w && z <= w };
+    }
+
+    _faceTexture(face) {
+      const source = typeof face === 'string' ? face : face?.png;
+      if (!source || !source.startsWith('data:image/png;base64,')) return null;
+      let record = this._faces.get(source);
+      if (!record) {
+        record = { image: new Image(), texture: null, ready: false, failed: false };
+        this._faces.set(source, record);
+        record.image.onload = () => { if (!this._disposed) record.ready = true; };
+        record.image.onerror = () => { record.failed = true; };
+        record.image.src = source;
+      }
+      if (!record.ready || record.failed) return null;
+      if (!record.texture) {
+        const gl = this.gl;
+        record.texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, record.texture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, record.image);
+      }
+      return record.texture;
+    }
+
+    _draw(mesh, mode, center, size, color, unlit = false, texture = null) {
+      const gl = this.gl, loc = this.loc;
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh.position);
+      gl.enableVertexAttribArray(loc.position);
+      gl.vertexAttribPointer(loc.position, 3, gl.FLOAT, false, 0, 0);
+      if (mesh.normal) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normal);
+        gl.enableVertexAttribArray(loc.normal);
+        gl.vertexAttribPointer(loc.normal, 3, gl.FLOAT, false, 0, 0);
+      } else { gl.disableVertexAttribArray(loc.normal); gl.vertexAttrib3f(loc.normal, 0, 1, 0); }
+      if (mesh.uv) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.uv);
+        gl.enableVertexAttribArray(loc.uv);
+        gl.vertexAttribPointer(loc.uv, 2, gl.FLOAT, false, 0, 0);
+      } else { gl.disableVertexAttribArray(loc.uv); gl.vertexAttrib2f(loc.uv, 0, 0); }
+      gl.uniform3fv(loc.center, center);
+      gl.uniform3fv(loc.size, size);
+      gl.uniform4fv(loc.color, color);
+      gl.uniform1f(loc.unlit, unlit ? 1 : 0);
+      gl.uniform1f(loc.faceEnabled, texture ? 1 : 0);
+      gl.bindTexture(gl.TEXTURE_2D, texture || this._emptyTexture);
+      if (mesh.indices) {
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indices);
+        gl.drawElements(mode, mesh.count, gl.UNSIGNED_SHORT, 0);
+      } else gl.drawArrays(mode, 0, mesh.count);
+    }
+
+    _box(center, size, color, texture = null, outline = false, unlit = false) {
+      this._draw(this.box, this.gl.TRIANGLES, center, size, color, unlit, texture);
+      if (outline) this._draw(this.edges, this.gl.LINES, center, size, [0.06, 0.09, 0.12, 0.7], true);
+    }
+
+    _line(from, to, color) {
+      const gl = this.gl;
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.lines.position);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([...from, ...to]), gl.DYNAMIC_DRAW);
+      this.lines.count = 2;
+      this._draw(this.lines, gl.LINES, [0, 0, 0], [1, 1, 1], color, true);
+    }
+
+    _floor(world) {
+      const bounds = world.bounds;
+      let minX = -24, maxX = 24, minZ = -24, maxZ = 24;
+      if (bounds?.min && bounds?.max) {
+        const min = asVec(bounds.min), max = asVec(bounds.max);
+        minX = min[0]; maxX = max[0]; minZ = min[2]; maxZ = max[2];
+      } else if (typeof bounds === 'number') minX = minZ = -(maxX = maxZ = bounds);
+      const width = maxX - minX, depth = maxZ - minZ;
+      this._box([(minX + maxX) / 2, -0.12, (minZ + maxZ) / 2], [width, 0.24, depth], [0.19, 0.245, 0.27, 1]);
+      const key = [minX, maxX, minZ, maxZ].join(',');
+      if (this._gridKey !== key) {
+        const lines = [];
+        for (let x = Math.ceil(minX / 2) * 2; x <= maxX; x += 2) lines.push(x, 0.004, minZ, x, 0.004, maxZ);
+        for (let z = Math.ceil(minZ / 2) * 2; z <= maxZ; z += 2) lines.push(minX, 0.004, z, maxX, 0.004, z);
+        const gl = this.gl;
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.grid.position);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lines), gl.STATIC_DRAW);
+        this.grid.count = lines.length / 3;
+        this._gridKey = key;
+      }
+      this._draw(this.grid, this.gl.LINES, [0, 0, 0], [1, 1, 1], [0.36, 0.47, 0.50, 0.30], true);
+    }
+
+    render(world) {
+      if (this._disposed || this._lost || !world?.player) return;
+      this._world = world;
+      this.resize();
+      const gl = this.gl, camera = this._camera(world.player, world), now = world.time || 0;
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.useProgram(this.program);
+      gl.uniformMatrix4fv(this.loc.matrix, false, camera.matrix);
+      gl.uniform3fv(this.loc.eye, camera.eye);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.uniform1i(this.loc.face, 0);
+      this._floor(world);
+
+      for (const obstacle of world.obstacles || []) {
+        this._box(asVec(obstacle.center), asVec(obstacle.size), colorValue(obstacle.color, [0.38, 0.45, 0.49, 1]), null, true);
+      }
+      for (const actor of world.actors || []) {
+        if (actor === world.player || actor.id === world.player.id || actor.alive === false || actor.hp <= 0) continue;
+        const boxes = world.actorBoxes ? world.actorBoxes(actor) : root.PixelFPS.actorBoxes(actor);
+        const weakened = (actor.statuses || []).some(status => status.type === 'weakness' || status.type === 'weaken');
+        const body = colorValue(actor.color, weakened ? [0.65, 0.42, 0.85, 1] : actor.team === world.player.team ? [0.27, 0.71, 0.78, 1] : [0.92, 0.39, 0.27, 1]);
+        const texture = this._faceTexture(actor.face);
+        for (const part of boxes) {
+          const head = part.id === 'head';
+          const color = head ? [0.97, 0.72, 0.49, 1] : /Leg/.test(part.id) ? body.map((value, index) => index < 3 ? value * 0.68 : value) : body;
+          this._box(asVec(part.center), asVec(part.size), color, head ? texture : null, true);
+        }
+      }
+      for (const pickup of world.pickups || []) {
+        if (pickup.active === false || pickup.collected) continue;
+        const pos = asVec(pickup.pos), color = colorValue(pickup.color, ITEM_COLORS[pickup.type] || [0.97, 0.74, 0.29, 1]);
+        const bob = 0.06 * Math.sin(now * 2.5 + pos[0]);
+        const center = [pos[0], Math.max(0.26, pos[1]) + bob, pos[2]];
+        const weapon = pickup.type === 'weapon';
+        this._box([pos[0], 0.012, pos[2]], [0.76, 0.024, 0.76], [...color.slice(0, 3).map(value => value * 0.48), 1]);
+        this._box(center, weapon ? [0.52, 0.20, 0.20] : [0.28, 0.38, 0.28], color, null, true, true);
+        if (weapon) this._box([center[0] + 0.12, center[1] - 0.14, center[2]], [0.12, 0.20, 0.18], color, null, true);
+        else this._box([center[0], center[1] + 0.20, center[2]], [0.14, 0.04, 0.14], [0.89, 0.94, 0.96, 1]);
+      }
+      for (const projectile of world.projectiles || []) {
+        const pos = asVec(projectile.pos), radius = Math.max(projectile.radius || 0.025, 0.055);
+        const color = colorValue(projectile.color, projectile.type === 'weakness' ? [0.77, 0.49, 1, 1] : [1, 0.89, 0.39, 1]);
+        this._box(pos, [radius * 2, radius * 2, radius * 2], color, null, false, true);
+        if (projectile.previousPos) this._line(asVec(projectile.previousPos), pos, color);
+      }
+      // Effects are disposable visuals. Their sizes never participate in hits.
+      gl.depthMask(false);
+      for (const effect of world.effects || []) {
+        if (!effect.pos || (Number.isFinite(effect.expiresAt) && effect.expiresAt < now)) continue;
+        const color = colorValue(effect.color, effect.type === 'explosion' ? [0.77, 0.40, 1, 0.65] : [1, 0.92, 0.61, 0.8]);
+        const radius = Math.max(0.08, Math.min(effect.radius || 0.12, 5));
+        if (effect.type === 'explosion' || radius > 0.4) {
+          this._draw(this.edges, gl.LINES, asVec(effect.pos), [radius * 2, radius * 2, radius * 2], color, true);
+        } else this._box(asVec(effect.pos), [radius, radius, radius], color, null, false, true);
+      }
+      gl.depthMask(true);
+    }
+
+    dispose() {
+      if (this._disposed) return;
+      this._disposed = true;
+      this._resizeObserver?.disconnect();
+      this.canvas.removeEventListener('webglcontextlost', this._onLost);
+      this.canvas.removeEventListener('webglcontextrestored', this._onRestored);
+      const gl = this.gl;
+      this._buffers.forEach(buffer => gl.deleteBuffer(buffer));
+      this._faces.forEach(record => { if (record.texture) gl.deleteTexture(record.texture); record.image.onload = null; record.image.onerror = null; });
+      this._faces.clear();
+      gl.deleteTexture(this._emptyTexture);
+      gl.deleteProgram(this.program);
+      this._world = null;
+    }
+  }
+
+  root.PixelFPSRenderer = PixelFPSRenderer;
+  if (typeof module !== 'undefined' && module.exports) module.exports = PixelFPSRenderer;
+})(typeof globalThis !== 'undefined' ? globalThis : window);
+</script>
+<script>(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const STORAGE_KEY = 'fps.block-character.v1';
+  const keys = new Set();
+  const skillIds = ['jetpack', 'autoaim', 'weaken'];
+  const skillKeys = ['Q', 'F', 'G'];
+  let world, renderer, running = false, started = false, mouseDown = false;
+  let sensitivity = 0.002, lastTime = 0, accumulator = 0, hudTime = 0, toastUntil = 0, hitUntil = 0, damageUntil = 0;
+  let previousHp = 0, lastEvent = null, waitingCharacter = null, ignoreMouseUntil = 0;
+  let project = { parameters: { ...BlockCharacter.DEFAULTS }, face: null };
+  const dialogs = ['inventory-dialog', 'settings-dialog', 'character-dialog'];
+  const isDialogOpen = () => dialogs.some(id => $(id).open);
+
+  function showToast(message) {
+    if (!message) return;
+    $('toast').textContent = message;
+    $('toast').classList.add('show');
+    toastUntil = performance.now() + 3200;
+  }
+
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) project = BlockCharacter.parseProject(JSON.parse(saved).character);
+  } catch (_) { /* An invalid or unavailable local save falls back to the default body. */ }
+
+  function describeCharacter() {
+    const c = BlockCharacter.createCharacter(project.parameters);
+    return `当前角色 ${c.standingHeight.toFixed(2)} m · 头部 ×${c.params.headScale.toFixed(2)} · 躯干 ×${c.params.torsoScale.toFixed(2)}${project.face ? ' · 已绘制面部' : ''}`;
+  }
+
+  function createWorld() {
+    world?.skills?.dispose();
+    world = new PixelFPS.World({ parameters: project.parameters, face: project.face });
+    world.skills = new PixelSkillRuntime(world);
+    world.targetsMoving = $('moving-targets').checked;
+    world.enemyFire = $('enemy-fire').checked;
+    previousHp = world.player.hp;
+    $('resume-game').textContent = '继续训练';
+    lastEvent = null;
+    accumulator = 0;
+    $('character-summary').textContent = describeCharacter();
+    $('settings-character').textContent = describeCharacter();
+    refreshHud();
+  }
+
+  function pause(showPanel = true) {
+    running = false;
+    mouseDown = false;
+    keys.clear();
+    if (document.pointerLockElement === $('arena')) document.exitPointerLock();
+    if (started && showPanel && !isDialogOpen()) $('pause-screen').hidden = false;
+  }
+
+  async function resume() {
+    if (!world || !renderer) return;
+    if (!world.player.alive || world.player.hp <= 0) createWorld();
+    dialogs.forEach(id => { if ($(id).open) $(id).close(); });
+    ignoreMouseUntil = Infinity;
+    try {
+      const result = $('arena').requestPointerLock();
+      if (result && typeof result.then === 'function') await result;
+      // Browsers with the legacy API confirm entry through pointerlockchange.
+      if (document.pointerLockElement === $('arena')) enterPlay();
+    } catch (_) {
+      ignoreMouseUntil = 0;
+      showToast('未能锁定鼠标，请再次点击继续；也可拖动鼠标瞄准。');
+      enterPlay();
+    }
+  }
+
+  function enterPlay() {
+    started = true;
+    running = true;
+    $('start-screen').hidden = true;
+    $('pause-screen').hidden = true;
+    $('pause-title').textContent = '继续你的实验';
+    $('pause-copy').textContent = '鼠标已释放。点击继续回到第一人称。';
+    lastTime = performance.now();
+  }
+
+  function openDialog(id) {
+    pause(false);
+    $('pause-screen').hidden = true;
+    if (id === 'inventory-dialog') renderInventory();
+    if (!$(id).open) $(id).showModal();
+  }
+
+  function closeDialog(id) {
+    $(id).close();
+    if (started) $('pause-screen').hidden = false;
+  }
+
+  function doResult(result) {
+    if (typeof result === 'string') showToast(result);
+    else if (result && result.message) showToast(result.message);
+    refreshHud();
+  }
+
+  function cast(id) {
+    doResult(world.skills.cast(id));
+    if ($('inventory-dialog').open) renderInventory();
+  }
+
+  function weaponName(weapon) {
+    const definition = PixelFPS.WEAPONS?.[weapon?.type] || {};
+    return definition.name || definition.label || weapon?.type || '未持有武器';
+  }
+
+  function refreshHud() {
+    if (!world) return;
+    const p = world.player, inventory = p.inventory;
+    $('health').textContent = `${Math.ceil(Math.max(0, p.hp))} / ${Math.ceil(p.maxHp)}`;
+    $('mana').textContent = `${Math.floor(p.mana)} / ${Math.ceil(p.maxMana)}`;
+    $('health-bar').max = p.maxHp; $('health-bar').value = Math.max(0, p.hp);
+    $('mana-bar').max = p.maxMana; $('mana-bar').value = p.mana;
+    const held = inventory.weapons[inventory.selected];
+    $('weapon-label').textContent = weaponName(held);
+    $('ammo').textContent = `通用弹药 ${inventory.ammo}`;
+    $('weapon-hint').textContent = held ? `1–${inventory.weapons.length} 切换 · 左键攻击` : '靠近物资按 E 拾取';
+    $('skill-hud').replaceChildren(...skillIds.map((id, index) => {
+      const state = world.skills.getState(id), item = document.createElement('div');
+      item.className = `skill-card${state.count ? '' : ' unowned'}${state.active ? ' active' : ''}`;
+      const key = document.createElement('kbd'); key.textContent = skillKeys[index];
+      const name = document.createElement('div'); name.className = 'name'; name.textContent = `${state.name || id} Lv.${state.level || 1}`;
+      const detail = document.createElement('div'); detail.className = 'detail';
+      detail.textContent = state.count || state.active ? `${state.manaCost ?? 0} 蓝 · ${id === 'autoaim' ? `剩余 ${state.count} 份` : '可重复'}` : '尚未拾取';
+      const cooldown = document.createElement('div'); cooldown.className = 'cooldown';
+      cooldown.textContent = state.active ? '生效中' : state.remaining > 0 ? `${state.remaining.toFixed(1)} s` : state.count ? '就绪' : '—';
+      item.append(key, name, detail, cooldown);
+      return item;
+    }));
+    const pickup = world.nearestPickup();
+    $('pickup-prompt').hidden = !pickup || !running;
+    $('pickup-prompt').textContent = pickup ? `E 拾取 · ${pickup.label || pickup.type}` : '';
+    const auto = world.skills.getState('autoaim');
+    $('crosshair').classList.toggle('locked', auto.active > 0);
+    const event = world.events?.at(-1);
+    if (event && event !== lastEvent) {
+      lastEvent = event;
+      showToast(event.text);
+      if (event.type === 'hit' || event.type === 'kill') hitUntil = performance.now() + 160;
+    }
+    if (p.hp < previousHp) damageUntil = performance.now() + 240;
+    previousHp = p.hp;
+    const target = world.actors.filter(a => a !== p && a.alive).map(a => {
+      const head = world.actorBoxes(a).find(b => b.id === 'head');
+      return { actor: a, point: head && world.lineOfSight(world.eye(p),head.center) && renderer?.project(head.center, p) };
+    }).filter(a => a.point?.visible && Math.hypot(a.point.x - $('arena').clientWidth / 2, a.point.y - $('arena').clientHeight / 2) < 80).sort((a,b) => a.point.depth-b.point.depth)[0];
+    $('target-label').textContent = target ? `${target.actor.label || '训练靶'} · ${Math.ceil(target.actor.hp)} / ${Math.ceil(target.actor.maxHp)}${target.actor.statuses.some(s => s.type === 'weakness' || s.type === 'weaken') ? ' · 虚弱' : ''}` : '';
+  }
+
+  function makeRow(title, detail, actions = []) {
+    const row = document.createElement('div'); row.className = 'inventory-row';
+    const text = document.createElement('div'), strong = document.createElement('strong'), small = document.createElement('small');
+    strong.textContent = title; small.textContent = detail; text.append(strong, small);
+    const buttons = document.createElement('div'); buttons.className = 'actions';
+    actions.forEach(action => { const b = document.createElement('button'); b.textContent = action.label; b.disabled = !!action.disabled; b.onclick = action.run; buttons.append(b); });
+    row.append(text, buttons); return row;
+  }
+
+  function renderInventory() {
+    const inventory = world.player.inventory;
+    $('inventory-resources').textContent = `通用弹药 ${inventory.ammo}　蓝瓶 ${inventory.manaPotions || 0}　击倒训练靶 ${world.kills || 0}`;
+    $('inventory-weapons').replaceChildren(...inventory.weapons.map((weapon, i) => makeRow(`${i + 1}. ${weaponName(weapon)}`, i === inventory.selected ? '当前手持' : '已携带', [{ label: '手持', run: () => { world.selectWeapon(i); renderInventory(); refreshHud(); } }])));
+    if (!inventory.weapons.length) $('inventory-weapons').textContent = '背包里还没有武器，靠近场地入口的物资按 E 拾取。';
+    $('inventory-skills').replaceChildren(...skillIds.map(id => {
+      const state = world.skills.getState(id), stored = inventory.skills[id] || {};
+      const levels = stored.levels || { [state.level || 1]: state.count || 0 };
+      const composition = Object.entries(levels).filter(([,n]) => n > 0).map(([l,n]) => `${l} 级 × ${n}`).join('，') || '尚未拾取';
+      const canUpgrade = id !== 'autoaim' && Object.values(levels).some(n => n >= 3);
+      const actions = [{ label: '使用', disabled: !state.count || state.remaining > 0, run: () => { closeDialog('inventory-dialog'); resume().then(() => cast(id)); } }];
+      if (id !== 'autoaim') actions.push({ label: '三合一升级', disabled: !canUpgrade, run: () => { doResult(world.upgradeSkill(id)); renderInventory(); } });
+      return makeRow(`${state.name || id} · Lv.${state.level || 1}`, `${composition} · ${state.remaining > 0 ? `冷却 ${state.remaining.toFixed(1)} 秒` : '已就绪'}`, actions);
+    }));
+  }
+
+  async function applyProject(next) {
+    const parsed = BlockCharacter.parseProject(BlockCharacter.exportData(next.parameters, next.face || null));
+    if (parsed.face) await new Promise((resolve,reject) => {
+      const img = new Image(); img.onload = () => img.width === 128 && img.height === 128 ? resolve() : reject(new Error('面部贴图必须为 128 × 128'));
+      img.onerror = () => reject(new Error('面部 PNG 无法解码')); img.src = parsed.face.png;
+    });
+    project = parsed;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({character:BlockCharacter.exportData(project.parameters,project.face)})); } catch (_) {}
+    pause(false); createWorld(); started = false;
+    $('start-screen').hidden = false; $('pause-screen').hidden = true;
+    showToast('角色已应用，场地与物资已重置');
+  }
+
+  function openCharacter() {
+    openDialog('character-dialog');
+    $('character-frame').srcdoc = JSON.parse($('studio-document').textContent);
+  }
+
+  $('start-game').onclick = resume; $('resume-game').onclick = resume;
+  $('edit-character').onclick = openCharacter; $('start-edit').onclick = openCharacter;
+  $('pause-character').onclick = openCharacter;
+  $('open-inventory').onclick = () => openDialog('inventory-dialog'); $('pause-inventory').onclick = () => openDialog('inventory-dialog');
+  $('close-inventory').onclick = () => closeDialog('inventory-dialog');
+  $('open-settings').onclick = () => openDialog('settings-dialog'); $('close-settings').onclick = () => closeDialog('settings-dialog');
+  $('pause-settings').onclick = () => openDialog('settings-dialog');
+  $('cancel-character').onclick = () => closeDialog('character-dialog');
+  $('reset-game').onclick = () => { createWorld(); resume(); };
+  $('reset-all').onclick = () => { createWorld(); closeDialog('settings-dialog'); showToast('训练场与物资已重置'); };
+  $('reset-targets').onclick = () => { world.resetTargets(); showToast('训练靶已恢复'); };
+  $('moving-targets').onchange = event => { world.targetsMoving = event.target.checked; };
+  $('enemy-fire').onchange = event => { world.enemyFire = event.target.checked; };
+  $('sensitivity').oninput = event => { sensitivity = Number(event.target.value); $('sensitivity-value').textContent = (sensitivity / .002).toFixed(1) + '×'; };
+  $('import-character').onclick = () => $('character-file').click();
+  $('default-character').onclick = async () => { try { await applyProject({parameters:BlockCharacter.DEFAULTS,face:null}); closeDialog('settings-dialog'); } catch (error) { showToast(error.message); } };
+  $('character-file').onchange = async event => {
+    const file = event.target.files[0]; if (!file) return;
+    try { if (file.size > 300 * 1024) throw new Error('角色文件过大'); await applyProject(BlockCharacter.parseProject(JSON.parse(await file.text()))); closeDialog('settings-dialog'); }
+    catch (error) { showToast('导入失败：' + error.message); }
+    event.target.value = '';
+  };
+  $('apply-character').onclick = () => {
+    if (waitingCharacter) return;
+    const token = `${Date.now()}-${Math.random()}`;
+    waitingCharacter = { token, timeout: setTimeout(() => { waitingCharacter = null; showToast('编辑器尚未就绪，请稍后再试'); }, 2500) };
+    $('character-frame').contentWindow.postMessage({type:'pixel-fps:request-character',token}, '*');
+  };
+  window.addEventListener('message', async event => {
+    if (event.source === $('character-frame').contentWindow && event.data?.type === 'pixel-fps:editor-ready') {
+      event.source.postMessage({type:'pixel-fps:set-character',character:BlockCharacter.exportData(project.parameters,project.face)}, '*');
+      return;
+    }
+    if (event.source !== $('character-frame').contentWindow || event.data?.type !== 'pixel-fps:character' || event.data.token !== waitingCharacter?.token) return;
+    clearTimeout(waitingCharacter.timeout); waitingCharacter = null;
+    try { await applyProject(BlockCharacter.parseProject(event.data.character)); closeDialog('character-dialog'); $('pause-screen').hidden = true; }
+    catch (error) { showToast('角色未应用：' + error.message); }
+  });
+  dialogs.forEach(id => $(id).addEventListener('cancel', () => { if (started) $('pause-screen').hidden = false; }));
+  document.addEventListener('pointerlockchange', () => {
+    if (document.pointerLockElement === $('arena')) {
+      // Discard pointer recentering events generated while entering pointer lock.
+      ignoreMouseUntil = performance.now() + 100;
+      enterPlay();
+    }
+    else if (running) pause(true);
+  });
+  document.addEventListener('pointerlockerror', () => { ignoreMouseUntil = 0; if (!isDialogOpen()) { enterPlay(); showToast('拖动鼠标瞄准，或再次点击画面锁定鼠标'); } });
+  window.addEventListener('keydown', event => {
+    if (event.code === 'Tab') { event.preventDefault(); if ($('inventory-dialog').open) closeDialog('inventory-dialog'); else if (started) openDialog('inventory-dialog'); return; }
+    if (!running || isDialogOpen()) return;
+    if (['Space','KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.code)) event.preventDefault();
+    keys.add(event.code);
+    if (event.repeat) return;
+    if (event.code === 'KeyE') doResult(world.interact());
+    if (event.code === 'KeyQ') cast('jetpack');
+    if (event.code === 'KeyF') cast('autoaim');
+    if (event.code === 'KeyG') cast('weaken');
+    if (event.code === 'KeyV') doResult(world.useManaPotion());
+    if (/^Digit[1-9]$/.test(event.code)) world.selectWeapon(Number(event.code.slice(-1)) - 1);
+    if (event.code === 'Escape') pause(true);
+  });
+  window.addEventListener('keyup', event => keys.delete(event.code));
+  window.addEventListener('blur', () => pause(true));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(true); });
+  $('arena').addEventListener('mousedown', event => { if (event.button === 0 && running) mouseDown = true; });
+  window.addEventListener('mouseup', () => { mouseDown = false; });
+  document.addEventListener('mousemove', event => {
+    if (!running || isDialogOpen() || (document.pointerLockElement !== $('arena') && !mouseDown)) return;
+    if (performance.now() < ignoreMouseUntil) return;
+    world.player.yaw += event.movementX * sensitivity;
+    world.player.pitch = Math.max(-1.48, Math.min(1.48, world.player.pitch - event.movementY * sensitivity));
+  });
+  $('arena').addEventListener('contextmenu', event => event.preventDefault());
+
+  function frame(now) {
+    const elapsed = Math.min(.1, Math.max(0, (now - lastTime) / 1000)); lastTime = now;
+    if (running) {
+      accumulator += elapsed;
+      while (accumulator >= 1 / 120) {
+        world.update(1 / 120, {forward:(keys.has('KeyW')?1:0)-(keys.has('KeyS')?1:0),right:(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),jump:keys.has('Space'),fire:mouseDown,sprint:keys.has('ShiftLeft')||keys.has('ShiftRight')});
+        accumulator -= 1 / 120;
+      }
+      if (!world.player.alive || world.player.hp <= 0) {
+        pause(true); $('pause-title').textContent = '本轮训练结束'; $('pause-copy').textContent = '可以重新开始，或调整体型再试一次。'; $('resume-game').textContent = '重新开始训练';
+      }
+    }
+    if (now - hudTime > 90) { refreshHud(); hudTime = now; }
+    $('hit-marker').style.opacity = now < hitUntil ? '1' : '0';
+    document.body.classList.toggle('damage', now < damageUntil);
+    if (now > toastUntil) $('toast').classList.remove('show');
+    renderer.render(world);
+    requestAnimationFrame(frame);
+  }
+
+  try {
+    renderer = new PixelFPSRenderer($('arena'));
+    createWorld();
+    window.PixelFPSApp = Object.freeze({ get world(){return world;}, get renderer(){return renderer;}, applyProject, pause, resume, reset:createWorld, cast });
+    requestAnimationFrame(frame);
+  } catch (error) {
+    $('boot-error').hidden = false; $('boot-error').textContent = '训练场启动失败：' + error.message;
+    $('start-game').disabled = true;
+    console.error(error);
+  }
+})();
+</script>
+</body></html>

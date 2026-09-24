@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><meta name="description" content="六方块角色构建器：调整体型，自由画脸，只有头部正面使用绘制的贴图。离线运行。">
+<title>方块人 · 角色构建器</title>
+<style>/* INLINE_STYLE */</style>
+</head>
+<body>
+<main class="app" aria-busy="true" inert>
+  <header class="header">
+    <div class="brand"><div class="brand-mark" aria-hidden="true"></div><div><h1>方块人</h1><div class="eyebrow">CHARACTER BUILDER</div></div><span class="module-tag">FPS · 体型与画脸</span></div>
+    <div class="actions"><button id="import-button" type="button">导入</button><button id="export-button" type="button" class="primary">导出角色 ↗</button></div>
+    <input type="file" id="import-file" accept=".json,application/json" hidden>
+  </header>
+  <div class="workspace">
+    <section class="studio" aria-label="角色三维预览">
+      <div class="studio-head">
+        <div id="body-metric"><div class="metric-label">自然身高</div><div class="height-number"><output id="height-value">1.80</output><span>m</span></div><div class="metric-formula">头高 + 躯干高 + 腿长</div></div>
+        <div id="face-metric" hidden><div class="metric-label">画脸</div><div class="face-stage-title">头部预览</div><div class="metric-formula">正面贴图 · 实时同步</div></div>
+        <div class="studio-badge" id="studio-badge">6 个方块 · 实时预览</div>
+      </div>
+      <div class="viewport-wrap" id="viewport-wrap"><canvas id="viewport" aria-label="六方块角色三维预览；拖动旋转，滚轮缩放，点击选择部件。也可使用下方视角按钮。">浏览器需要支持 Canvas 和 WebGL 才能显示三维角色。</canvas></div>
+      <div class="viewport-error" id="viewport-error" role="alert" hidden></div>
+      <div class="studio-footer">
+        <div class="view-bar" role="group" aria-label="视角"><button data-view="perspective" aria-pressed="true" type="button">三维</button><button data-view="front" aria-pressed="false" type="button">正面</button><button data-view="side" aria-pressed="false" type="button">侧面</button><button class="fit" id="fit-button" type="button">适配画面</button></div>
+        <div class="stage-caption"><span id="selection-caption" class="selection-caption">头部 · 40 × 40 × 40 cm</span><span>拖动旋转 · 滚轮缩放 · 点击选择</span></div>
+      </div>
+    </section>
+    <aside class="inspector" aria-label="角色编辑器">
+      <div class="module-tabs" role="tablist" aria-label="角色编辑步骤"><button id="body-tab" role="tab" aria-controls="body-panel" aria-selected="true" type="button"><span>01</span>调整体型</button><button id="face-tab" role="tab" aria-controls="face-panel" aria-selected="false" type="button"><span>02</span>画脸</button></div>
+      <div id="body-panel" class="body-panel" role="tabpanel" aria-labelledby="body-tab">
+      <div class="inspector-title"><h2>尺寸参数</h2><span class="subtle">拖动滑杆 · 输入后回车</span></div>
+      <div class="presets" role="group" aria-label="起始体型">
+        <button type="button" class="preset" data-preset="small" aria-pressed="false">迷你<small>组合示例 · 0.50 m</small></button>
+        <button type="button" class="preset" data-preset="default" aria-pressed="true">标准<small>组合示例 · 1.80 m</small></button>
+        <button type="button" class="preset" data-preset="tall" aria-pressed="false">高大<small>组合示例 · 5.00 m</small></button>
+      </div>
+      <div class="group scale-group" id="scale-controls"></div>
+      <section class="group"><div class="group-title"><h3>手臂 · 两侧等长</h3></div><div id="arm-controls"></div><p class="group-note">宽 16 cm、深 22 cm 保持不变</p></section>
+      <section class="group"><div class="group-title"><h3>腿部 · 两侧等长</h3></div><div id="leg-controls"></div><p class="group-note">宽 20 cm、深 24 cm 保持不变</p></section>
+      <p id="geometry-notice" class="notice"></p>
+      <div class="body-actions"><button id="reset-button" class="reset" type="button">恢复初始体型</button><button id="start-face-button" class="next-step" type="button">下一步：画脸 →</button></div>
+      </div>
+      <section id="face-panel" class="face-panel" role="tabpanel" aria-labelledby="face-tab" hidden>
+        <div class="inspector-title"><h2>正面画板</h2><span class="subtle">空白处保留头部底色</span></div>
+        <div class="paint-tools" role="group" aria-label="绘画工具"><button id="brush-button" type="button" aria-pressed="true">画笔</button><button id="eraser-button" type="button" aria-pressed="false">橡皮</button><span class="paint-tool-hint" id="paint-tool-hint">按住拖动绘制</span></div>
+        <div class="paint-board"><canvas id="face-canvas" width="128" height="128" tabindex="0" aria-label="头部正面画板，使用鼠标或手指绘制；内容实时贴到角色头部正面。Ctrl 或 Command 加 Z 撤销。">请使用支持 Canvas 的浏览器进行绘制。</canvas></div>
+        <div class="paint-history"><button id="undo-button" type="button" disabled>撤销</button><button id="redo-button" type="button" disabled>重做</button><button id="clear-face-button" type="button">清空画板</button></div>
+        <div class="paint-colors"><div class="paint-section-heading"><span>颜色</span><label class="custom-color">自选<input id="paint-color" type="color" value="#20242b" aria-label="自选画笔颜色"></label></div><div id="paint-palette" class="paint-palette" role="group" aria-label="常用画笔颜色"></div></div>
+        <label class="brush-size" for="brush-size"><span>画笔粗细 <output id="brush-size-value">4</output><small>像素</small></span><input id="brush-size" type="range" min="1" max="24" value="4" step="1"></label>
+        <p class="paint-note">只绘制头部正面。橡皮恢复底色，清空后也可以撤销；返回调整体型不会丢失画好的脸。</p>
+      </section>
+      <div class="inspector-bottom"><span class="subtle" id="module-state">体型编辑</span><span class="save-state" id="save-state">自动保存于此浏览器</span></div>
+    </aside>
+  </div>
+  <footer class="app-footer"><div class="footer-left"><span>六个独立方块</span><span>仅正面贴图</span><span>体型与绘画一起保存</span></div><span class="status-message" id="status" role="status" aria-live="polite">就绪</span></footer>
+  <span class="sr-only" id="announcer" aria-live="polite"></span>
+</main>
+<script>/* INLINE_CHARACTER */</script>
+<script>/* INLINE_VIEWPORT */</script>
+<script>/* INLINE_PAINTER */</script>
+<script>/* INLINE_APP */</script>
+</body>
+</html>
